@@ -1,0 +1,30 @@
+Package: LitFetchR
+Type: Package
+Title: Automatically fetching references metadata from databases.
+Version: 0.1.0
+Author@R: c(person("Thomas", "DUMOND", role = c("cre","aut"), email = "thomas.dumond@adelaide.edu.au", comment = c(ORCID = "0000-0002-9427-8649")),
+            person("Charles", "Caraguel", role = "ctb", comment = c(ORCID = "0000-0003-0019-4813")),
+            person("Torben", "Nielsen", role = "ctb", comment = c(ORCID = "0000-0002-8941-7376"))
+Maintainer: Thomas Dumond <thomas.dumond@adelaide.edu.au>
+Description: Provides functions to automatically retrieve and deduplicate
+    reference metadata based on saved search strings.
+    Access to Web of Science and Scopus requires personal API keys,
+    while PubMed can be queried without one.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Imports:
+    ASySD,
+    dplyr,
+    httr,
+    jsonlite,
+    openxlsx,
+    purrr,
+    readxl,
+    shiny,
+    xml2
+Remotes:
+    camaradesuk/ASySD
+Suggests:
+    cronR,
+    taskscheduleR
+RoxygenNote: 7.3.2

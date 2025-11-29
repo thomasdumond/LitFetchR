@@ -6,8 +6,7 @@ create_search_history <- function(){
   if (!file.exists("history_search.xlsx")){
     history_search <- openxlsx::createWorkbook()
     # Add a sheet with date included in name
-    date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
-    sheet_name <- paste0("search", date_suffix)
+    sheet_name <- build_sheet_name()
     openxlsx::addWorksheet(history_search, sheet_name)
     openxlsx::saveWorkbook(history_search, "history_search.xlsx", overwrite = TRUE)
   } else{

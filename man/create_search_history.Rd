@@ -2,13 +2,15 @@
 % Please edit documentation in R/create_search_history.R
 \name{create_search_history}
 \alias{create_search_history}
-\title{creates an excel file to store the search history}
+\title{Creates an excel file to store the history of searches
+made using \code{create_save_search()}}
 \usage{
 create_search_history()
 }
 \value{
-create an excel file
+"history_search.xlsx" and or a new sheet for the new search(es)
 }
 \description{
-creates an excel file to store the search history
+Creates an excel file to store the history of searches
+made using \code{create_save_search()}
 }

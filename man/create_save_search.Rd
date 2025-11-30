@@ -2,8 +2,7 @@
 % Please edit documentation in R/create_save_search.R
 \name{create_save_search}
 \alias{create_save_search}
-\title{create and save search string by display the number of results from 3 platforms:
-Web of Science, Scopus and PubMed}
+\title{create and save search string}
 \usage{
 create_save_search()
 }
@@ -11,6 +10,9 @@ create_save_search()
 one or more search string(s) in the file "search_list.txt"
 }
 \description{
-create and save search string by display the number of results from 3 platforms:
-Web of Science, Scopus and PubMed
+\code{create_save_search}  is an interactive function that
+ask the user to enter a search string and provide
+the number of results from 3 platforms:
+Web of Science, Scopus and PubMed. You can then save one
+or more search strings to retrieve the references later.
 }

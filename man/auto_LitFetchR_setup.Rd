@@ -2,10 +2,10 @@
 % Please edit documentation in R/auto_LitFetchR_setup.R
 \name{auto_LitFetchR_setup}
 \alias{auto_LitFetchR_setup}
-\title{creates a read-only code file and a task to run the code automatically.}
+\title{Automating the retrieval of references based on a saved search string}
 \usage{
 auto_LitFetchR_setup(
-  reviewID = "reviewID",
+  task_ID = "task_ID",
   when = "DAILY",
   time = "08:00",
   WOS = TRUE,
@@ -14,21 +14,23 @@ auto_LitFetchR_setup(
 )
 }
 \arguments{
-\item{reviewID}{name of the review}
+\item{task_ID}{Name of the automated task (e.g. one keyword describing your review)}
 
-\item{when}{frequency of the fetching, i.e. DAILY, WEEKLY, MONTHLY}
+\item{when}{Frequency of the fetching, i.e. DAILY, WEEKLY, MONTHLY}
 
-\item{time}{time of the fetching, i.e. HH:MM 24-hour clock format}
+\item{time}{Time of the fetching, i.e. HH:MM 24-hour clock format}
 
-\item{WOS}{choose to search on Web of Science}
+\item{WOS}{Choose to search on Web of Science}
 
-\item{SCP}{choose to search on Scopus}
+\item{SCP}{Choose to search on Scopus}
 
-\item{PMD}{choose to search on PubMed}
+\item{PMD}{Choose to search on PubMed}
 }
 \value{
-create a Rcode file and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
+Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
 }
 \description{
-creates a read-only code file and a task to run the code automatically.
+\code{auto_LitFetchR_setup} creates a read-only Rscript and a task to run the code automatically
+at a specified frequency and time, on up to three platforms (e.g. \href{https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/}{Web of Science},
+\href{https://www.elsevier.com/en-au/products/scopus}{Scopus} and \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed})
 }

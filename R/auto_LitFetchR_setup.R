@@ -15,7 +15,6 @@
 #'
 #' @export
 
-
 auto_LitFetchR_setup <- function(task_ID = "task_ID", when = "DAILY", time = "08:00", WOS = TRUE, SCP = TRUE, PMD = TRUE) {
 
   # CREATE AUTOMATION CODE

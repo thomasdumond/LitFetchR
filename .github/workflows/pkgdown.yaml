@@ -23,13 +23,6 @@ jobs:
     permissions:
       contents: write
     steps:
-
-      - name: Install devtools (and pkgdown)
-        run: |
-          Rscript -e 'options(repos = c(CRAN = "https://packagemanager.posit.co/cran/__linux__/noble/latest"));
-                    pkgs <- c("devtools", "pkgdown");
-                    install.packages(setdiff(pkgs, rownames(installed.packages())), dependencies = TRUE)'
-
       - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-pandoc@v2
@@ -38,9 +31,15 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: Install devtools (and pkgdown)
+        run: |
+          Rscript -e 'options(repos = c(CRAN = "https://packagemanager.posit.co/cran/__linux__/noble/latest"));
+                    pkgs <- c("devtools", "pkgdown");
+                    install.packages(setdiff(pkgs, rownames(installed.packages())), dependencies = TRUE)'
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, any::devtools, local::.
+          extra-packages: any::pkgdown, local::.
           needs: website
 
       - name: Build site

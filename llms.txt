@@ -1,0 +1,94 @@
+# LitFetchR
+
+The goal of LitFetchR is to automatically retrieve and deduplicate
+reference metadata based on saved search strings. Access to Web of
+Science and Scopus requires personal API keys, while PubMed can be
+queried without one.
+
+## Installation
+
+You can install the development version of LitFetchR from
+[GitHub](https://github.com/) with:
+
+``` R
+install.packages("devtools")
+devtools::install_github("thomasdumond/LitFetchR")
+```
+
+## Tutorial
+
+Please see the [written
+tutorial](https://thomasdumond.github.io/LitFetchR/) as well as the
+[youtube tutorial](https://thomasdumond.github.io/LitFetchR/).
+
+## Requirements
+
+This package uses API to access Web of Science and Scopus platforms. To
+enjoy the full performance of `LitFetchR`, request personal API keys to
+the platforms. For more information on API keys, you can see our [API
+tutorial](https://thomasdumond.github.io/LitFetchR/). If you are
+affiliated to a University we suggest contacting your local librarian to
+discuss the use of API keys (i.e. quota access, detail of databases
+accessed through Web of Science).
+
+PubMed does not require API key access, so the package can still be used
+to access PubMed only.
+
+More databases will be considered for inclusion in future versions of
+the package.
+
+# Package index
+
+## All functions
+
+- [`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md)
+  : Automating the retrieval of references based on a saved search
+  string
+
+- [`build_sheet_name()`](https://thomasdumond.github.io/LitFetchR/reference/build_sheet_name.md)
+  : Create a unique name for any document
+
+- [`create_dedup_history()`](https://thomasdumond.github.io/LitFetchR/reference/create_dedup_history.md)
+  : Creates an excel file to store the deduplication history
+
+- [`create_id_history()`](https://thomasdumond.github.io/LitFetchR/reference/create_id_history.md)
+  : Creates an excel file to store the references identification
+  retrieved at each search
+
+- [`create_save_search()`](https://thomasdumond.github.io/LitFetchR/reference/create_save_search.md)
+  : create and save search string
+
+- [`create_search_history()`](https://thomasdumond.github.io/LitFetchR/reference/create_search_history.md)
+  :
+
+  Creates an excel file to store the history of searches made using
+  [`create_save_search()`](https://thomasdumond.github.io/LitFetchR/reference/create_save_search.md)
+
+- [`dedup_refs()`](https://thomasdumond.github.io/LitFetchR/reference/dedup_refs.md)
+  : deduplicate the references from three dataframes
+
+- [`extract_pmd_list()`](https://thomasdumond.github.io/LitFetchR/reference/extract_pmd_list.md)
+  : extract the metadata from the new references from PubMed based on
+  the search strings found in search_list.txt
+
+- [`extract_scp_list()`](https://thomasdumond.github.io/LitFetchR/reference/extract_scp_list.md)
+  : extract the metadata from the new references from Scopus based on
+  the search strings found in search_list.txt
+
+- [`extract_wos_list()`](https://thomasdumond.github.io/LitFetchR/reference/extract_wos_list.md)
+  : extract the metadata from the new references from Web of Science
+  based on the search strings found in search_list.txt
+
+- [`get_short_path()`](https://thomasdumond.github.io/LitFetchR/reference/get_short_path.md)
+  : transforms a long computer path into a shorter
+
+- [`manual_fetch()`](https://thomasdumond.github.io/LitFetchR/reference/manual_fetch.md)
+  : manual literature fetch
+
+- [`remove_scheduled_task()`](https://thomasdumond.github.io/LitFetchR/reference/remove_scheduled_task.md)
+  : Remove a scheduled task by name from Task Scheduler (Windows) or
+  Cron (Mac/Linux)
+
+- [`save_api_keys()`](https://thomasdumond.github.io/LitFetchR/reference/save_api_keys.md)
+  : Save Web of Science and/or Scopus API keys in .Renviron
+

@@ -2,13 +2,13 @@
 % Please edit documentation in R/create_dedup_history.R
 \name{create_dedup_history}
 \alias{create_dedup_history}
-\title{creates an excel file to store the deduplication history}
+\title{Creates an excel file to store the deduplication history}
 \usage{
 create_dedup_history()
 }
 \value{
-create an excel file
+history_dedup.xlsx
 }
 \description{
-creates an excel file to store the deduplication history
+Creates an excel file to store the deduplication history
 }

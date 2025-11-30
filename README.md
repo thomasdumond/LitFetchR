@@ -14,7 +14,6 @@ queried without one.
 You can install the development version of LitFetchR from
 [GitHub](https://github.com/) with:
 
-    {r}
     install.packages("devtools")
     devtools::install_github("thomasdumond/LitFetchR")
 

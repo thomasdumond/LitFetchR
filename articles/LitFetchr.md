@@ -1,0 +1,5 @@
+# LitFetchr
+
+``` r
+library(LitFetchR)
+```

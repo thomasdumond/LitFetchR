@@ -92,3 +92,8 @@ the package.
 - [`save_api_keys()`](https://thomasdumond.github.io/LitFetchR/reference/save_api_keys.md)
   : Save Web of Science and/or Scopus API keys in .Renviron
 
+# Articles
+
+### All vignettes
+
+- [LitFetchr](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.md):

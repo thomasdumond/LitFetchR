@@ -2,3 +2,8 @@ url: https://thomasdumond.github.io/LitFetchR/
 template:
   bootstrap: 5
 
+articles:
+  - title: "Articles"
+    navbar: ~
+    contents:
+      - LitFetchr

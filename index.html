@@ -71,21 +71,27 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of LitFetchR from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"thomasdumond/LitFetchR"</span>)</span></code></pre></div>
+<p>You can install the development version of LitFetchR from <a href="https://github.com/" class="external-link">GitHub</a> using <code>devtools</code> or <code>remotes</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#install via devtools</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"thomasdumond/LitFetchR"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#install via remotes</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"thomasdumond/LitFetchR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="tutorial">Tutorial<a class="anchor" aria-label="anchor" href="#tutorial"></a>
 </h2>
-<p>Please see the <a href="">written tutorial</a> as well as the <a href="">youtube tutorial</a>.</p>
+<p>You can find all the tutorial in the <a href="https://thomasdumond.github.io/LitFetchR/articles/">Articles</a> tab.</p>
 </div>
 <div class="section level2">
 <h2 id="requirements">Requirements<a class="anchor" aria-label="anchor" href="#requirements"></a>
 </h2>
-<p>This package uses API to access Web of Science and Scopus platforms. To enjoy the full performance of <code>LitFetchR</code>, request personal API keys to the platforms. For more information on API keys, you can see our <a href="">API tutorial</a>. If you are affiliated to a University we suggest contacting your local librarian to discuss the use of API keys (i.e. quota access, detail of databases accessed through Web of Science).</p>
+<p>This package uses API to access Web of Science and Scopus platforms. To enjoy the full performance of <code>LitFetchR</code>, request personal API keys to the platforms. For more information on API keys, you can see our tutorial <a href="https://thomasdumond.github.io/LitFetchR/articles/Get_API_keys.html">Get API keys</a>. If you are affiliated to a university we suggest contacting your local librarian to discuss the use of API keys (i.e. quota access, detail of databases accessed through Web of Science).</p>
 <p>PubMed does not require API key access, so the package can still be used to access PubMed only.</p>
-<p>More databases will be considered for inclusion in future versions of the package.</p>
+<p><em>More scientific platforms and databases will be considered for inclusion in future versions of the package.</em></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

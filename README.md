@@ -12,26 +12,36 @@ queried without one.
 ## Installation
 
 You can install the development version of LitFetchR from
-[GitHub](https://github.com/) with:
+[GitHub](https://github.com/) using `devtools` or `remotes`:
 
-    install.packages("devtools")
-    devtools::install_github("thomasdumond/LitFetchR")
+``` r
+#install via devtools
+install.packages("devtools")
+devtools::install_github("thomasdumond/LitFetchR")
+
+#install via remotes
+install.packages("remotes")
+remotes::install_github("thomasdumond/LitFetchR")
+```
 
 ## Tutorial
 
-Please see the [written tutorial]() as well as the [youtube tutorial]().
+You can find all the tutorial in the
+[Articles](https://thomasdumond.github.io/LitFetchR/articles/) tab.
 
 ## Requirements
 
 This package uses API to access Web of Science and Scopus platforms. To
 enjoy the full performance of `LitFetchR`, request personal API keys to
-the platforms. For more information on API keys, you can see our [API
-tutorial](). If you are affiliated to a University we suggest contacting
-your local librarian to discuss the use of API keys (i.e. quota access,
-detail of databases accessed through Web of Science).
+the platforms. For more information on API keys, you can see our
+tutorial [Get API
+keys](https://thomasdumond.github.io/LitFetchR/articles/Get_API_keys.html).
+If you are affiliated to a university we suggest contacting your local
+librarian to discuss the use of API keys (i.e. quota access, detail of
+databases accessed through Web of Science).
 
 PubMed does not require API key access, so the package can still be used
 to access PubMed only.
 
-More databases will be considered for inclusion in future versions of
-the package.
+*More scientific platforms and databases will be considered for
+inclusion in future versions of the package.*

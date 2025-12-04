@@ -4,6 +4,7 @@
 #' @return A dataframe containing the metadata from the new references on Web of Science
 #' @importFrom utils URLencode
 #' @importFrom stats setNames
+#' @keywords internal
 
 extract_wos_list <- function(search_list_path){
   if(file.exists(search_list_path)){

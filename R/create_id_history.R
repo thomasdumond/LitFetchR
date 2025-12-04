@@ -1,6 +1,7 @@
 #' Creates an excel file to store the references identification retrieved at each search
 #'
 #' @return history_id.xlsx
+#' @keywords internal
 
 # create history if does not exist
 create_id_history <- function(){

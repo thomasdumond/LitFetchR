@@ -2,6 +2,7 @@
 #' made using `create_save_search()`
 #'
 #' @return "history_search.xlsx" and or a new sheet for the new search(es)
+#' @keywords internal
 
 create_search_history <- function(){
 

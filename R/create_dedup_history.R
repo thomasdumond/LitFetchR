@@ -1,6 +1,8 @@
 #' Creates an excel file to store the deduplication history
 #'
 #' @return history_dedup.xlsx
+#'
+#' @keywords internal
 
 create_dedup_history <- function(){
 

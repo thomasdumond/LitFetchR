@@ -4,6 +4,7 @@
 #' @return A dataframe containing the metadata from the new references on PubMed
 #' @importFrom utils URLencode
 #' @importFrom stats setNames
+#' @keywords internal
 
 extract_pmd_list <- function(search_list_path){
   if(file.exists(search_list_path)){

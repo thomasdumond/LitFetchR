@@ -15,3 +15,4 @@ a shorter path
 \description{
 transforms a long computer path into a shorter
 }
+\keyword{internal}

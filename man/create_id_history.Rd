@@ -12,3 +12,4 @@ history_id.xlsx
 \description{
 Creates an excel file to store the references identification retrieved at each search
 }
+\keyword{internal}

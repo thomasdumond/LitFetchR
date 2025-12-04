@@ -17,3 +17,4 @@ A dataframe containing the metadata from the new references on Scopus
 extract the metadata from the new references from Scopus
 based on the search strings found in search_list.txt
 }
+\keyword{internal}

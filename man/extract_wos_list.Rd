@@ -17,3 +17,4 @@ A dataframe containing the metadata from the new references on Web of Science
 extract the metadata from the new references from Web of Science
 based on the search strings found in search_list.txt
 }
+\keyword{internal}

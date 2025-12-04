@@ -14,3 +14,4 @@ create_search_history()
 Creates an excel file to store the history of searches
 made using \code{create_save_search()}
 }
+\keyword{internal}

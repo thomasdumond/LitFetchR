@@ -16,3 +16,4 @@ with the format YYYY-MM-DD-HHMMSS.
 \description{
 Create a unique name for any document
 }
+\keyword{internal}

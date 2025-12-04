@@ -40,6 +40,8 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/Get_API_keys.html">Get API keys</a></li>
     <li><a class="dropdown-item" href="../articles/LitFetchr.html">LitFetchR (Tutorial)</a></li>
+    <li><a class="dropdown-item" href="../articles/remove_task.html">Remove or change a scheduled task</a></li>
+    <li><a class="dropdown-item" href="../articles/manual_fetch.html">Manual reference retrieval</a></li>
   </ul>
 </li>
       </ul>
@@ -149,7 +151,8 @@ using the following:</p>
 <span><span class="co">#change "TRUE" to "FALSE" in front of the corresponding database (e.g.`WOS = FALSE`).</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/auto_LitFetchR_setup.html">auto_LitFetchR_setup</a></span><span class="op">(</span>task_ID <span class="op">=</span> <span class="st">"name_of_your_task"</span>, when <span class="op">=</span> <span class="st">"DAILY"</span>, time <span class="op">=</span> <span class="st">"14:00"</span>, WOS <span class="op">=</span> <span class="cn">TRUE</span>, SCP <span class="op">=</span> <span class="cn">TRUE</span>, PMD <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>After running <code><a href="../reference/auto_LitFetchR_setup.html">auto_LitFetchR_setup()</a></code>,</p>
+<p>After running <code><a href="../reference/auto_LitFetchR_setup.html">auto_LitFetchR_setup()</a></code> for the first time,
+four new files will be created:</p>
 <ul>
 <li>
 <p>history_id.xlsx</p>
@@ -179,6 +182,9 @@ this file by accident, use the <code><a href="../reference/auto_LitFetchR_setup.
 create a new task and a new code file.</em></p>
 </li>
 </ul>
+<p>Each time <code><a href="../reference/auto_LitFetchR_setup.html">auto_LitFetchR_setup()</a></code> runs, new unique
+<em>history_dedup_</em> and <em>citationCSV_</em> files are created and
+<em>history_id</em> is updated.</p>
 <p><strong>Congratulations ! Your automated reference retrieval is ready
 to work !</strong></p>
 <p>See also:</p>

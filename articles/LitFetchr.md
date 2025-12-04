@@ -95,7 +95,8 @@ auto_LitFetchR_setup(task_ID = "name_of_your_task", when = "DAILY", time = "14:0
 ```
 
 After running
-[`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md),
+[`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md)
+for the first time, four new files will be created:
 
 - history_id.xlsx
 
@@ -123,6 +124,11 @@ After running
   deleted this file by accident, use the
   [`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md)
   to create a new task and a new code file.*
+
+Each time
+[`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md)
+runs, new unique *history_dedup\_* and *citationCSV\_* files are created
+and *history_id* is updated.
 
 **Congratulations ! Your automated reference retrieval is ready to work
 !**

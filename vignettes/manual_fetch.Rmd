@@ -1,0 +1,32 @@
+---
+title: "Manual reference retrieval"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{manual_fetch}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+If you are here, this is because you want to manually retrieve a list of reference, outside of the automated task that you might have set up after reading [LitFetchR (Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html).
+
+## Setup
+From your individual review R directory, load `LitFetchR`:
+```{r, eval = FALSE}
+library(LitFetchR)
+```
+
+## Manual reference retrieval
+Make sure to have save your search string using `create_save_search()` as the following function need to access the file *search_list.txt*, see [LitFetchR (Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html).
+
+```{r, eval=FALSE}
+manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)
+```
+
+After running `manual_fetch()`, new unique *history_dedup_* and *citationCSV_* files are created and *history_id* is updated.

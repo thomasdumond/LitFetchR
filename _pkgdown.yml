@@ -11,3 +11,5 @@ articles:
     contents:
       - Get_API_keys
       - LitFetchr
+      - remove_task
+      - manual_fetch

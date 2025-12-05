@@ -2,7 +2,7 @@
 
 ## Authors
 
-- **Thomas DUMOND**. Maintainer, author.
+- **Thomas DUMOND**. Maintainer, author, copyright holder.
   [](https://orcid.org/0000-0002-9427-8649)
 
 - **Charles Caraguel**. Contributor.

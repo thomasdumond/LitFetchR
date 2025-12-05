@@ -13,4 +13,7 @@ create_save_search()
 
 ## Value
 
-one or more search string(s) in the file "search_list.txt"
+one or more search string(s) in the file "search_list.txt" and the
+history of all searches in "history_search.xlsx"
+
+## Examples

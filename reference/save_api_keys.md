@@ -21,3 +21,5 @@ save_api_keys(WOS_API_KEY = NULL, SCP_API_KEY = NULL)
 ## Value
 
 TRUE if at least one value was written, FALSE if left unchanged.
+
+## Examples

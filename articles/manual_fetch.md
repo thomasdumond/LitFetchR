@@ -72,4 +72,5 @@ manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)
 After running
 [`manual_fetch()`](https://thomasdumond.github.io/LitFetchR/reference/manual_fetch.md),
 new unique *history_dedup\_* and *citationCSV\_* files are created and
-*history_id* is updated.
+*history_id* is updated.See bottom of the page [LitFetchR
+(Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html)

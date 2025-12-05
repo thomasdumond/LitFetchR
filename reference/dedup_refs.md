@@ -24,4 +24,7 @@ dedup_refs(df1, df2, df3)
 
 ## Value
 
-A CSV file containing all the new references deduplicated
+A CSV file containing all the new references deduplicated and the
+history of the deduplication.
+
+## Examples

@@ -36,17 +36,19 @@ auto_LitFetchR_setup(
 
 - WOS:
 
-  Choose to search on Web of Science
+  Choose to search on Web of Science (TRUE or FALSE)
 
 - SCP:
 
-  Choose to search on Scopus
+  Choose to search on Scopus (TRUE or FALSE)
 
 - PMD:
 
-  Choose to search on PubMed
+  Choose to search on PubMed (TRUE or FALSE)
 
 ## Value
 
 Create a Rscript file (READ ONLY) and a task in Task Scheduler
 (Windows), or in Cron (Mac/Linux)
+
+## Examples

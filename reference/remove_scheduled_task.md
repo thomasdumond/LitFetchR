@@ -14,3 +14,5 @@ remove_scheduled_task(taskname)
 - taskname:
 
   Name/ID of the scheduled task (Windows Task Scheduler or cronR id)
+
+## Examples

@@ -81,7 +81,8 @@ after reading <a href="https://thomasdumond.github.io/LitFetchR/articles/LitFetc
 <p>From your individual review R directory, load
 <code>LitFetchR</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">#Load LitFetchR</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="manual-reference-retrieval">Manual reference retrieval<a class="anchor" aria-label="anchor" href="#manual-reference-retrieval"></a>
@@ -91,7 +92,50 @@ after reading <a href="https://thomasdumond.github.io/LitFetchR/articles/LitFetc
 access the file <em>search_list.txt</em>, see <a href="https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html">LitFetchR
 (Tutorial)</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/manual_fetch.html">manual_fetch</a></span><span class="op">(</span>WOS <span class="op">=</span> <span class="cn">TRUE</span>, SCP <span class="op">=</span> <span class="cn">TRUE</span>, PMD <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">#Load LitFetchR</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Retrieve the list of references corresponding to your saved search string(s)</span></span>
+<span><span class="fu"><a href="../reference/manual_fetch.html">manual_fetch</a></span><span class="op">(</span>WOS <span class="op">=</span> <span class="cn">TRUE</span>, SCP <span class="op">=</span> <span class="cn">TRUE</span>, PMD <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Example of what you should see: </span></span>
+<span><span class="co"># &gt; manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)</span></span>
+<span><span class="co"># [1] 126</span></span>
+<span><span class="co"># Finished batch number 1</span></span>
+<span><span class="co"># Finished batch number 2</span></span>
+<span><span class="co"># [1] "10.1016/j.aaf.2023.11.002 1 / 126"</span></span>
+<span><span class="co"># [1] "10.3390/fishes10090439 2 / 126"</span></span>
+<span><span class="co"># [FOR THE PURPOSE OF THIS EXAMPLE WE DO ARE NOT SHOWING EACH LINE OF THE COMMAND]</span></span>
+<span><span class="co"># [1] "NA 125 / 126"</span></span>
+<span><span class="co"># [1] "NA 126 / 126"</span></span>
+<span><span class="co"># [1] 22</span></span>
+<span><span class="co"># Finished batch number 1</span></span>
+<span><span class="co"># File already exists</span></span>
+<span><span class="co"># [1] "10.1007/s12602-023-10207-x 1 / 22"</span></span>
+<span><span class="co"># [1] "10.1016/j.fsi.2025.110189 2 / 22"</span></span>
+<span><span class="co"># [FOR THE PURPOSE OF THIS EXAMPLE WE DO ARE NOT SHOWING EACH LINE OF THE COMMAND]</span></span>
+<span><span class="co"># [1] "10.1111/j.1472-765X.2010.02894.x 21 / 22"</span></span>
+<span><span class="co"># [1] "NA 22 / 22"</span></span>
+<span><span class="co"># [1] 106</span></span>
+<span><span class="co"># Finished batch 1 for fish AND "vibrio harveyi" AND diagnostic</span></span>
+<span><span class="co"># File already exists</span></span>
+<span><span class="co"># [1] "10.1016/j.fsi.2025.110503 1 / 106"</span></span>
+<span><span class="co"># [1] "10.1016/j.fsi.2025.110501 2 / 106"</span></span>
+<span><span class="co"># [FOR THE PURPOSE OF THIS EXAMPLE WE DO ARE NOT SHOWING EACH LINE OF THE COMMAND][1] "NA 105 / 106"</span></span>
+<span><span class="co"># [1] "NA 106 / 106"</span></span>
+<span><span class="co"># Warning: The following columns are missing: pages, number, record_id, isbn</span></span>
+<span><span class="co"># formatting data...</span></span>
+<span><span class="co"># identifying potential duplicates...</span></span>
+<span><span class="co"># identified duplicates!</span></span>
+<span><span class="co"># flagging potential pairs for manual dedup...</span></span>
+<span><span class="co"># Joining with `by = join_by(duplicate_id.x, duplicate_id.y)`</span></span>
+<span><span class="co"># 254 citations loaded...</span></span>
+<span><span class="co"># 14 duplicate citations removed...</span></span>
+<span><span class="co"># 240 unique citations remaining!</span></span>
+<span><span class="co"># Deduplication script has been executed, concatenated deduplicated references had been exported.</span></span>
+<span><span class="co"># Warning message:</span></span>
+<span><span class="co"># In add_missing_cols(raw_citations) :</span></span>
+<span><span class="co">#   Search contains missing values for the record_id column. A record_id will be created using row numbers</span></span></code></pre></div>
 <p>After running <code><a href="../reference/manual_fetch.html">manual_fetch()</a></code>, new unique
 <em>history_dedup_</em> and <em>citationCSV_</em> files are created and
 <em>history_id</em> is updated.</p>

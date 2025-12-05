@@ -111,7 +111,8 @@ GitHub:</p>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"thomasdumond/LitFetchR"</span><span class="op">)</span></span></code></pre></div>
 <p>Then load the package:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co">#Load LitFetchR</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="save-api-keys">Save API keys<a class="anchor" aria-label="anchor" href="#save-api-keys"></a>
@@ -119,10 +120,24 @@ GitHub:</p>
 <p>Save your API keys in your personal R environment:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#This step can be skipped if your API keys have already been saved. Repeat this step if your API keys changed.</span></span>
-<span><span class="fu"><a href="../reference/save_api_keys.html">save_api_keys</a></span><span class="op">(</span>WOS_API_KEY <span class="op">=</span> <span class="st">"your-wos-api-key"</span>, SCP_API_KEY <span class="op">=</span> <span class="st">"your-scp-api-key"</span><span class="op">)</span></span></code></pre></div>
+<span></span>
+<span><span class="co">#Load LitFetchR</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Save API keys in your R environment</span></span>
+<span><span class="fu"><a href="../reference/save_api_keys.html">save_api_keys</a></span><span class="op">(</span>WOS_API_KEY <span class="op">=</span> <span class="st">"your-wos-api-key"</span>, SCP_API_KEY <span class="op">=</span> <span class="st">"your-scp-api-key"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Example of what you should see:</span></span>
+<span><span class="co">#&gt; save_api_keys(WOS_API_KEY = "abcd01234", SCP_API_KEY = "efgh5678")</span></span>
+<span><span class="co">#Saved key(s) WOS_API_KEY, SCP_API_KEY to -path-to-your-renvironment/.Renviron.</span></span>
+<span><span class="co">#Restart R for the new environment variable(s) to be available.</span></span></code></pre></div>
 <p>This will allow <code>LitFetchR</code> to locally access your
 personal API keys while keeping them confidential if you need to share
 your code with collaborators.</p>
+<p>As mentionned by R, it is important to restart your session before
+continuing:</p>
+<p><code>Session</code>&gt;<code>Restart R</code></p>
+<p>Then load LitFetchR again using <code><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">library(LitFetchR)</a></code></p>
 <p><em>If you don’t have API keys for Scopus and Web of Science, see <a href="https://thomasdumond.github.io/LitFetchR/articles/Get_API_keys.html">Get
 API keys</a>.</em></p>
 </div>
@@ -132,9 +147,45 @@ API keys</a>.</em></p>
 <p>The interactive <code><a href="../reference/create_save_search.html">create_save_search()</a></code> function will guide
 you through its workflow. Here is an example of what you should see:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/create_save_search.html">create_save_search</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co">#Load LitFetchR</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Example</span></span></code></pre></div>
+<span><span class="co">#The following function can help to create your search string(s)</span></span>
+<span><span class="co">#It has to be used to save your search string(s)</span></span>
+<span><span class="fu"><a href="../reference/create_save_search.html">create_save_search</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Example of what you should see building the search: fish AND "vibrio harveyi" AND diagnostic</span></span>
+<span><span class="co">#</span></span>
+<span><span class="co"># &gt; create_save_search()</span></span>
+<span><span class="co"># History had been created.</span></span>
+<span><span class="co"># Enter your search string (or 'summary' or 'exit'): fish</span></span>
+<span><span class="co"># [1] "fish"</span></span>
+<span><span class="co"># [1] "Web of Science: 1793296 results"</span></span>
+<span><span class="co"># [1] "Scopus: 718644 results"</span></span>
+<span><span class="co"># [1] "PubMed: 384742 results"</span></span>
+<span><span class="co"># Enter your search string (or 'summary' or 'exit'): fish AND "vibrio harveyi"</span></span>
+<span><span class="co"># [1] "fish AND \"vibrio harveyi\""</span></span>
+<span><span class="co"># [1] "Web of Science: 2084 results"</span></span>
+<span><span class="co"># [1] "Scopus: 1080 results"</span></span>
+<span><span class="co"># [1] "PubMed: 727 results"</span></span>
+<span><span class="co"># Enter your search string (or 'summary' or 'exit'): fish AND "vibrio harveyi" AND diagnostic</span></span>
+<span><span class="co"># [1] "fish AND \"vibrio harveyi\" AND diagnostic"</span></span>
+<span><span class="co"># [1] "Web of Science: 126 results"</span></span>
+<span><span class="co"># [1] "Scopus: 22 results"</span></span>
+<span><span class="co"># [1] "PubMed: 106 results"</span></span>
+<span><span class="co"># Enter your search string (or 'summary' or 'exit'): summary</span></span>
+<span><span class="co">#                                Search_Term Results_WOS Results_SCP Results_PMD</span></span>
+<span><span class="co"># 1                                     fish     1793296      718644      384742</span></span>
+<span><span class="co"># 2                fish AND "vibrio harveyi"        2084        1080         727</span></span>
+<span><span class="co"># 3 fish AND "vibrio harveyi" AND diagnostic         126          22         106</span></span>
+<span><span class="co"># Select the index number for the search string to use in automated retrieval: 3</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Selected search string: fish AND "vibrio harveyi" AND diagnostic </span></span>
+<span><span class="co"># Do you want to save the search string for future use? (yes/no): yes</span></span>
+<span><span class="co"># Enter a name for the search identification: fish_vibrio</span></span>
+<span><span class="co"># Search string saved successfully.</span></span>
+<span><span class="co"># Enter your search string (or 'summary' or 'exit'): exit</span></span>
+<span><span class="co"># Exiting search tool.</span></span></code></pre></div>
 <p>After using <code><a href="../reference/create_save_search.html">create_save_search()</a></code>, two new files will
 appear in your directory:</p>
 <ul>
@@ -168,13 +219,30 @@ or Cron (Mac/Linux). You do not have to specify it,
 <code>LitFetchR</code> will detect the system and setup the task for you
 using the following:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#We recommend using a single word for the *task_ID* or to use underscores "_" to separate words.</span></span>
+<code class="sourceCode R"><span><span class="co">#Load LitFetchR</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#We recommend using a single word for the *task_ID* or to use underscores "_" to separate words.</span></span>
 <span><span class="co">#The retrieval frequency is currently available "DAILY", "WEEKLY" or "MONTHLY".</span></span>
 <span><span class="co">#You need to use a 24H format for the time of reference retrieval.</span></span>
 <span><span class="co">#If you do not have an API key for WOS and/or SCP or want to exclude any database,</span></span>
 <span><span class="co">#change "TRUE" to "FALSE" in front of the corresponding database (e.g.`WOS = FALSE`).</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/auto_LitFetchR_setup.html">auto_LitFetchR_setup</a></span><span class="op">(</span>task_ID <span class="op">=</span> <span class="st">"name_of_your_task"</span>, when <span class="op">=</span> <span class="st">"DAILY"</span>, time <span class="op">=</span> <span class="st">"14:00"</span>, WOS <span class="op">=</span> <span class="cn">TRUE</span>, SCP <span class="op">=</span> <span class="cn">TRUE</span>, PMD <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/auto_LitFetchR_setup.html">auto_LitFetchR_setup</a></span><span class="op">(</span>task_ID <span class="op">=</span> <span class="st">"name_of_your_task"</span>,</span>
+<span>                     when <span class="op">=</span> <span class="st">"DAILY"</span>,</span>
+<span>                     time <span class="op">=</span> <span class="st">"09:00"</span>,</span>
+<span>                     WOS <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                     SCP <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                     PMD <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Example fo what you should see</span></span>
+<span><span class="co">#&gt; auto_LitFetchR_setup(task_ID = "fish_vibrio",</span></span>
+<span>                     <span class="co"># when = "WEEKLY",</span></span>
+<span>                     <span class="co"># time = "14:00",</span></span>
+<span>                     <span class="co"># WOS = TRUE,</span></span>
+<span>                     <span class="co"># SCP = TRUE,</span></span>
+<span>                     <span class="co"># PMD = TRUE)</span></span>
+<span><span class="co">#Task scheduled!</span></span></code></pre></div>
 <p>After running <code><a href="../reference/auto_LitFetchR_setup.html">auto_LitFetchR_setup()</a></code> for the first time,
 four new files will be created:</p>
 <ul>
@@ -216,8 +284,10 @@ to work !</strong></p>
 <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a>
 </h2>
 <ul>
-<li><p><a href="">Remove or change a scheduled task</a></p></li>
-<li><p><a href="">Manual reference retrieval</a></p></li>
+<li><p><a href="https://thomasdumond.github.io/LitFetchR/articles/remove_task.html">Remove
+or change a scheduled task</a></p></li>
+<li><p><a href="https://thomasdumond.github.io/LitFetchR/articles/manual_fetch.html">Manual
+reference retrieval</a></p></li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

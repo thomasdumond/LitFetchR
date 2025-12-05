@@ -41,6 +41,7 @@ remotes::install_github("thomasdumond/LitFetchR")
 Then load the package:
 
 ``` r
+#Load LitFetchR
 library(LitFetchR)
 ```
 
@@ -50,12 +51,30 @@ Save your API keys in your personal R environment:
 
 ``` r
 #This step can be skipped if your API keys have already been saved. Repeat this step if your API keys changed.
+
+#Load LitFetchR
+library(LitFetchR)
+
+#Save API keys in your R environment
 save_api_keys(WOS_API_KEY = "your-wos-api-key", SCP_API_KEY = "your-scp-api-key")
+
+#Example of what you should see:
+#> save_api_keys(WOS_API_KEY = "abcd01234", SCP_API_KEY = "efgh5678")
+#Saved key(s) WOS_API_KEY, SCP_API_KEY to -path-to-your-renvironment/.Renviron.
+#Restart R for the new environment variable(s) to be available.
 ```
 
 This will allow `LitFetchR` to locally access your personal API keys
 while keeping them confidential if you need to share your code with
 collaborators.
+
+As mentionned by R, it is important to restart your session before
+continuing:
+
+`Session`\>`Restart R`
+
+Then load LitFetchR again using
+[`library(LitFetchR)`](https://github.com/thomasdumond/LitFetchR)
 
 *If you don’t have API keys for Scopus and Web of Science, see [Get API
 keys](https://thomasdumond.github.io/LitFetchR/articles/Get_API_keys.html).*
@@ -68,9 +87,45 @@ function will guide you through its workflow. Here is an example of what
 you should see:
 
 ``` r
+#Load LitFetchR
+library(LitFetchR)
+
+#The following function can help to create your search string(s)
+#It has to be used to save your search string(s)
 create_save_search()
 
-# Example
+# Example of what you should see building the search: fish AND "vibrio harveyi" AND diagnostic
+#
+# > create_save_search()
+# History had been created.
+# Enter your search string (or 'summary' or 'exit'): fish
+# [1] "fish"
+# [1] "Web of Science: 1793296 results"
+# [1] "Scopus: 718644 results"
+# [1] "PubMed: 384742 results"
+# Enter your search string (or 'summary' or 'exit'): fish AND "vibrio harveyi"
+# [1] "fish AND \"vibrio harveyi\""
+# [1] "Web of Science: 2084 results"
+# [1] "Scopus: 1080 results"
+# [1] "PubMed: 727 results"
+# Enter your search string (or 'summary' or 'exit'): fish AND "vibrio harveyi" AND diagnostic
+# [1] "fish AND \"vibrio harveyi\" AND diagnostic"
+# [1] "Web of Science: 126 results"
+# [1] "Scopus: 22 results"
+# [1] "PubMed: 106 results"
+# Enter your search string (or 'summary' or 'exit'): summary
+#                                Search_Term Results_WOS Results_SCP Results_PMD
+# 1                                     fish     1793296      718644      384742
+# 2                fish AND "vibrio harveyi"        2084        1080         727
+# 3 fish AND "vibrio harveyi" AND diagnostic         126          22         106
+# Select the index number for the search string to use in automated retrieval: 3
+# 
+# Selected search string: fish AND "vibrio harveyi" AND diagnostic 
+# Do you want to save the search string for future use? (yes/no): yes
+# Enter a name for the search identification: fish_vibrio
+# Search string saved successfully.
+# Enter your search string (or 'summary' or 'exit'): exit
+# Exiting search tool.
 ```
 
 After using
@@ -106,13 +161,30 @@ Cron (Mac/Linux). You do not have to specify it, `LitFetchR` will detect
 the system and setup the task for you using the following:
 
 ``` r
+#Load LitFetchR
+library(LitFetchR)
+
 #We recommend using a single word for the *task_ID* or to use underscores "_" to separate words.
 #The retrieval frequency is currently available "DAILY", "WEEKLY" or "MONTHLY".
 #You need to use a 24H format for the time of reference retrieval.
 #If you do not have an API key for WOS and/or SCP or want to exclude any database,
 #change "TRUE" to "FALSE" in front of the corresponding database (e.g.`WOS = FALSE`).
 
-auto_LitFetchR_setup(task_ID = "name_of_your_task", when = "DAILY", time = "14:00", WOS = TRUE, SCP = TRUE, PMD = TRUE)
+auto_LitFetchR_setup(task_ID = "name_of_your_task",
+                     when = "DAILY",
+                     time = "09:00",
+                     WOS = TRUE,
+                     SCP = TRUE,
+                     PMD = TRUE)
+
+#Example fo what you should see
+#> auto_LitFetchR_setup(task_ID = "fish_vibrio",
+                     # when = "WEEKLY",
+                     # time = "14:00",
+                     # WOS = TRUE,
+                     # SCP = TRUE,
+                     # PMD = TRUE)
+#Task scheduled!
 ```
 
 After running
@@ -156,7 +228,7 @@ is updated.
 ## See also
 
 - [Remove or change a scheduled
-  task](https://thomasdumond.github.io/LitFetchR/articles/)
+  task](https://thomasdumond.github.io/LitFetchR/articles/remove_task.html)
 
 - [Manual reference
-  retrieval](https://thomasdumond.github.io/LitFetchR/articles/)
+  retrieval](https://thomasdumond.github.io/LitFetchR/articles/manual_fetch.html)

@@ -11,6 +11,7 @@ to learn how to set up a task.
 From your individual review R directory, load `LitFetchR`:
 
 ``` r
+#Load LitFetchR
 library(LitFetchR)
 ```
 
@@ -19,7 +20,16 @@ library(LitFetchR)
 Just use the following function with the name of the scheduled task:
 
 ``` r
+#Load LitFetchR
+library(LitFetchR)
+
+#remove a scheduled task using its name/identification
 remove_scheduled_task("taskID")
+
+#Example of what you should see:
+# > remove_scheduled_task("fish_vibrio")
+# SUCCESS: The scheduled task "fish_vibrio" was successfully deleted.
+# Windows task 'fish_vibrio' removed (or did not exist).
 ```
 
 ## Modify a scheduled task
@@ -28,5 +38,5 @@ There is no function to directly modify a scheduled task at the moment.
 You can simply:
 
 1.  Remove the scheduled task (see above)
-2.  Setup a new task (see [LitFetchR
-    (Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html))
+2.  Setup a new task → see [LitFetchR
+    (Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html)

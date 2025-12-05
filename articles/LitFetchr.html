@@ -81,12 +81,34 @@ API keys</a>.</p>
 </h2>
 <p>We strongly recommend to create a new R directory for each individual
 review project. To do so in RStudio:</p>
-<p><code>File</code> &gt; <code>New Project…</code> &gt;
-<code>New Directory</code></p>
-<p>From your new directory, install the package in R from GitHub:</p>
+<ul>
+<li><p>Go to
+<code>File</code>&gt;<code>New Project…</code>&gt;<code>New Directory</code>&gt;<code>New Project</code></p></li>
+<li>
+<p>Choose a name for your directory
+(<em>e.g. review_fish_vibrio</em>), then <code>Browse...</code> to
+choose where to save the directory.</p>
+<p><em>We suggest to save the directory on you computer
+(e.g. <code>C:/users/...</code>) instead of clouds (e.g. OneDrive, Box,
+etc.), as restriction access from institution might block
+R.</em></p>
+</li>
+<li><p>Click <code>Create Project</code></p></li>
+</ul>
+<p>From your new directory, install <code>LitFetchR</code> from
+GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#This step can be skipped if `LitFetchR` is already installed</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"thomasdumond/LitFetchR"</span><span class="op">)</span></span></code></pre></div>
+<span></span>
+<span><span class="co">#Install using devtools package</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"thomasdumond/LitFetchR"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#or</span></span>
+<span></span>
+<span><span class="co">#Install using remotes package</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"thomasdumond/LitFetchR"</span><span class="op">)</span></span></code></pre></div>
 <p>Then load the package:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span></code></pre></div>
@@ -101,9 +123,11 @@ review project. To do so in RStudio:</p>
 <p>This will allow <code>LitFetchR</code> to locally access your
 personal API keys while keeping them confidential if you need to share
 your code with collaborators.</p>
+<p><em>If you don’t have API keys for Scopus and Web of Science, see <a href="https://thomasdumond.github.io/LitFetchR/articles/Get_API_keys.html">Get
+API keys</a>.</em></p>
 </div>
 <div class="section level2">
-<h2 id="save-the-review-search-string">Save the review search string<a class="anchor" aria-label="anchor" href="#save-the-review-search-string"></a>
+<h2 id="save-the-review-search-strings">Save the review search string(s)<a class="anchor" aria-label="anchor" href="#save-the-review-search-strings"></a>
 </h2>
 <p>The interactive <code><a href="../reference/create_save_search.html">create_save_search()</a></code> function will guide
 you through its workflow. Here is an example of what you should see:</p>
@@ -182,12 +206,15 @@ this file by accident, use the <code><a href="../reference/auto_LitFetchR_setup.
 create a new task and a new code file.</em></p>
 </li>
 </ul>
-<p>Each time <code><a href="../reference/auto_LitFetchR_setup.html">auto_LitFetchR_setup()</a></code> runs, new unique
+<p>Each time <em>auto_LitFetchR_code(READ_ONLY).R</em> runs, new unique
 <em>history_dedup_</em> and <em>citationCSV_</em> files are created and
 <em>history_id</em> is updated.</p>
 <p><strong>Congratulations ! Your automated reference retrieval is ready
 to work !</strong></p>
-<p>See also:</p>
+</div>
+<div class="section level2">
+<h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a>
+</h2>
 <ul>
 <li><p><a href="">Remove or change a scheduled task</a></p></li>
 <li><p><a href="">Manual reference retrieval</a></p></li>

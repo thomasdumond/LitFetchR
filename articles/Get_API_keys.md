@@ -49,3 +49,9 @@ More info at: <https://pmc.ncbi.nlm.nih.gov/tools/developers/>
   provide you with your individual API key (it can take several days to
   weeks, do not hesitate to contact the Clarivate support team for
   updates at <ts.support.anz@clarivate.com>)
+
+**Well done!**
+
+**Now that you got you API keys, you can continue to the next tutorial →
+[LitFetchR
+(Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html)**

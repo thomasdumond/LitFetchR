@@ -11,13 +11,31 @@ keys](https://thomasdumond.github.io/LitFetchR/articles/Get_API_keys.html).
 We strongly recommend to create a new R directory for each individual
 review project. To do so in RStudio:
 
-`File` \> `New Project…` \> `New Directory`
+- Go to `File`\>`New Project…`\>`New Directory`\>`New Project`
 
-From your new directory, install the package in R from GitHub:
+- Choose a name for your directory (*e.g. review_fish_vibrio*), then
+  `Browse...` to choose where to save the directory.
+
+  *We suggest to save the directory on you computer
+  (e.g. `C:/users/...`) instead of clouds (e.g. OneDrive, Box, etc.), as
+  restriction access from institution might block R.*
+
+- Click `Create Project`
+
+From your new directory, install `LitFetchR` from GitHub:
 
 ``` r
 #This step can be skipped if `LitFetchR` is already installed
+
+#Install using devtools package
+install.packages("devtools")
 devtools::install_github("thomasdumond/LitFetchR")
+
+#or
+
+#Install using remotes package
+install.packages("remotes")
+remotes::install_github("thomasdumond/LitFetchR")
 ```
 
 Then load the package:
@@ -39,7 +57,10 @@ This will allow `LitFetchR` to locally access your personal API keys
 while keeping them confidential if you need to share your code with
 collaborators.
 
-## Save the review search string
+*If you don’t have API keys for Scopus and Web of Science, see [Get API
+keys](https://thomasdumond.github.io/LitFetchR/articles/Get_API_keys.html).*
+
+## Save the review search string(s)
 
 The interactive
 [`create_save_search()`](https://thomasdumond.github.io/LitFetchR/reference/create_save_search.md)
@@ -125,15 +146,14 @@ for the first time, four new files will be created:
   [`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md)
   to create a new task and a new code file.*
 
-Each time
-[`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md)
-runs, new unique *history_dedup\_* and *citationCSV\_* files are created
-and *history_id* is updated.
+Each time *auto_LitFetchR_code(READ_ONLY).R* runs, new unique
+*history_dedup\_* and *citationCSV\_* files are created and *history_id*
+is updated.
 
 **Congratulations ! Your automated reference retrieval is ready to work
 !**
 
-See also:
+## See also
 
 - [Remove or change a scheduled
   task](https://thomasdumond.github.io/LitFetchR/articles/)

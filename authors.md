@@ -16,12 +16,12 @@
 Source:
 [`DESCRIPTION`](https://github.com/thomasdumond/LitFetchR/blob/master/DESCRIPTION)
 
-DUMOND T (2025). *LitFetchR: Automatically fetching references metadata
-from databases*. R package version 0.1.0,
+DUMOND T (2025). *LitFetchR: Automatically Fetching References Metadata
+from Databases*. R package version 0.1.0,
 <https://github.com/thomasdumond/LitFetchR>.
 
     @Manual{,
-      title = {LitFetchR: Automatically fetching references metadata from databases},
+      title = {LitFetchR: Automatically Fetching References Metadata from Databases},
       author = {Thomas DUMOND},
       year = {2025},
       note = {R package version 0.1.0},

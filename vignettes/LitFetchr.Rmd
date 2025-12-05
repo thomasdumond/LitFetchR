@@ -19,12 +19,27 @@ Before continuing to the general package tutorial, make sure to have received yo
 ## Setup
 We strongly recommend to create a new R directory for each individual review project. To do so in RStudio:
 
-`File` > `New Project…` > `New Directory`
+* Go to `File`>`New Project…`>`New Directory`>`New Project`
 
-From your new directory, install the package in R from GitHub: 
+* Choose a name for your directory (*e.g. review_fish_vibrio*), then `Browse...` to choose where to save the directory.
+
+    *We suggest to save the directory on you computer (e.g. `C:/users/...`) instead of clouds (e.g. OneDrive, Box, etc.), as restriction access from institution might block R.*
+
+* Click `Create Project`
+
+From your new directory, install `LitFetchR` from GitHub: 
 ```{r, eval = FALSE}
 #This step can be skipped if `LitFetchR` is already installed
+
+#Install using devtools package
+install.packages("devtools")
 devtools::install_github("thomasdumond/LitFetchR")
+
+#or
+
+#Install using remotes package
+install.packages("remotes")
+remotes::install_github("thomasdumond/LitFetchR")
 ```
 Then load the package:
 ```{r, eval = FALSE}
@@ -39,7 +54,9 @@ save_api_keys(WOS_API_KEY = "your-wos-api-key", SCP_API_KEY = "your-scp-api-key"
 ```
 This will allow `LitFetchR` to locally access your personal API keys while keeping them confidential if you need to share your code with collaborators.
 
-## Save the review search string
+*If you don't have API keys for Scopus and Web of Science, see [Get API keys](https://thomasdumond.github.io/LitFetchR/articles/Get_API_keys.html).*
+
+## Save the review search string(s)
 The interactive `create_save_search()` function will guide you through its workflow. Here is an example of what you should see:
 
 ```{r, eval=FALSE}
@@ -92,11 +109,11 @@ After running `auto_LitFetchR_setup()` for the first time, four new files will b
 
     *This file contains the code that is automatically run by the scheduled task. It is set as "READ ONLY" to avoid accidental modification that would impair the scheduled task action. If you deleted this file by accident, use the `auto_LitFetchR_setup()` to create a new task and a new code file.*
 
-Each time `auto_LitFetchR_setup()` runs, new unique *history_dedup_* and *citationCSV_* files are created and *history_id* is updated.
+Each time *auto_LitFetchR_code(READ_ONLY).R* runs, new unique *history_dedup_* and *citationCSV_* files are created and *history_id* is updated.
 
 **Congratulations ! Your automated reference retrieval is ready to work !**
 
-See also:
+## See also
 
 * [Remove or change a scheduled task]()
 

@@ -151,7 +151,7 @@ auto_LitFetchR_setup(task_ID = "name_of_your_task",
                      SCP = TRUE,
                      PMD = TRUE)
 
-#Example fo what you should see
+#Example of what you should see
 #> auto_LitFetchR_setup(task_ID = "fish_vibrio",
                      # when = "WEEKLY",
                      # time = "14:00",
@@ -177,7 +177,7 @@ After running `auto_LitFetchR_setup()` for the first time, four new files will b
 
 * auto_LitFetchR_code(READ_ONLY).R
 
-    *This file contains the code that is automatically run by the scheduled task. It is set as "READ ONLY" to avoid accidental modification that would impair the scheduled task action. If you deleted this file by accident, use the `auto_LitFetchR_setup()` to create a new task and a new code file.*
+    *This file contains the code that is automatically run by the scheduled task (uses the function `manual_fetch()`). It is set as "READ ONLY" to avoid accidental modification that would impair the scheduled task action. If you deleted this file by accident, use the `auto_LitFetchR_setup()` to create a new task and a new code file.*
 
 Each time *auto_LitFetchR_code(READ_ONLY).R* runs, new unique *history_dedup_* and *citationCSV_* files are created and *history_id* is updated.
 

@@ -5,6 +5,16 @@
 #' @param WOS_API_KEY The API key value for Web of Science (optional).
 #' @param SCP_API_KEY The API key value for Scopus (optional).
 #' @return TRUE if at least one value was written, FALSE if left unchanged.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' #Example of what you should see:
+#'> save_api_keys(WOS_API_KEY = "abcd01234", SCP_API_KEY = "efgh5678")
+#'Saved key(s) WOS_API_KEY, SCP_API_KEY to -path-to-your-renvironment/.Renviron.
+#'Restart R for the new environment variable(s) to be available.
+#'}
+#'
 #' @export
 save_api_keys <- function(WOS_API_KEY = NULL, SCP_API_KEY = NULL) {
   # Collect provided keys -----------------------------------------------------

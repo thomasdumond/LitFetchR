@@ -20,11 +20,11 @@ auto_LitFetchR_setup(
 
 \item{time}{Time of the fetching, i.e. HH:MM 24-hour clock format}
 
-\item{WOS}{Choose to search on Web of Science}
+\item{WOS}{Choose to search on Web of Science (TRUE or FALSE)}
 
-\item{SCP}{Choose to search on Scopus}
+\item{SCP}{Choose to search on Scopus (TRUE or FALSE)}
 
-\item{PMD}{Choose to search on PubMed}
+\item{PMD}{Choose to search on PubMed (TRUE or FALSE)}
 }
 \value{
 Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
@@ -33,4 +33,18 @@ Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in 
 \code{auto_LitFetchR_setup} creates a read-only Rscript and a task to run the code automatically
 at a specified frequency and time, on up to three platforms (e.g. \href{https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/}{Web of Science},
 \href{https://www.elsevier.com/en-au/products/scopus}{Scopus} and \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed})
+}
+\examples{
+\dontrun{
+
+#Example of what you should see:
+> auto_LitFetchR_setup(task_ID = "fish_vibrio",
+                       when = "WEEKLY",
+                       time = "14:00",
+                       WOS = TRUE,
+                       SCP = TRUE,
+                       PMD = TRUE)
+Task scheduled!
+}
+
 }

@@ -12,3 +12,13 @@ remove_scheduled_task(taskname)
 \description{
 Remove a scheduled task by name from Task Scheduler (Windows) or Cron (Mac/Linux)
 }
+\examples{
+\dontrun{
+
+#Example of what you should see:
+> remove_scheduled_task("fish_vibrio")
+SUCCESS: The scheduled task "fish_vibrio" was successfully deleted.
+Windows task 'fish_vibrio' removed (or did not exist).
+}
+
+}

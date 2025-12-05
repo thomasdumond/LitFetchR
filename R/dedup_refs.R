@@ -2,7 +2,28 @@
 #' @param df1 dataframe 1
 #' @param df2 dataframe 2
 #' @param df3 dataframe 3
-#' @return A CSV file containing all the new references deduplicated
+#' @return A CSV file containing all the new references deduplicated and the history of the deduplication.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' #Example of what you should see:
+#' > dedup_refs(df_vibrio_wos, df_vibrio_scp, df_vibrio_pmd)
+#' Warning: The following columns are missing: pages, number, record_id, isbn
+#' formatting data...
+#' identifying potential duplicates...
+#' identified duplicates!
+#' flagging potential pairs for manual dedup...
+#' Joining with `by = join_by(duplicate_id.x, duplicate_id.y)`
+#' 254 citations loaded...
+#' 14 duplicate citations removed...
+#' 240 unique citations remaining!
+#' Deduplication script has been executed, concatenated deduplicated references had been exported.
+#' Warning message:
+#' In add_missing_cols(raw_citations) :
+#'   Search contains missing values for the record_id column. A record_id will be created using row numbers
+#' }
+#'
 #' @export
 
 dedup_refs <- function(df1, df2, df3){

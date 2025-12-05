@@ -17,3 +17,13 @@ TRUE if at least one value was written, FALSE if left unchanged.
 \description{
 You can set WOS_API_KEY, SCP_API_KEY, or both in a single call.
 }
+\examples{
+\dontrun{
+
+#Example of what you should see:
+> save_api_keys(WOS_API_KEY = "abcd01234", SCP_API_KEY = "efgh5678")
+Saved key(s) WOS_API_KEY, SCP_API_KEY to -path-to-your-renvironment/.Renviron.
+Restart R for the new environment variable(s) to be available.
+}
+
+}

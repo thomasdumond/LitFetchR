@@ -7,11 +7,24 @@
 #' @param task_ID Name of the automated task (e.g. one keyword describing your review)
 #' @param when Frequency of the fetching, i.e. DAILY, WEEKLY, MONTHLY
 #' @param time Time of the fetching, i.e. HH:MM 24-hour clock format
-#' @param WOS Choose to search on Web of Science
-#' @param SCP Choose to search on Scopus
-#' @param PMD Choose to search on PubMed
+#' @param WOS Choose to search on Web of Science (TRUE or FALSE)
+#' @param SCP Choose to search on Scopus (TRUE or FALSE)
+#' @param PMD Choose to search on PubMed (TRUE or FALSE)
 #'
 #' @returns Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
+#'
+#' @examples
+#' \dontrun{
+#'
+#' #Example of what you should see:
+#' > auto_LitFetchR_setup(task_ID = "fish_vibrio",
+#'                        when = "WEEKLY",
+#'                        time = "14:00",
+#'                        WOS = TRUE,
+#'                        SCP = TRUE,
+#'                        PMD = TRUE)
+#' Task scheduled!
+#' }
 #'
 #' @export
 

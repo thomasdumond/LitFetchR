@@ -73,4 +73,4 @@ manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)
 #   Search contains missing values for the record_id column. A record_id will be created using row numbers
 ```
 
-After running `manual_fetch()`, new unique *history_dedup_* and *citationCSV_* files are created and *history_id* is updated.
+After running `manual_fetch()`, new unique *history_dedup_* and *citationCSV_* files are created and *history_id* is updated.See bottom of the page [LitFetchR (Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html)

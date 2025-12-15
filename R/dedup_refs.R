@@ -1,7 +1,7 @@
 #' deduplicate the references from three dataframes
-#' @param df1 dataframe 1
-#' @param df2 dataframe 2
-#' @param df3 dataframe 3
+#' @param df1 dataframe 1, can be null
+#' @param df2 dataframe 2, can be null
+#' @param df3 dataframe 3, can be null
 #' @return A CSV file containing all the new references deduplicated and the history of the deduplication.
 #'
 #' @examples

@@ -10,6 +10,7 @@
 #' @param WOS Choose to search on Web of Science (TRUE or FALSE)
 #' @param SCP Choose to search on Scopus (TRUE or FALSE)
 #' @param PMD Choose to search on PubMed (TRUE or FALSE)
+#' @param dedup Choose to deduplicate or not the references (TRUE or FALSE)
 #'
 #' @returns Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
 #'
@@ -28,16 +29,16 @@
 #'
 #' @export
 
-auto_LitFetchR_setup <- function(task_ID = "task_ID", when = "DAILY", time = "08:00", WOS = TRUE, SCP = TRUE, PMD = TRUE) {
+auto_LitFetchR_setup <- function(task_ID = "task_ID", when = "DAILY", time = "08:00", WOS = TRUE, SCP = TRUE, PMD = TRUE, dedup = FALSE) {
 
   # CREATE AUTOMATION CODE
   ########################
 
   # Build the list of selected databases
-  selected <- c(WOS = WOS, SCP = SCP, PMD = PMD)
+  selected <- c(WOS = WOS, SCP = SCP, PMD = PMD, dedup = dedup)
   # If no database was selected, then the code stops and mentions
   # that at least one database must be selected
-  if (!any(selected)) {
+  if (!any(c(WOS, SCP, PMD))) {
     stop("At least one database must be set to TRUE (WOS, SCP, PMD).")
   }
 
@@ -103,7 +104,7 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID", when = "DAILY", time = "08
       taskname  = task_ID,
       rscript   = script_path,
       schedule  = when,
-      starttime = time,
+      starttime = time
     )
   } else {
     # macOS/Linux: use cronR if available

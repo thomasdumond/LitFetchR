@@ -27,14 +27,19 @@
 #'
 #' @export
 
-dedup_refs <- function(df1, df2, df3){
+dedup_refs <- function(df1 = NULL, df2 = NULL, df3 = NULL){
+
+  dfs <- Filter(function(x) !is.null(x), list(df1, df2, df3))
+  if (length(dfs) == 0) stop("No dataframes provided to deduplicate.")
+  citations <- dplyr::bind_rows(dfs)
 
   date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
   csv_name <- paste0("citationsCSV_", date_suffix,".csv")
+
   hd <- create_dedup_history()
   history_dedup <- hd$history_dedup
   hist_dedup_name <- hd$hist_dedup_name
-  citations <- rbind(df1, df2, df3)
+
   openxlsx::writeData(history_dedup, "citations", citations)
   openxlsx::saveWorkbook(history_dedup, hist_dedup_name, overwrite = TRUE)
 

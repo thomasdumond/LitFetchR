@@ -71,6 +71,8 @@ manual_fetch <- function(WOS = TRUE, SCP = TRUE, PMD = TRUE, dedup = FALSE){
     stop("At least one database must be set to TRUE (WOS, SCP, PMD).")
   }
 
+  df1 <- df2 <- df3 <- NULL
+
   if ("WOS" %in% selected) {
     df1 <- extract_wos_list(search_list_path)
   }

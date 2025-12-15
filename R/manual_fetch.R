@@ -45,7 +45,8 @@
 #' Deduplication script has been executed, concatenated deduplicated references had been exported.
 #' Warning message:
 #' In add_missing_cols(raw_citations) :
-#'   Search contains missing values for the record_id column. A record_id will be created using row numbers
+#'   Search contains missing values for the record_id column.
+#'   A record_id will be created using row numbers
 #' }
 #'
 #' @export

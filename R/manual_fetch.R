@@ -2,6 +2,7 @@
 #' @param WOS choose to search on Web of Science (TRUE or FALSE)
 #' @param SCP choose to search on Scopus (TRUE or FALSE)
 #' @param PMD choose to search on PubMed (TRUE or FALSE)
+#' @param dedup choose to proceed to the deduplication of the references or not
 #'
 #' @return create a CSV file with the literature metadata, a history file of the references retreived and a history file of the deduplication
 #'
@@ -51,7 +52,7 @@
 #'
 #' @export
 
-manual_fetch <- function(WOS = TRUE, SCP = TRUE, PMD = TRUE){
+manual_fetch <- function(WOS = TRUE, SCP = TRUE, PMD = TRUE, dedup = FALSE){
 
   wd <- getwd()
   setwd(wd)
@@ -80,7 +81,10 @@ manual_fetch <- function(WOS = TRUE, SCP = TRUE, PMD = TRUE){
     df3 <- extract_pmd_list(search_list_path)
   }
 
-  dedup_refs(df1, df2, df3)
+  if (dedup == TRUE){
+    dedup_refs(df1, df2, df3)
+  }
+
 
 }
 

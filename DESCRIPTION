@@ -29,6 +29,7 @@ Suggests:
     rmarkdown,
     taskscheduleR,
     testthat (>= 3.0.0)
+Additional_repositories: https://github.com/camaradesuk/ASySD
 RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3

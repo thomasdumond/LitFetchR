@@ -1,7 +1,7 @@
 Package: LitFetchR
 Type: Package
 Title: Automatically Fetching References Metadata from Databases
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
             person("Thomas", "Dumond", role = c("cre","aut","cph"), email = "thomas.dumond@adelaide.edu.au", comment = c(ORCID = "0000-0002-9427-8649")),
             person("Charles", "Caraguel", role = "ctb", comment = c(ORCID = "0000-0003-0019-4813")),

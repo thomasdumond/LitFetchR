@@ -3,6 +3,7 @@
 #' @param SCP choose to search on Scopus (TRUE or FALSE)
 #' @param PMD choose to search on PubMed (TRUE or FALSE)
 #' @param dedup choose to proceed to the deduplication of the references or not
+#' @param open_file choose to automatically open the CSV file after reference retrieval
 #'
 #' @return create a CSV file with the literature metadata, a history file of the references retreived and a history file of the deduplication
 #'
@@ -52,7 +53,7 @@
 #'
 #' @export
 
-manual_fetch <- function(WOS = TRUE, SCP = TRUE, PMD = TRUE, dedup = FALSE){
+manual_fetch <- function(WOS = TRUE, SCP = TRUE, PMD = TRUE, dedup = FALSE, open_file = FALSE){
 
   wd <- getwd()
   setwd(wd)
@@ -83,8 +84,31 @@ manual_fetch <- function(WOS = TRUE, SCP = TRUE, PMD = TRUE, dedup = FALSE){
     df3 <- extract_pmd_list(search_list_path)
   }
 
-  if (dedup == TRUE){
+  if (isTRUE(dedup)){
     dedup_refs(df1, df2, df3)
+  } else{
+    date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
+    csv_name <- paste0("citationsCSV_", date_suffix,".csv")
+    dfs <- Filter(Negate(is.null), list(df1, df2, df3))
+    citations <- dplyr::bind_rows(dfs)
+
+    write.csv(citations, csv_name, row.names = FALSE)
+
+    if (isTRUE(open_file)){
+
+      if (.Platform$OS.type == "windows") {
+        # Windows: opens in default app
+        shell.exec(csv_name)
+
+      } else if (Sys.info()[["sysname"]] == "Darwin") {
+        # macOS: opens in default app (e.g., Excel)
+        system2("open", csv_name)
+
+      } else {
+        # Linux: opens in default app
+        system2("xdg-open", csv_name)
+      }
+    }
   }
 
 

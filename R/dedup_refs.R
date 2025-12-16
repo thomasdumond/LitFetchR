@@ -29,6 +29,14 @@
 
 dedup_refs <- function(df1 = NULL, df2 = NULL, df3 = NULL){
 
+  if (!requireNamespace("ASySD", quietly = TRUE)) {
+    stop(
+      "ASySD is required for deduplication but is not installed.\n",
+      "Install it with: remotes::install_github('camaradesuk/ASySD')",
+      call. = FALSE
+    )
+  }
+
   dfs <- Filter(function(x) !is.null(x), list(df1, df2, df3))
   if (length(dfs) == 0) stop("No dataframes provided to deduplicate.")
   citations <- dplyr::bind_rows(dfs)

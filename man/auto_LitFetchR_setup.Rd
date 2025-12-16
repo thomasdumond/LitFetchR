@@ -29,6 +29,8 @@ auto_LitFetchR_setup(
 \item{PMD}{Choose to search on PubMed (TRUE or FALSE)}
 
 \item{dedup}{Choose to deduplicate or not the references (TRUE or FALSE)}
+
+\item{open_file}{choose to automatically open the CSV file after reference retrieval}
 }
 \value{
 Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)

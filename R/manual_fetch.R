@@ -92,7 +92,7 @@ manual_fetch <- function(WOS = TRUE, SCP = TRUE, PMD = TRUE, dedup = FALSE, open
     dfs <- Filter(Negate(is.null), list(df1, df2, df3))
     citations <- dplyr::bind_rows(dfs)
 
-    write.csv(citations, csv_name, row.names = FALSE)
+    utils::write.csv(citations, csv_name, row.names = FALSE)
 
     if (isTRUE(open_file)){
 

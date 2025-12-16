@@ -11,6 +11,7 @@
 #' @param SCP Choose to search on Scopus (TRUE or FALSE)
 #' @param PMD Choose to search on PubMed (TRUE or FALSE)
 #' @param dedup Choose to deduplicate or not the references (TRUE or FALSE)
+#' @param open_file choose to automatically open the CSV file after reference retrieval
 #'
 #' @returns Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
 #'

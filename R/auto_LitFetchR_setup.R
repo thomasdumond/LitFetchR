@@ -29,13 +29,13 @@
 #'
 #' @export
 
-auto_LitFetchR_setup <- function(task_ID = "task_ID", when = "DAILY", time = "08:00", WOS = TRUE, SCP = TRUE, PMD = TRUE, dedup = FALSE) {
+auto_LitFetchR_setup <- function(task_ID = "task_ID", when = "DAILY", time = "08:00", WOS = TRUE, SCP = TRUE, PMD = TRUE, dedup = FALSE, open_file = FALSE) {
 
   # CREATE AUTOMATION CODE
   ########################
 
   # Build the list of selected databases
-  selected <- c(WOS = WOS, SCP = SCP, PMD = PMD, dedup = dedup)
+  selected <- c(WOS = WOS, SCP = SCP, PMD = PMD, dedup = dedup, open_file = open_file)
   # If no database was selected, then the code stops and mentions
   # that at least one database must be selected
   if (!any(c(WOS, SCP, PMD))) {

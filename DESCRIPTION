@@ -15,7 +15,6 @@ Description: Provides functions to automatically retrieve and deduplicate
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports:
-    ASySD,
     dplyr,
     httr,
     jsonlite,
@@ -23,9 +22,8 @@ Imports:
     purrr,
     readxl,
     xml2
-Remotes:
-    camaradesuk/ASySD
 Suggests:
+    ASySD,
     cronR,
     knitr,
     rmarkdown,

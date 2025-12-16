@@ -16,7 +16,9 @@ auto_LitFetchR_setup(
   time = "08:00",
   WOS = TRUE,
   SCP = TRUE,
-  PMD = TRUE
+  PMD = TRUE,
+  dedup = FALSE,
+  open_file = FALSE
 )
 ```
 
@@ -45,6 +47,14 @@ auto_LitFetchR_setup(
 - PMD:
 
   Choose to search on PubMed (TRUE or FALSE)
+
+- dedup:
+
+  Choose to deduplicate or not the references (TRUE or FALSE)
+
+- open_file:
+
+  choose to automatically open the CSV file after reference retrieval
 
 ## Value
 

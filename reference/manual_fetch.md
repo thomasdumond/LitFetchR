@@ -5,7 +5,13 @@ manual literature fetch
 ## Usage
 
 ``` r
-manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)
+manual_fetch(
+  WOS = TRUE,
+  SCP = TRUE,
+  PMD = TRUE,
+  dedup = FALSE,
+  open_file = FALSE
+)
 ```
 
 ## Arguments
@@ -21,6 +27,14 @@ manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)
 - PMD:
 
   choose to search on PubMed (TRUE or FALSE)
+
+- dedup:
+
+  choose to proceed to the deduplication of the references or not
+
+- open_file:
+
+  choose to automatically open the CSV file after reference retrieval
 
 ## Value
 

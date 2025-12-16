@@ -4,7 +4,13 @@
 \alias{manual_fetch}
 \title{manual literature fetch}
 \usage{
-manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)
+manual_fetch(
+  WOS = TRUE,
+  SCP = TRUE,
+  PMD = TRUE,
+  dedup = FALSE,
+  open_file = FALSE
+)
 }
 \arguments{
 \item{WOS}{choose to search on Web of Science (TRUE or FALSE)}
@@ -12,6 +18,10 @@ manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)
 \item{SCP}{choose to search on Scopus (TRUE or FALSE)}
 
 \item{PMD}{choose to search on PubMed (TRUE or FALSE)}
+
+\item{dedup}{choose to proceed to the deduplication of the references or not}
+
+\item{open_file}{choose to automatically open the CSV file after reference retrieval}
 }
 \value{
 create a CSV file with the literature metadata, a history file of the references retreived and a history file of the deduplication

@@ -10,7 +10,9 @@ auto_LitFetchR_setup(
   time = "08:00",
   WOS = TRUE,
   SCP = TRUE,
-  PMD = TRUE
+  PMD = TRUE,
+  dedup = FALSE,
+  open_file = FALSE
 )
 }
 \arguments{
@@ -25,6 +27,8 @@ auto_LitFetchR_setup(
 \item{SCP}{Choose to search on Scopus (TRUE or FALSE)}
 
 \item{PMD}{Choose to search on PubMed (TRUE or FALSE)}
+
+\item{dedup}{Choose to deduplicate or not the references (TRUE or FALSE)}
 }
 \value{
 Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)

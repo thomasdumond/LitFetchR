@@ -16,7 +16,7 @@
 #' @returns Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' #Example of what you should see:
 #' auto_LitFetchR_setup(task_ID = "fish_vibrio",

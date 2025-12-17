@@ -18,14 +18,14 @@
 #' @examples
 #' \donttest{
 #'
-#' #Example of what you should see:
-#' #auto_LitFetchR_setup(task_ID = "fish_vibrio",
+#' # Example of what you should see:
+#' auto_LitFetchR_setup(task_ID = "fish_vibrio",
 #'                        when = "WEEKLY",
 #'                        time = "14:00",
 #'                        WOS = TRUE,
 #'                        SCP = TRUE,
 #'                        PMD = TRUE)
-#' #Task scheduled!
+#' #> Task scheduled!
 #' }
 #'
 #' @export

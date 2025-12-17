@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">LitFetchR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">dedup_refs</span><span class="op">(</span>df1 <span class="op">=</span> <span class="cn">NULL</span>, df2 <span class="op">=</span> <span class="cn">NULL</span>, df3 <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">dedup_refs</span><span class="op">(</span>df1 <span class="op">=</span> <span class="cn">NULL</span>, df2 <span class="op">=</span> <span class="cn">NULL</span>, df3 <span class="op">=</span> <span class="cn">NULL</span>, open_file <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -62,6 +62,10 @@
 
 <dt id="arg-df-">df3<a class="anchor" aria-label="anchor" href="#arg-df-"></a></dt>
 <dd><p>dataframe 3, can be null</p></dd>
+
+
+<dt id="arg-open-file">open_file<a class="anchor" aria-label="anchor" href="#arg-open-file"></a></dt>
+<dd><p>choose to automatically open the CSV file after reference deduplication</p></dd>
 
 </dl></div>
     <div class="section level2">

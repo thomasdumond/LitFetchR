@@ -106,7 +106,23 @@ at a specified frequency and time, on up to three platforms (e.g. <a href="https
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Example of what you should see:</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span> <span class="fu">auto_LitFetchR_setup</span><span class="op">(</span>task_ID <span class="op">=</span> <span class="st">"fish_vibrio"</span>,</span></span>
+<span class="r-in"><span>                       when <span class="op">=</span> <span class="st">"WEEKLY"</span>,</span></span>
+<span class="r-in"><span>                       time <span class="op">=</span> <span class="st">"14:00"</span>,</span></span>
+<span class="r-in"><span>                       WOS <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                       SCP <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                       PMD <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> At your own risk: will set the cron schedule as is: 'weekly'</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Are you sure you want to add the specified cron job: '/opt/R/4.5.2/lib/R/bin/Rscript '/home/runner/work/LitFetchR/LitFetchR/docs/reference/auto_LitFetchR_code(READ_ONLY).R'  &gt;&gt; '/home/runner/work/LitFetchR/LitFetchR/docs/reference/auto_LitFetchR_code(READ_ONLY).log' 2&gt;&amp;1'? [y/n]: </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in if (!input %in% "y") {    message("No action taken.")    return(invisible())}:</span> argument is of length zero</span>
+<span class="r-in"><span><span class="co">#&gt; Task scheduled!</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

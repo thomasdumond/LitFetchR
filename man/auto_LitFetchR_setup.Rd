@@ -45,7 +45,7 @@ at a specified frequency and time, on up to three platforms (e.g. \href{https://
 
 # Example of what you should see:
 
- auto_LitFetchR_setup(task_ID = "fish_vibrio",
+# auto_LitFetchR_setup(task_ID = "fish_vibrio",
                        when = "WEEKLY",
                        time = "14:00",
                        WOS = TRUE,

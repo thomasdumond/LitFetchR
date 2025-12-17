@@ -62,20 +62,3 @@ Create a Rscript file (READ ONLY) and a task in Task Scheduler
 (Windows), or in Cron (Mac/Linux)
 
 ## Examples
-
-``` r
-# \donttest{
-
-# Example of what you should see:
-auto_LitFetchR_setup(task_ID = "fish_vibrio",
-                       when = "WEEKLY",
-                       time = "14:00",
-                       WOS = TRUE,
-                       SCP = TRUE,
-                       PMD = TRUE)
-#> At your own risk: will set the cron schedule as is: 'weekly'
-#> Are you sure you want to add the specified cron job: '/opt/R/4.5.2/lib/R/bin/Rscript '/home/runner/work/LitFetchR/LitFetchR/docs/reference/auto_LitFetchR_code(READ_ONLY).R'  >> '/home/runner/work/LitFetchR/LitFetchR/docs/reference/auto_LitFetchR_code(READ_ONLY).log' 2>&1'? [y/n]: 
-#> Error in if (!input %in% "y") {    message("No action taken.")    return(invisible())}: argument is of length zero
-#> Task scheduled!
-# }
-```

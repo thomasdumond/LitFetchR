@@ -2,6 +2,7 @@
 #' @param df1 dataframe 1, can be null
 #' @param df2 dataframe 2, can be null
 #' @param df3 dataframe 3, can be null
+#' @param open_file choose to automatically open the CSV file after reference deduplication
 #' @return A CSV file containing all the new references deduplicated and the history of the deduplication.
 #'
 #' @examples
@@ -27,7 +28,7 @@
 #'
 #' @export
 
-dedup_refs <- function(df1 = NULL, df2 = NULL, df3 = NULL){
+dedup_refs <- function(df1 = NULL, df2 = NULL, df3 = NULL, open_file = FALSE){
 
   if (!requireNamespace("ASySD", quietly = TRUE)) {
     stop(
@@ -80,17 +81,20 @@ dedup_refs <- function(df1 = NULL, df2 = NULL, df3 = NULL){
 
   cat("Deduplication script has been executed, concatenated deduplicated references had been exported.\n")
 
-  if (.Platform$OS.type == "windows") {
-    # Windows: opens in default app
-    shell.exec(csv_name)
+  if (isTRUE(open_file)){
 
-  } else if (Sys.info()[["sysname"]] == "Darwin") {
-    # macOS: opens in default app (e.g., Excel)
-    system2("open", csv_name)
+    if (.Platform$OS.type == "windows") {
+      # Windows: opens in default app
+      shell.exec(csv_name)
 
-  } else {
-    # Linux: opens in default app
-    system2("xdg-open", csv_name)
+    } else if (Sys.info()[["sysname"]] == "Darwin") {
+      # macOS: opens in default app (e.g., Excel)
+      system2("open", csv_name)
+
+    } else {
+      # Linux: opens in default app
+      system2("xdg-open", csv_name)
+    }
   }
 
 }

@@ -4,7 +4,7 @@
 \alias{dedup_refs}
 \title{deduplicate the references from three dataframes}
 \usage{
-dedup_refs(df1 = NULL, df2 = NULL, df3 = NULL)
+dedup_refs(df1 = NULL, df2 = NULL, df3 = NULL, open_file = FALSE)
 }
 \arguments{
 \item{df1}{dataframe 1, can be null}
@@ -12,6 +12,8 @@ dedup_refs(df1 = NULL, df2 = NULL, df3 = NULL)
 \item{df2}{dataframe 2, can be null}
 
 \item{df3}{dataframe 3, can be null}
+
+\item{open_file}{choose to automatically open the CSV file after reference deduplication}
 }
 \value{
 A CSV file containing all the new references deduplicated and the history of the deduplication.

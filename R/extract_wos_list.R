@@ -153,10 +153,11 @@ extract_wos_list <- function(search_list_path){
       }
 
       # Extract volume (set to NA if missing)
-      wos_volume <- purrr::pluck(wos_article,
-                          "Data", "Records", "records", "REC",
-                          "static_data", "summary", "pub_info", "vol",
-                          .default = NA)
+      wos_volume <- as.character(purrr::pluck(wos_article,
+                                 "Data", "Records", "records", "REC", "static_data", "summary", "pub_info", "vol",
+                                 .default = NA
+                                 )
+      )
 
       # Extract abstract (set to NA if missing)
       abstract <- purrr::pluck(wos_article,
@@ -188,31 +189,32 @@ extract_wos_list <- function(search_list_path){
       }
 
       # Extract issue (set to NA if missing)
-      wos_issue <- purrr::pluck(wos_article,
-                         "Data", "Records", "records", "REC",
-                         "static_data", "summary", "pub_info", "issue",
-                         .default = NA)
+      wos_issue <- as.character(purrr::pluck(wos_article,
+                                "Data", "Records", "records", "REC", "static_data", "summary", "pub_info", "issue",
+                                .default = NA
+        )
+      )
 
       # Extract source
       wos_source <- "Web of Science"
 
       # Combine into a data frame
       wos_results_x <- data.frame(
-        author = wos_authors,
-        year = wos_year,
-        title = wos_title,
-        journal = wos_journal,
-        volume = wos_volume,
-        issue = wos_issue,
-        abstract = wos_abstract,
-        doi = wos_doi,
-        source = wos_source,
+        author = wos_authors[1],
+        year = wos_year[1],
+        title = wos_title[1],
+        journal = wos_journal[1],
+        volume = wos_volume[1],
+        issue = wos_issue[1],
+        abstract = wos_abstract[1],
+        doi = wos_doi[1],
+        source = wos_source[1],
         stringsAsFactors = FALSE
       )
       num_doi_wos <- num_doi_wos+1
       print(paste(wos_doi,num_doi_wos,"/",length(wos_new)))
       wos_results <- rbind(wos_results, wos_results_x)
-      Sys.sleep(0.2)
+      Sys.sleep(1.2)
     }
 
     return(wos_results)

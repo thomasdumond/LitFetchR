@@ -85,7 +85,7 @@ manual_fetch <- function(WOS = TRUE, SCP = TRUE, PMD = TRUE, dedup = FALSE, open
   }
 
   if (isTRUE(dedup)){
-    dedup_refs(df1, df2, df3)
+    dedup_refs(df1, df2, df3, open_file = open_file)
   } else{
     date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
     csv_name <- paste0("citationsCSV_", date_suffix,".csv")

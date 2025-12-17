@@ -106,7 +106,11 @@ extract_pmd_list <- function(search_list_path){
       }
       # Extract year
       year_node <- xml2::xml_find_first(fetch_response, "//PubDate/Year")
-      pmd_year <- if (!is.na(year_node)) xml2::xml_text(year_node) else NA
+      pmd_year <- readr::parse_integer(
+        xml2::xml_text(year_node, trim = TRUE),
+        na = c("", NA)
+      )
+
       # Extract article title
       title_node <- xml2::xml_find_first(fetch_response, "//ArticleTitle")
       pmd_title <- if (!is.na(title_node)) xml2::xml_text(title_node) else NA
@@ -115,29 +119,40 @@ extract_pmd_list <- function(search_list_path){
       pmd_journal <- if (!is.na(journal_node)) xml2::xml_text(journal_node) else NA
       # Extract volume
       volume_node <- xml2::xml_find_first(fetch_response, "//JournalIssue/Volume")
-      pmd_volume <- if (!is.na(volume_node)) xml2::xml_text(volume_node) else NA
+      pmd_volume <- as.character(
+        xml2::xml_text(volume_node, trim = TRUE),
+        na = c("", NA)
+      )
       # Extract issue
       issue_node <- xml2::xml_find_first(fetch_response, "//JournalIssue/Issue")
-      pmd_issue <- if (!is.na(issue_node)) xml2::xml_text(issue_node) else NA
+      pmd_issue <- as.character(
+        xml2::xml_text(issue_node, trim = TRUE),
+        na = c("", NA)
+      )
       # Extract abstract
       abstract_node <- xml2::xml_find_first(fetch_response, "//AbstractText")
       pmd_abstract <- if (!is.na(abstract_node)) xml2::xml_text(abstract_node) else NA
+
       # Extract DOI (if available)
-      doi_node <- xml2::xml_find_first(fetch_response, "//ELocationID[@EIdType='doi']")
-      pmd_doi <- if (!is.na(doi_node)) xml2::xml_text(doi_node) else NA
+      pmd_doi <- xml2::xml_text(
+        xml2::xml_find_first(fetch_response, ".//ArticleId[@IdType='doi']"),
+        trim = TRUE
+      )
+      if (length(pmd_doi) == 0) pmd_doi <- NA_character_
+
       pmd_source <- "PubMed"
 
       # Store results
       pubmed_results <- rbind(pubmed_results, data.frame(
-        author = pmd_authors,
-        year = pmd_year,
-        title = pmd_title,
-        journal = pmd_journal,
-        volume = pmd_volume,
-        issue = pmd_issue,
-        abstract = pmd_abstract,
-        doi = pmd_doi,
-        source = pmd_source,
+        author = pmd_authors[1],
+        year = pmd_year[1],
+        title = pmd_title[1],
+        journal = pmd_journal[1],
+        volume = pmd_volume[1],
+        issue = pmd_issue[1],
+        abstract = pmd_abstract[1],
+        doi = pmd_doi[1],
+        source = pmd_source[1],
         stringsAsFactors = FALSE
       ))
 

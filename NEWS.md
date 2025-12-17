@@ -1,3 +1,7 @@
+# LitFetchR 0.1.2
+
+* New data extraction strategy improving quality and consistency.
+
 # LitFetchR 0.1.1
 
 * Deduplication of references using ASySD made optional.

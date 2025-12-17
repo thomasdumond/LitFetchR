@@ -101,37 +101,61 @@ extract_scp_list <- function(search_list_path){
 
       # Extract article entries from API response
       scp_data <- scp_article$`abstracts-retrieval-response`$coredata
+      scp_data2 <- scp_article$`abstracts-retrieval-response`$item$bibrecord$head
+      scp_data3 <- scp_article$`abstracts-retrieval-response`
 
       # Extract authors (set to NA if missing)
-      scp_authors <- ifelse("dc:creator" %in% names(scp_data), scp_data$`dc:creator`$author$`ce:surname`, NA)
+      names_list <- purrr::pluck(scp_data3,
+                                  "authors", "author", "ce:surname",
+                                  .default = NA
+                                  )
+      scp_authors <- paste(names_list, collapse = ", ")
+
       # Extract year (set to NA if missing)
-      scp_year <- ifelse("prism:coverDate" %in% names(scp_data), scp_data$`prism:coverDate`, NA)
+      scp_year <- readr::parse_integer(purrr::pluck(scp_data2,
+                                        "source", "publicationdate", "year",
+                                        .default = NA_character_
+                                                    )
+      )
+
       # Extract title (set to NA if missing)
       scp_titles <- ifelse("dc:title" %in% names(scp_data), scp_data$`dc:title`, NA)
       # Extract journal
       scp_journal <- ifelse("prism:publicationName" %in% names(scp_data), scp_data$`prism:publicationName`, NA)
       # Extract volume (set to NA if missing)
-      scp_volume <- ifelse("prism:volume" %in% names(scp_data), scp_data$`prism:volume`, NA)
+      scp_volume <- as.character(
+        purrr::pluck(
+          scp_data,
+          "prism:volume",
+          .default = NA_character_
+        )
+      )
       # Extract abstract (set to NA if missing)
       scp_abstracts <- ifelse("dc:description" %in% names(scp_data), scp_data$`dc:description`, NA)
       # Extract DOI (set to NA if missing)
       scp_doi <- ifelse("prism:doi" %in% names(scp_data), scp_data$`prism:doi`, NA)
       # Extract issue (set to NA if missing)
-      scp_issue <- ifelse("prism:issueIdentifier" %in% names(scp_data), scp_data$`prism:issueIdentifier`, NA)
+      scp_issue <- as.character(
+        purrr::pluck(
+          scp_data,
+          "prism:issueIdentifier",
+          .default = NA_character_
+        )
+      )
       # Extract source
       scp_source <- "Scopus"
 
       # Combine into a data frame
       scopus_results_x <- data.frame(
-        author = scp_authors,
-        year = scp_year,
-        title = scp_titles,
-        journal = scp_journal,
-        volume = scp_volume,
-        issue = scp_issue,
-        abstract = scp_abstracts,
-        doi = scp_doi,
-        source = scp_source,
+        author = scp_authors[1],
+        year = scp_year[1],
+        title = scp_titles[1],
+        journal = scp_journal[1],
+        volume = scp_volume[1],
+        issue = scp_issue[1],
+        abstract = scp_abstracts[1],
+        doi = scp_doi[1],
+        source = scp_source[1],
         stringsAsFactors = FALSE
       )
       num_doi_scp <- num_doi_scp+1

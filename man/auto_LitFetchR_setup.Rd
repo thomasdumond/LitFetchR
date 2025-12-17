@@ -41,10 +41,11 @@ at a specified frequency and time, on up to three platforms (e.g. \href{https://
 \href{https://www.elsevier.com/en-au/products/scopus}{Scopus} and \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed})
 }
 \examples{
-\donttest{
+\dontrun{
 
 # Example of what you should see:
-auto_LitFetchR_setup(task_ID = "fish_vibrio",
+
+#> auto_LitFetchR_setup(task_ID = "fish_vibrio",
                        when = "WEEKLY",
                        time = "14:00",
                        WOS = TRUE,

@@ -44,6 +44,8 @@ at a specified frequency and time, on up to three platforms (e.g. \href{https://
 \href{https://www.elsevier.com/en-au/products/scopus}{Scopus} and \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed})
 }
 \examples{
+# This is a "dry run" example.
+# No task will actually be scheduled, it only shows how the function should react>
 auto_LitFetchR_setup(task_ID = "fish_vibrio",
                        when = "WEEKLY",
                        time = "14:00",

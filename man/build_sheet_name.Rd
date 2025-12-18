@@ -2,18 +2,18 @@
 % Please edit documentation in R/build_sheet_name.R
 \name{build_sheet_name}
 \alias{build_sheet_name}
-\title{Create a unique name for any document}
+\title{Creates a unique name for any document.}
 \usage{
 build_sheet_name(time = Sys.time())
 }
 \arguments{
-\item{time}{System time at the time the function is run}
+\item{time}{System time at the time the function is run.}
 }
 \value{
 Return a unique name based on the system time
 with the format YYYY-MM-DD-HHMMSS.
 }
 \description{
-Create a unique name for any document
+Creates a unique name for any document.
 }
 \keyword{internal}

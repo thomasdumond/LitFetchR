@@ -1,6 +1,6 @@
-#' Create a unique name for any document
+#' Creates a unique name for any document.
 #'
-#' @param time System time at the time the function is run
+#' @param time System time at the time the function is run.
 #'
 #' @returns Return a unique name based on the system time
 #'          with the format YYYY-MM-DD-HHMMSS.

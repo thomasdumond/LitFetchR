@@ -2,7 +2,7 @@
 % Please edit documentation in R/auto_LitFetchR_setup.R
 \name{auto_LitFetchR_setup}
 \alias{auto_LitFetchR_setup}
-\title{Automating the retrieval of references based on a saved search string}
+\title{Automating the retrieval of references based on a saved search string(s).}
 \usage{
 auto_LitFetchR_setup(
   task_ID = "task_ID",
@@ -17,35 +17,35 @@ auto_LitFetchR_setup(
 )
 }
 \arguments{
-\item{task_ID}{Name of the automated task (e.g. one keyword describing your review)}
+\item{task_ID}{Name of the automated reference retrieval task (e.g. one keyword describing your review).}
 
-\item{when}{Frequency of the fetching, i.e. DAILY, WEEKLY, MONTHLY}
+\item{when}{Frequency of the automated reference retrieval task (DAILY, WEEKLY or MONTHLY).}
 
-\item{time}{Time of the fetching, i.e. HH:MM 24-hour clock format}
+\item{time}{Time of the automated reference retrieval task (must be HH:MM 24-hour clock format).}
 
-\item{WOS}{Choose to search on Web of Science (TRUE or FALSE)}
+\item{WOS}{Runs the search on Web of Science (TRUE or FALSE).}
 
-\item{SCP}{Choose to search on Scopus (TRUE or FALSE)}
+\item{SCP}{Runs the search on Scopus (TRUE or FALSE).}
 
-\item{PMD}{Choose to search on PubMed (TRUE or FALSE)}
+\item{PMD}{Runs the search on PubMed (TRUE or FALSE).}
 
-\item{dedup}{Choose to deduplicate or not the references (TRUE or FALSE)}
+\item{dedup}{Deduplicates the retrieved references (TRUE or FALSE).}
 
-\item{open_file}{choose to automatically open the CSV file after reference retrieval}
+\item{open_file}{Automatically open the CSV file after reference retrieval.}
 
-\item{dry_run}{simulation run option}
+\item{dry_run}{Simulation run option.}
 }
 \value{
 Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
 }
 \description{
-\code{auto_LitFetchR_setup} creates a read-only Rscript and a task to run the code automatically
+Creates a read-only Rscript and a task to run the code automatically
 at a specified frequency and time, on up to three platforms (e.g. \href{https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/}{Web of Science},
-\href{https://www.elsevier.com/en-au/products/scopus}{Scopus} and \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed})
+\href{https://www.elsevier.com/en-au/products/scopus}{Scopus} and \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed}).
 }
 \examples{
 # This is a "dry run" example.
-# No task will actually be scheduled, it only shows how the function should react>
+# No task will actually be scheduled, it only shows how the function should react.
 auto_LitFetchR_setup(task_ID = "fish_vibrio",
                        when = "WEEKLY",
                        time = "14:00",

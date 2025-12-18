@@ -1,24 +1,24 @@
-#' Automating the retrieval of references based on a saved search string
+#' Automating the retrieval of references based on a saved search string(s).
 #'
-#' `auto_LitFetchR_setup` creates a read-only Rscript and a task to run the code automatically
+#' Creates a read-only Rscript and a task to run the code automatically
 #' at a specified frequency and time, on up to three platforms (e.g. [Web of Science](https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/),
-#' [Scopus](https://www.elsevier.com/en-au/products/scopus) and [PubMed](https://pubmed.ncbi.nlm.nih.gov/))
+#' [Scopus](https://www.elsevier.com/en-au/products/scopus) and [PubMed](https://pubmed.ncbi.nlm.nih.gov/)).
 #'
-#' @param task_ID Name of the automated task (e.g. one keyword describing your review)
-#' @param when Frequency of the fetching, i.e. DAILY, WEEKLY, MONTHLY
-#' @param time Time of the fetching, i.e. HH:MM 24-hour clock format
-#' @param WOS Choose to search on Web of Science (TRUE or FALSE)
-#' @param SCP Choose to search on Scopus (TRUE or FALSE)
-#' @param PMD Choose to search on PubMed (TRUE or FALSE)
-#' @param dedup Choose to deduplicate or not the references (TRUE or FALSE)
-#' @param open_file choose to automatically open the CSV file after reference retrieval
-#' @param dry_run simulation run option
+#' @param task_ID Name of the automated reference retrieval task (e.g. one keyword describing your review).
+#' @param when Frequency of the automated reference retrieval task (DAILY, WEEKLY or MONTHLY).
+#' @param time Time of the automated reference retrieval task (must be HH:MM 24-hour clock format).
+#' @param WOS Runs the search on Web of Science (TRUE or FALSE).
+#' @param SCP Runs the search on Scopus (TRUE or FALSE).
+#' @param PMD Runs the search on PubMed (TRUE or FALSE).
+#' @param dedup Deduplicates the retrieved references (TRUE or FALSE).
+#' @param open_file Automatically open the CSV file after reference retrieval.
+#' @param dry_run Simulation run option.
 #'
 #' @returns Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
 #'
 #' @examples
 #' # This is a "dry run" example.
-#' # No task will actually be scheduled, it only shows how the function should react>
+#' # No task will actually be scheduled, it only shows how the function should react.
 #' auto_LitFetchR_setup(task_ID = "fish_vibrio",
 #'                        when = "WEEKLY",
 #'                        time = "14:00",

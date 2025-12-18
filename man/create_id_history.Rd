@@ -2,14 +2,14 @@
 % Please edit documentation in R/create_id_history.R
 \name{create_id_history}
 \alias{create_id_history}
-\title{Creates an excel file to store the references identification retrieved at each search}
+\title{Creates an excel file to store the references identification retrieved at each search.}
 \usage{
 create_id_history()
 }
 \value{
-history_id.xlsx
+The excel file 'history_id.xlsx'.
 }
 \description{
-Creates an excel file to store the references identification retrieved at each search
+Creates an excel file to store the references identification retrieved at each search.
 }
 \keyword{internal}

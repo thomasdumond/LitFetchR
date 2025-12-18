@@ -1,6 +1,6 @@
-#' Creates an excel file to store the deduplication history
+#' Creates an excel file to store the deduplication history.
 #'
-#' @return history_dedup.xlsx
+#' @return The excel file 'history_dedup.xlsx'.
 #'
 #' @keywords internal
 

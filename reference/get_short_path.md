@@ -1,6 +1,6 @@
-# transforms a long computer path into a shorter
+# Transforms a long computer path into a shorter.
 
-transforms a long computer path into a shorter
+Transforms a long computer path into a shorter.
 
 ## Usage
 
@@ -12,8 +12,8 @@ get_short_path(path)
 
 - path:
 
-  path to the document
+  Path to the document.
 
 ## Value
 
-a shorter path
+A shorter path.

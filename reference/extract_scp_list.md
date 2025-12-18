@@ -1,7 +1,7 @@
-# extract the metadata from the new references from Scopus based on the search strings found in search_list.txt
+# Extracts the metadata from the new references found on Scopus based on the search string(s) saved in "search_list.txt".
 
-extract the metadata from the new references from Scopus based on the
-search strings found in search_list.txt
+Extracts the metadata from the new references found on Scopus based on
+the search string(s) saved in "search_list.txt".
 
 ## Usage
 
@@ -13,8 +13,9 @@ extract_scp_list(search_list_path)
 
 - search_list_path:
 
-  path to search_list
+  Path to "search_list.txt".
 
 ## Value
 
-A dataframe containing the metadata from the new references on Scopus
+A dataframe containing the metadata from the new references found on
+Scopus.

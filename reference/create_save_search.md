@@ -11,6 +11,12 @@ references later.
 create_save_search(dry_run = FALSE)
 ```
 
+## Arguments
+
+- dry_run:
+
+  Simulation run option.
+
 ## Value
 
 One or more search string(s) in the file "search_list.txt" and the

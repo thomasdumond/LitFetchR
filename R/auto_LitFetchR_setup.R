@@ -12,39 +12,38 @@
 #' @param PMD Choose to search on PubMed (TRUE or FALSE)
 #' @param dedup Choose to deduplicate or not the references (TRUE or FALSE)
 #' @param open_file choose to automatically open the CSV file after reference retrieval
+#' @param dry_run simulation run option
 #'
 #' @returns Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
 #'
 #' @examples
-#' \dontrun{
-#'
-#' # Example of what you should see:
-#'
 #' auto_LitFetchR_setup(task_ID = "fish_vibrio",
 #'                        when = "WEEKLY",
 #'                        time = "14:00",
 #'                        WOS = TRUE,
 #'                        SCP = TRUE,
-#'                        PMD = TRUE)
-#' #> Task scheduled!
-#' }
-#'
-#' @section Example:
-#' ```r
-#' # Example of what you should see:
-#'
-#' auto_LitFetchR_setup(task_ID = "fish_vibrio",
-#'                        when = "WEEKLY",
-#'                        time = "14:00",
-#'                        WOS = TRUE,
-#'                        SCP = TRUE,
-#'                        PMD = TRUE)
-#' #> Task scheduled!
-#' ```
+#'                        PMD = TRUE,
+#'                        dedup = FALSE,
+#'                        open_file = FALSE,
+#'                        dry_run = TRUE
+#'                        )
 #'
 #' @export
 
-auto_LitFetchR_setup <- function(task_ID = "task_ID", when = "DAILY", time = "08:00", WOS = TRUE, SCP = TRUE, PMD = TRUE, dedup = FALSE, open_file = FALSE) {
+auto_LitFetchR_setup <- function(task_ID = "task_ID",
+                                 when = "DAILY",
+                                 time = "08:00",
+                                 WOS = TRUE,
+                                 SCP = TRUE,
+                                 PMD = TRUE,
+                                 dedup = FALSE,
+                                 open_file = FALSE,
+                                 dry_run = FALSE
+                                 ) {
+  if (dry_run) {
+    message("Task scheduled!")
+    return(invisible(NULL))
+  }
 
   # CREATE AUTOMATION CODE
   ########################

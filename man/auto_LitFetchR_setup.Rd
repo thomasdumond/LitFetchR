@@ -12,7 +12,8 @@ auto_LitFetchR_setup(
   SCP = TRUE,
   PMD = TRUE,
   dedup = FALSE,
-  open_file = FALSE
+  open_file = FALSE,
+  dry_run = FALSE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ auto_LitFetchR_setup(
 \item{dedup}{Choose to deduplicate or not the references (TRUE or FALSE)}
 
 \item{open_file}{choose to automatically open the CSV file after reference retrieval}
+
+\item{dry_run}{simulation run option}
 }
 \value{
 Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
@@ -40,33 +43,16 @@ Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in 
 at a specified frequency and time, on up to three platforms (e.g. \href{https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/}{Web of Science},
 \href{https://www.elsevier.com/en-au/products/scopus}{Scopus} and \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed})
 }
-\section{Example}{
-
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Example of what you should see:
-
-auto_LitFetchR_setup(task_ID = "fish_vibrio",
-                       when = "WEEKLY",
-                       time = "14:00",
-                       WOS = TRUE,
-                       SCP = TRUE,
-                       PMD = TRUE)
-#> Task scheduled!
-}\if{html}{\out{</div>}}
-}
-
 \examples{
-\dontrun{
-
-# Example of what you should see:
-
 auto_LitFetchR_setup(task_ID = "fish_vibrio",
                        when = "WEEKLY",
                        time = "14:00",
                        WOS = TRUE,
                        SCP = TRUE,
-                       PMD = TRUE)
-#> Task scheduled!
-}
+                       PMD = TRUE,
+                       dedup = FALSE,
+                       open_file = FALSE,
+                       dry_run = TRUE
+                       )
 
 }

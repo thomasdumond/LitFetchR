@@ -16,7 +16,7 @@
 #' @returns Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'
 #' # Example of what you should see:
 #'
@@ -28,6 +28,19 @@
 #'                        PMD = TRUE)
 #' #> Task scheduled!
 #' }
+#'
+#' @section Example:
+#' ```r
+#' # Example of what you should see:
+#'
+#' auto_LitFetchR_setup(task_ID = "fish_vibrio",
+#'                        when = "WEEKLY",
+#'                        time = "14:00",
+#'                        WOS = TRUE,
+#'                        SCP = TRUE,
+#'                        PMD = TRUE)
+#' #> Task scheduled!
+#' ```
 #'
 #' @export
 

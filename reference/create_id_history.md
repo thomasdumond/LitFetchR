@@ -1,7 +1,7 @@
-# Creates an excel file to store the references identification retrieved at each search
+# Creates an excel file to store the references identification retrieved at each search.
 
 Creates an excel file to store the references identification retrieved
-at each search
+at each search.
 
 ## Usage
 
@@ -11,4 +11,4 @@ create_id_history()
 
 ## Value
 
-history_id.xlsx
+The excel file 'history_id.xlsx'.

@@ -1,6 +1,6 @@
-# Creates an excel file to store the deduplication history
+# Creates an excel file to store the deduplication history.
 
-Creates an excel file to store the deduplication history
+Creates an excel file to store the deduplication history.
 
 ## Usage
 
@@ -10,4 +10,4 @@ create_dedup_history()
 
 ## Value
 
-history_dedup.xlsx
+The excel file 'history_dedup.xlsx'.

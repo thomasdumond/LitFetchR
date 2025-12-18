@@ -1,6 +1,6 @@
-# Create a unique name for any document
+# Creates a unique name for any document.
 
-Create a unique name for any document
+Creates a unique name for any document.
 
 ## Usage
 
@@ -12,7 +12,7 @@ build_sheet_name(time = Sys.time())
 
 - time:
 
-  System time at the time the function is run
+  System time at the time the function is run.
 
 ## Value
 

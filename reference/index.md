@@ -4,9 +4,9 @@
 
 - [`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md)
   : Automating the retrieval of references based on a saved search
-  string
+  string(s).
 - [`create_save_search()`](https://thomasdumond.github.io/LitFetchR/reference/create_save_search.md)
-  : create and save search string
+  : Create and save search string(s).
 - [`dedup_refs()`](https://thomasdumond.github.io/LitFetchR/reference/dedup_refs.md)
   : deduplicate the references from three dataframes
 - [`manual_fetch()`](https://thomasdumond.github.io/LitFetchR/reference/manual_fetch.md)

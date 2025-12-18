@@ -3,15 +3,15 @@
 \name{create_search_history}
 \alias{create_search_history}
 \title{Creates an excel file to store the history of searches
-made using \code{create_save_search()}}
+made using \code{create_save_search()}.}
 \usage{
 create_search_history()
 }
 \value{
-"history_search.xlsx" and or a new sheet for the new search(es)
+An history_search R object workbook and sheet_name in a list.
 }
 \description{
 Creates an excel file to store the history of searches
-made using \code{create_save_search()}
+made using \code{create_save_search()}.
 }
 \keyword{internal}

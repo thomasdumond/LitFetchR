@@ -6,6 +6,8 @@
 #' Web of Science, Scopus and PubMed. You can then save one
 #' or more search strings to retrieve the references later.
 #'
+#' @param dry_run Simulation run option.
+#'
 #' @return One or more search string(s) in the file "search_list.txt" and the history of all searches in "history_search.xlsx".
 #' @importFrom utils URLencode
 #'

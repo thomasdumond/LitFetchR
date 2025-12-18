@@ -1,20 +1,29 @@
-#' Remove a scheduled task by name from Task Scheduler (Windows) or Cron (Mac/Linux)
-#' @param taskname Name/ID of the scheduled task (Windows Task Scheduler or cronR id)
+#' Removes a scheduled task using the "task_ID" from Task Scheduler (Windows) or Cron (Mac/Linux).
+#' @param taskname Name/ID of the scheduled task (Windows Task Scheduler or Cron).
+#' @param dry_run Simulation run option.
 #'
 #' @examples
-#' \dontrun{
-#'
-#' #Example of what you should see:
-#' > remove_scheduled_task("fish_vibrio")
-#' SUCCESS: The scheduled task "fish_vibrio" was successfully deleted.
-#' Windows task 'fish_vibrio' removed (or did not exist).
-#' }
+#' # This is a "dry run" example.
+#' # No task will actually be removed, it only shows how the function should react.
+#' remove_scheduled_task("fish_vibrio",
+#'                       dry_run = TRUE
+#'                       )
 #'
 #' @export
-remove_scheduled_task <- function(taskname) {
 
+remove_scheduled_task <- function(taskname,
+                                  dry_run = FALSE
+                                  ) {
+
+  if (dry_run) {
+    message('SUCCESS: The scheduled task "fish_vibrio" was successfully deleted.
+            Windows task "fish_vibrio" removed (or did not exist).')
+    return(invisible(NULL))
+  }
+
+  # Identifies the OS of the computer before removing the task.
   if (.Platform$OS.type == "windows") {
-    # Windows: use taskscheduleR
+    # Windows: uses taskscheduleR.
     if (!requireNamespace("taskscheduleR", quietly = TRUE)) {
       stop("Package 'taskscheduleR' is required on Windows.")
     }
@@ -34,7 +43,7 @@ remove_scheduled_task <- function(taskname) {
     }
 
   } else {
-    # macOS / Linux: use cronR
+    # macOS / Linux: uses cronR.
     if (!requireNamespace("cronR", quietly = TRUE)) {
       stop("Package 'cronR' is required on this OS.")
     }

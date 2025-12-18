@@ -2,19 +2,19 @@
 % Please edit documentation in R/extract_pmd_list.R
 \name{extract_pmd_list}
 \alias{extract_pmd_list}
-\title{extract the metadata from the new references from PubMed
-based on the search strings found in search_list.txt}
+\title{Extracts the metadata from the new references found on PubMed
+based on the search string(s) saved in "search_list.txt".}
 \usage{
 extract_pmd_list(search_list_path)
 }
 \arguments{
-\item{search_list_path}{path to search_list}
+\item{search_list_path}{Path to "search_list.txt".}
 }
 \value{
-A dataframe containing the metadata from the new references on PubMed
+A dataframe containing the metadata from the new references found on PubMed.
 }
 \description{
-extract the metadata from the new references from PubMed
-based on the search strings found in search_list.txt
+Extracts the metadata from the new references found on PubMed
+based on the search string(s) saved in "search_list.txt".
 }
 \keyword{internal}

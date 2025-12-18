@@ -1,6 +1,6 @@
-#' transforms a long computer path into a shorter
-#' @param path path to the document
-#' @return a shorter path
+#' Transforms a long computer path into a shorter.
+#' @param path Path to the document.
+#' @return A shorter path.
 #' @keywords internal
 
 get_short_path <- function(path) {

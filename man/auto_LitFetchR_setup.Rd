@@ -31,7 +31,7 @@ auto_LitFetchR_setup(
 
 \item{dedup}{Deduplicates the retrieved references (TRUE or FALSE).}
 
-\item{open_file}{Automatically open the CSV file after reference retrieval.}
+\item{open_file}{Automatically opens the CSV file after reference retrieval.}
 
 \item{dry_run}{Simulation run option.}
 }
@@ -40,7 +40,7 @@ Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in 
 }
 \description{
 Creates a read-only Rscript and a task to run the code automatically
-at a specified frequency and time, on up to three platforms (e.g. \href{https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/}{Web of Science},
+at a specified frequency and time, to retrieve references corresponding to the saved search string(s) on up to three platforms (e.g. \href{https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/}{Web of Science},
 \href{https://www.elsevier.com/en-au/products/scopus}{Scopus} and \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed}).
 }
 \examples{

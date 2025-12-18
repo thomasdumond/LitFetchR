@@ -2,17 +2,17 @@
 % Please edit documentation in R/get_short_path.R
 \name{get_short_path}
 \alias{get_short_path}
-\title{transforms a long computer path into a shorter}
+\title{Transforms a long computer path into a shorter.}
 \usage{
 get_short_path(path)
 }
 \arguments{
-\item{path}{path to the document}
+\item{path}{Path to the document.}
 }
 \value{
-a shorter path
+A shorter path.
 }
 \description{
-transforms a long computer path into a shorter
+Transforms a long computer path into a shorter.
 }
 \keyword{internal}

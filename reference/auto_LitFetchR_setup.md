@@ -69,6 +69,8 @@ Create a Rscript file (READ ONLY) and a task in Task Scheduler
 ## Examples
 
 ``` r
+# This is a "dry run" example.
+# No task will actually be scheduled, it only shows how the function should react>
 auto_LitFetchR_setup(task_ID = "fish_vibrio",
                        when = "WEEKLY",
                        time = "14:00",

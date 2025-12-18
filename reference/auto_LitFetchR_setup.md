@@ -18,7 +18,8 @@ auto_LitFetchR_setup(
   SCP = TRUE,
   PMD = TRUE,
   dedup = FALSE,
-  open_file = FALSE
+  open_file = FALSE,
+  dry_run = FALSE
 )
 ```
 
@@ -56,36 +57,27 @@ auto_LitFetchR_setup(
 
   choose to automatically open the CSV file after reference retrieval
 
+- dry_run:
+
+  simulation run option
+
 ## Value
 
 Create a Rscript file (READ ONLY) and a task in Task Scheduler
 (Windows), or in Cron (Mac/Linux)
 
-## Example
-
-    # Example of what you should see:
-
-    auto_LitFetchR_setup(task_ID = "fish_vibrio",
-                           when = "WEEKLY",
-                           time = "14:00",
-                           WOS = TRUE,
-                           SCP = TRUE,
-                           PMD = TRUE)
-    #> Task scheduled!
-
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-
-# Example of what you should see:
-
 auto_LitFetchR_setup(task_ID = "fish_vibrio",
                        when = "WEEKLY",
                        time = "14:00",
                        WOS = TRUE,
                        SCP = TRUE,
-                       PMD = TRUE)
+                       PMD = TRUE,
+                       dedup = FALSE,
+                       open_file = FALSE,
+                       dry_run = TRUE
+                       )
 #> Task scheduled!
-} # }
 ```

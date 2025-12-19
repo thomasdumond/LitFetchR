@@ -1,4 +1,4 @@
-# Removes a scheduled task using the "task_ID" from Task Scheduler (Windows) or Cron (Mac/Linux).
+# Removes a scheduled task.
 
 Removes a scheduled task using the "task_ID" from Task Scheduler
 (Windows) or Cron (Mac/Linux).

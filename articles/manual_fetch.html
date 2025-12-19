@@ -73,7 +73,7 @@
     
     
 <p>If you are here, this is because you want to manually retrieve a list
-of reference, outside of the automated task that you might have set up
+of references, outside of the automated task that you might have set up
 after reading <a href="https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html">LitFetchR
 (Tutorial)</a>.</p>
 <div class="section level2">
@@ -82,31 +82,40 @@ after reading <a href="https://thomasdumond.github.io/LitFetchR/articles/LitFetc
 <p>From your individual review R directory, load
 <code>LitFetchR</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#Load LitFetchR</span></span>
+<code class="sourceCode R"><span><span class="co"># Load LitFetchR</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="manual-reference-retrieval">Manual reference retrieval<a class="anchor" aria-label="anchor" href="#manual-reference-retrieval"></a>
 </h2>
-<p>Make sure to have save your search string using
-<code><a href="../reference/create_save_search.html">create_save_search()</a></code> as the following function need to
+<p>Make sure to have saved your search string using
+<code><a href="../reference/create_save_search.html">create_save_search()</a></code> as the following function needs to
 access the file <em>search_list.txt</em>, see <a href="https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html">LitFetchR
 (Tutorial)</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#Load LitFetchR</span></span>
+<code class="sourceCode R"><span><span class="co"># Load LitFetchR</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#Retrieve the list of references corresponding to your saved search string(s)</span></span>
-<span><span class="fu"><a href="../reference/manual_fetch.html">manual_fetch</a></span><span class="op">(</span>WOS <span class="op">=</span> <span class="cn">TRUE</span>, SCP <span class="op">=</span> <span class="cn">TRUE</span>, PMD <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co"># Retrieve the list of references corresponding to your saved search string(s)</span></span>
+<span><span class="fu"><a href="../reference/manual_fetch.html">manual_fetch</a></span><span class="op">(</span>WOS <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>             SCP <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>             PMD <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>             dedup <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>             open_file <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#Example of what you should see: </span></span>
-<span><span class="co"># &gt; manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)</span></span>
+<span><span class="co"># Example of what you should see: </span></span>
+<span><span class="co"># &gt; manual_fetch(WOS = TRUE,</span></span>
+<span><span class="co">#                SCP = TRUE,</span></span>
+<span><span class="co">#                PMD = TRUE,</span></span>
+<span><span class="co">#                dedup = TRUE,</span></span>
+<span><span class="co">#                open_file = FALSE)</span></span>
 <span><span class="co"># [1] 126</span></span>
 <span><span class="co"># Finished batch number 1</span></span>
 <span><span class="co"># Finished batch number 2</span></span>
 <span><span class="co"># [1] "10.1016/j.aaf.2023.11.002 1 / 126"</span></span>
 <span><span class="co"># [1] "10.3390/fishes10090439 2 / 126"</span></span>
-<span><span class="co"># [FOR THE PURPOSE OF THIS EXAMPLE WE DO ARE NOT SHOWING EACH LINE OF THE COMMAND]</span></span>
+<span><span class="co"># [FOR THE PURPOSE OF THIS EXAMPLE WE ARE NOT SHOWING EACH LINE OF THE COMMAND]</span></span>
+<span><span class="co"># [THE REMOVED LINES CORRESPOND TO MOST OF THE REFERENCE RETRIEVAL COUNTING]</span></span>
 <span><span class="co"># [1] "NA 125 / 126"</span></span>
 <span><span class="co"># [1] "NA 126 / 126"</span></span>
 <span><span class="co"># [1] 22</span></span>
@@ -114,7 +123,8 @@ access the file <em>search_list.txt</em>, see <a href="https://thomasdumond.gith
 <span><span class="co"># File already exists</span></span>
 <span><span class="co"># [1] "10.1007/s12602-023-10207-x 1 / 22"</span></span>
 <span><span class="co"># [1] "10.1016/j.fsi.2025.110189 2 / 22"</span></span>
-<span><span class="co"># [FOR THE PURPOSE OF THIS EXAMPLE WE DO ARE NOT SHOWING EACH LINE OF THE COMMAND]</span></span>
+<span><span class="co"># [FOR THE PURPOSE OF THIS EXAMPLE WE ARE NOT SHOWING EACH LINE OF THE COMMAND]</span></span>
+<span><span class="co"># [THE REMOVED LINES CORRESPOND TO MOST OF THE REFERENCE RETRIEVAL COUNTING]</span></span>
 <span><span class="co"># [1] "10.1111/j.1472-765X.2010.02894.x 21 / 22"</span></span>
 <span><span class="co"># [1] "NA 22 / 22"</span></span>
 <span><span class="co"># [1] 106</span></span>
@@ -122,7 +132,8 @@ access the file <em>search_list.txt</em>, see <a href="https://thomasdumond.gith
 <span><span class="co"># File already exists</span></span>
 <span><span class="co"># [1] "10.1016/j.fsi.2025.110503 1 / 106"</span></span>
 <span><span class="co"># [1] "10.1016/j.fsi.2025.110501 2 / 106"</span></span>
-<span><span class="co"># [FOR THE PURPOSE OF THIS EXAMPLE WE DO ARE NOT SHOWING EACH LINE OF THE COMMAND][1] "NA 105 / 106"</span></span>
+<span><span class="co"># [FOR THE PURPOSE OF THIS EXAMPLE WE ARE NOT SHOWING EACH LINE OF THE COMMAND][1] "NA 105 / 106"</span></span>
+<span><span class="co"># [THE REMOVED LINES CORRESPOND TO MOST OF THE REFERENCE RETRIEVAL COUNTING]</span></span>
 <span><span class="co"># [1] "NA 106 / 106"</span></span>
 <span><span class="co"># Warning: The following columns are missing: pages, number, record_id, isbn</span></span>
 <span><span class="co"># formatting data...</span></span>
@@ -139,8 +150,8 @@ access the file <em>search_list.txt</em>, see <a href="https://thomasdumond.gith
 <span><span class="co">#   Search contains missing values for the record_id column. A record_id will be created using row numbers</span></span></code></pre></div>
 <p>After running <code><a href="../reference/manual_fetch.html">manual_fetch()</a></code>, new unique
 <em>history_dedup_</em> and <em>citationCSV_</em> files are created and
-<em>history_id</em> is updated.See bottom of the page <a href="https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html">LitFetchR
-(Tutorial)</a></p>
+<em>history_id</em> is updated. See bottom of the page <a href="https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html">LitFetchR
+(Tutorial)</a> for more information about those files.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

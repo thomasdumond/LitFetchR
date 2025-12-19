@@ -8,7 +8,7 @@ keys](https://thomasdumond.github.io/LitFetchR/articles/Get_API_keys.html).
 
 ## Setup
 
-We strongly recommend to create a new R directory for each individual
+We strongly recommend creating a new R directory for each individual
 review project. To do so in RStudio:
 
 - Go to `File`\>`New Project…`\>`New Directory`\>`New Project`
@@ -16,7 +16,7 @@ review project. To do so in RStudio:
 - Choose a name for your directory (*e.g. review_fish_vibrio*), then
   `Browse...` to choose where to save the directory.
 
-  *We suggest to save the directory on you computer
+  *We suggest to save the directory on your computer
   (e.g. `C:/users/...`) instead of clouds (e.g. OneDrive, Box, etc.), as
   restriction access from institution might block R.*
 
@@ -41,7 +41,7 @@ remotes::install_github("thomasdumond/LitFetchR")
 Then load the package:
 
 ``` r
-#Load LitFetchR
+#Load `LitFetchR`
 library(LitFetchR)
 ```
 
@@ -52,7 +52,7 @@ Save your API keys in your personal R environment:
 ``` r
 #This step can be skipped if your API keys have already been saved. Repeat this step if your API keys changed.
 
-#Load LitFetchR
+#Load `LitFetchR`
 library(LitFetchR)
 
 #Save API keys in your R environment
@@ -68,12 +68,12 @@ This will allow `LitFetchR` to locally access your personal API keys
 while keeping them confidential if you need to share your code with
 collaborators.
 
-As mentionned by R, it is important to restart your session before
+As mentioned by R, it is important to restart your session before
 continuing:
 
 `Session`\>`Restart R`
 
-Then load LitFetchR again using
+Then load `LitFetchR` again using
 [`library(LitFetchR)`](https://github.com/thomasdumond/LitFetchR)
 
 *If you don’t have API keys for Scopus and Web of Science, see [Get API
@@ -175,7 +175,9 @@ auto_LitFetchR_setup(task_ID = "name_of_your_task",
                      time = "09:00",
                      WOS = TRUE,
                      SCP = TRUE,
-                     PMD = TRUE)
+                     PMD = TRUE,
+                     dedup = FALSE,
+                     open_file = TRUE)
 
 #Example of what you should see
 #> auto_LitFetchR_setup(task_ID = "fish_vibrio",
@@ -183,7 +185,9 @@ auto_LitFetchR_setup(task_ID = "name_of_your_task",
                      # time = "14:00",
                      # WOS = TRUE,
                      # SCP = TRUE,
-                     # PMD = TRUE)
+                     # PMD = TRUE
+                     # dedup = FALSE,
+                     # open_file = TRUE)
 #Task scheduled!
 ```
 
@@ -197,17 +201,20 @@ for the first time, four new files will be created:
   SCOPUS_ID). These are saved and used at each reference retrieval to
   only extract the references that were not retrieved before.*
 
-- history_dedup_YYYY_MM_HHMMSS.xlsx
+- history_dedup_YYYY_MM_HHMMSS.xlsx (if dedup = TRUE)
 
-  *This file contains the history of each steps of the deduplication,
+  *This file contains the history of each step of the deduplication,
   using the package ASySD.*
 
 - citationsCSV_YYYY_MM_HHMMSS.CSV
 
-  *This file contains the unique list of references retrieved from the
-  search conducted at the date referenced in the name of the file. It is
-  a CSV file, ready to be imported in the screening tool of your choice
-  or in your reference manager.*
+  *This file contains the list of references retrieved from the search
+  conducted at the date referenced in the name of the file. It is a CSV
+  file, ready to be imported into the screening tool of your choice or
+  in your reference manager. If the deduplication option was selected
+  (dedup = TRUE), this file contains the unique dedupicated references.
+  This file automatically opens after the reference retrieval ends if
+  the corresponding option is selected (open_file = TRUE).*
 
 - auto_LitFetchR_code(READ_ONLY).R
 
@@ -224,8 +231,8 @@ Each time *auto_LitFetchR_code(READ_ONLY).R* runs, new unique
 *history_dedup\_* and *citationCSV\_* files are created and *history_id*
 is updated.
 
-**Congratulations ! Your automated reference retrieval is ready to work
-!**
+**Congratulations! Your automated reference retrieval is ready to
+work!**
 
 ## See also
 

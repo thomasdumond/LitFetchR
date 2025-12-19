@@ -14,7 +14,7 @@ More info at: <https://pmc.ncbi.nlm.nih.gov/tools/developers/>
 
 - Access the Elsevier developer portal at: <https://dev.elsevier.com/>
 - Click on “I want an API key”
-- Sign in with you institutional/organisation credentials
+- Sign in with your institutional/organisation credentials
 - Click on “Create API key”
 - Enter the label of your API key (avoid the use of spaces in the name)
 - You don’t need to provide a website URL
@@ -45,13 +45,13 @@ More info at: <https://pmc.ncbi.nlm.nih.gov/tools/developers/>
 - Click on “APIs” at top of the page
 - Select the tile “Web of Science API Expanded”
 - At the bottom of the page click “Subscribe”
-- You will need to wait Clarivate to approve your application and
+- You will need to wait for Clarivate to approve your application and
   provide you with your individual API key (it can take several days to
   weeks, do not hesitate to contact the Clarivate support team for
   updates at <ts.support.anz@clarivate.com>)
 
 **Well done!**
 
-**Now that you got you API keys, you can continue to the next tutorial →
-[LitFetchR
+**Now that you got your API keys, you can continue to the next tutorial
+→ [LitFetchR
 (Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html)**

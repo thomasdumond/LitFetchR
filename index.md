@@ -1,13 +1,13 @@
 # LitFetchR
 
-The purpose of LitFetchR is to automatically retrieve and deduplicate
+The purpose of `LitFetchR` is to automatically retrieve and deduplicate
 references based on saved search string(s). Access to Web of Science and
 Scopus requires personal API keys, while PubMed can be queried without
 one.
 
 ## Installation
 
-You can install the development version of LitFetchR from
+You can install the development version of `LitFetchR` from
 [GitHub](https://github.com/) using `devtools` or `remotes`:
 
 ``` r
@@ -22,18 +22,18 @@ remotes::install_github("thomasdumond/LitFetchR")
 
 ## Tutorial
 
-You can find all the tutorial in the
+You can find all the tutorials in the
 [Articles](https://thomasdumond.github.io/LitFetchR/articles/) tab.
 
 ## Requirements
 
-This package uses API to access Web of Science and Scopus platforms. To
-enjoy the full performance of `LitFetchR`, request personal API keys to
-the platforms. For more information on API keys, you can see our
+This package uses APIs to access Web of Science and Scopus platforms. To
+enjoy the full performance of `LitFetchR`, request personal API keys
+from the platforms. For more information on API keys, you can see our
 tutorial [Get API
 keys](https://thomasdumond.github.io/LitFetchR/articles/Get_API_keys.html).
-If you are affiliated to a university we suggest contacting your local
-librarian to discuss the use of API keys (i.e. quota access, detail of
+If you are affiliated with a university we suggest contacting your local
+librarian to discuss the use of API keys (i.e. quota access, details of
 databases accessed through Web of Science).
 
 PubMed does not require API key access, so the package can still be used

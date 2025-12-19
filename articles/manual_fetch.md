@@ -1,7 +1,7 @@
 # Manual reference retrieval
 
 If you are here, this is because you want to manually retrieve a list of
-reference, outside of the automated task that you might have set up
+references, outside of the automated task that you might have set up
 after reading [LitFetchR
 (Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html).
 
@@ -10,33 +10,42 @@ after reading [LitFetchR
 From your individual review R directory, load `LitFetchR`:
 
 ``` r
-#Load LitFetchR
+# Load LitFetchR
 library(LitFetchR)
 ```
 
 ## Manual reference retrieval
 
-Make sure to have save your search string using
+Make sure to have saved your search string using
 [`create_save_search()`](https://thomasdumond.github.io/LitFetchR/reference/create_save_search.md)
-as the following function need to access the file *search_list.txt*, see
-[LitFetchR
+as the following function needs to access the file *search_list.txt*,
+see [LitFetchR
 (Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html).
 
 ``` r
-#Load LitFetchR
+# Load LitFetchR
 library(LitFetchR)
 
-#Retrieve the list of references corresponding to your saved search string(s)
-manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)
+# Retrieve the list of references corresponding to your saved search string(s)
+manual_fetch(WOS = TRUE,
+             SCP = TRUE,
+             PMD = TRUE,
+             dedup = TRUE,
+             open_file = FALSE)
 
-#Example of what you should see: 
-# > manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)
+# Example of what you should see: 
+# > manual_fetch(WOS = TRUE,
+#                SCP = TRUE,
+#                PMD = TRUE,
+#                dedup = TRUE,
+#                open_file = FALSE)
 # [1] 126
 # Finished batch number 1
 # Finished batch number 2
 # [1] "10.1016/j.aaf.2023.11.002 1 / 126"
 # [1] "10.3390/fishes10090439 2 / 126"
-# [FOR THE PURPOSE OF THIS EXAMPLE WE DO ARE NOT SHOWING EACH LINE OF THE COMMAND]
+# [FOR THE PURPOSE OF THIS EXAMPLE WE ARE NOT SHOWING EACH LINE OF THE COMMAND]
+# [THE REMOVED LINES CORRESPOND TO MOST OF THE REFERENCE RETRIEVAL COUNTING]
 # [1] "NA 125 / 126"
 # [1] "NA 126 / 126"
 # [1] 22
@@ -44,7 +53,8 @@ manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)
 # File already exists
 # [1] "10.1007/s12602-023-10207-x 1 / 22"
 # [1] "10.1016/j.fsi.2025.110189 2 / 22"
-# [FOR THE PURPOSE OF THIS EXAMPLE WE DO ARE NOT SHOWING EACH LINE OF THE COMMAND]
+# [FOR THE PURPOSE OF THIS EXAMPLE WE ARE NOT SHOWING EACH LINE OF THE COMMAND]
+# [THE REMOVED LINES CORRESPOND TO MOST OF THE REFERENCE RETRIEVAL COUNTING]
 # [1] "10.1111/j.1472-765X.2010.02894.x 21 / 22"
 # [1] "NA 22 / 22"
 # [1] 106
@@ -52,7 +62,8 @@ manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)
 # File already exists
 # [1] "10.1016/j.fsi.2025.110503 1 / 106"
 # [1] "10.1016/j.fsi.2025.110501 2 / 106"
-# [FOR THE PURPOSE OF THIS EXAMPLE WE DO ARE NOT SHOWING EACH LINE OF THE COMMAND][1] "NA 105 / 106"
+# [FOR THE PURPOSE OF THIS EXAMPLE WE ARE NOT SHOWING EACH LINE OF THE COMMAND][1] "NA 105 / 106"
+# [THE REMOVED LINES CORRESPOND TO MOST OF THE REFERENCE RETRIEVAL COUNTING]
 # [1] "NA 106 / 106"
 # Warning: The following columns are missing: pages, number, record_id, isbn
 # formatting data...
@@ -72,5 +83,6 @@ manual_fetch(WOS = TRUE, SCP = TRUE, PMD = TRUE)
 After running
 [`manual_fetch()`](https://thomasdumond.github.io/LitFetchR/reference/manual_fetch.md),
 new unique *history_dedup\_* and *citationCSV\_* files are created and
-*history_id* is updated.See bottom of the page [LitFetchR
+*history_id* is updated. See bottom of the page [LitFetchR
 (Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html)
+for more information about those files.

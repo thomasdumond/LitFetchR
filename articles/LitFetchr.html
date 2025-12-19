@@ -80,7 +80,7 @@ API keys</a>.</p>
 <div class="section level2">
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
-<p>We strongly recommend to create a new R directory for each individual
+<p>We strongly recommend creating a new R directory for each individual
 review project. To do so in RStudio:</p>
 <ul>
 <li><p>Go to
@@ -89,7 +89,7 @@ review project. To do so in RStudio:</p>
 <p>Choose a name for your directory
 (<em>e.g. review_fish_vibrio</em>), then <code>Browse...</code> to
 choose where to save the directory.</p>
-<p><em>We suggest to save the directory on you computer
+<p><em>We suggest to save the directory on your computer
 (e.g. <code>C:/users/...</code>) instead of clouds (e.g. OneDrive, Box,
 etc.), as restriction access from institution might block
 R.</em></p>
@@ -112,7 +112,7 @@ GitHub:</p>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"thomasdumond/LitFetchR"</span><span class="op">)</span></span></code></pre></div>
 <p>Then load the package:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#Load LitFetchR</span></span>
+<code class="sourceCode R"><span><span class="co">#Load `LitFetchR`</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -122,7 +122,7 @@ GitHub:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#This step can be skipped if your API keys have already been saved. Repeat this step if your API keys changed.</span></span>
 <span></span>
-<span><span class="co">#Load LitFetchR</span></span>
+<span><span class="co">#Load `LitFetchR`</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#Save API keys in your R environment</span></span>
@@ -135,10 +135,11 @@ GitHub:</p>
 <p>This will allow <code>LitFetchR</code> to locally access your
 personal API keys while keeping them confidential if you need to share
 your code with collaborators.</p>
-<p>As mentionned by R, it is important to restart your session before
+<p>As mentioned by R, it is important to restart your session before
 continuing:</p>
 <p><code>Session</code>&gt;<code>Restart R</code></p>
-<p>Then load LitFetchR again using <code><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">library(LitFetchR)</a></code></p>
+<p>Then load <code>LitFetchR</code> again using
+<code><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">library(LitFetchR)</a></code></p>
 <p><em>If you don’t have API keys for Scopus and Web of Science, see <a href="https://thomasdumond.github.io/LitFetchR/articles/Get_API_keys.html">Get
 API keys</a>.</em></p>
 </div>
@@ -234,7 +235,9 @@ using the following:</p>
 <span>                     time <span class="op">=</span> <span class="st">"09:00"</span>,</span>
 <span>                     WOS <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                     SCP <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                     PMD <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>                     PMD <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                     dedup <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                     open_file <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#Example of what you should see</span></span>
 <span><span class="co">#&gt; auto_LitFetchR_setup(task_ID = "fish_vibrio",</span></span>
@@ -242,7 +245,9 @@ using the following:</p>
 <span>                     <span class="co"># time = "14:00",</span></span>
 <span>                     <span class="co"># WOS = TRUE,</span></span>
 <span>                     <span class="co"># SCP = TRUE,</span></span>
-<span>                     <span class="co"># PMD = TRUE)</span></span>
+<span>                     <span class="co"># PMD = TRUE</span></span>
+<span>                     <span class="co"># dedup = FALSE,</span></span>
+<span>                     <span class="co"># open_file = TRUE)</span></span>
 <span><span class="co">#Task scheduled!</span></span></code></pre></div>
 <p>After running <code><a href="../reference/auto_LitFetchR_setup.html">auto_LitFetchR_setup()</a></code> for the first time,
 four new files will be created:</p>
@@ -255,16 +260,19 @@ retrieval to only extract the references that were not retrieved
 before.</em></p>
 </li>
 <li>
-<p>history_dedup_YYYY_MM_HHMMSS.xlsx</p>
-<p><em>This file contains the history of each steps of the
-deduplication, using the package ASySD.</em></p>
+<p>history_dedup_YYYY_MM_HHMMSS.xlsx (if dedup = TRUE)</p>
+<p><em>This file contains the history of each step of the deduplication,
+using the package ASySD.</em></p>
 </li>
 <li>
 <p>citationsCSV_YYYY_MM_HHMMSS.CSV</p>
-<p><em>This file contains the unique list of references retrieved from
-the search conducted at the date referenced in the name of the file. It
-is a CSV file, ready to be imported in the screening tool of your choice
-or in your reference manager.</em></p>
+<p><em>This file contains the list of references retrieved from the
+search conducted at the date referenced in the name of the file. It is a
+CSV file, ready to be imported into the screening tool of your choice or
+in your reference manager. If the deduplication option was selected
+(dedup = TRUE), this file contains the unique dedupicated references.
+This file automatically opens after the reference retrieval ends if the
+corresponding option is selected (open_file = TRUE).</em></p>
 </li>
 <li>
 <p>auto_LitFetchR_code(READ_ONLY).R</p>
@@ -279,8 +287,8 @@ file.</em></p>
 <p>Each time <em>auto_LitFetchR_code(READ_ONLY).R</em> runs, new unique
 <em>history_dedup_</em> and <em>citationCSV_</em> files are created and
 <em>history_id</em> is updated.</p>
-<p><strong>Congratulations ! Your automated reference retrieval is ready
-to work !</strong></p>
+<p><strong>Congratulations! Your automated reference retrieval is ready
+to work!</strong></p>
 </div>
 <div class="section level2">
 <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a>

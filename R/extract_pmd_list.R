@@ -24,7 +24,7 @@ extract_pmd_list <- function(search_list_path){
       # Call PubMed API to get total results
       base_url_pmd <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/" # Creates the baseline API URL
       search_url_pmd <- paste0(base_url_pmd, "esearch.fcgi?db=pubmed&term=", utils::URLencode(search_query), "&retmax=1&retmode=json") # Adds the search information.
-      response_pmd <- jsonlite::fromJSON(httr::content(httr::GET(search_url_pmd), "text", encoding = "UTF-8")) # Extracts the content of the corresponding API call.
+      response_pmd <- jsonlite::fromJSON(get_text_retry(search_url_pmd)) # Extracts the content of the corresponding API call.
 
       # Check if the search gives results.
       if (is.null(response_pmd$esearchresult$count)) {
@@ -46,7 +46,7 @@ extract_pmd_list <- function(search_list_path){
           base_url_pmd, "esearch.fcgi?db=pubmed&term=", utils::URLencode(search_query),
           "&retstart=", next_start_pmd, "&retmax=200&retmode=json"
         )
-        response_pmd <- jsonlite::fromJSON(httr::content(httr::GET(batch_url_pmd), "text", encoding = "UTF-8"))
+        response_pmd <- jsonlite::fromJSON(get_text_retry(batch_url_pmd))
         # Check if ID list exists, and extracts the IDs.
         if (!is.null(response_pmd$esearchresult$idlist)) {
           dfs_pmd[[i]] <- data.frame(PMID = unlist(response_pmd$esearchresult$idlist))
@@ -62,7 +62,7 @@ extract_pmd_list <- function(search_list_path){
         message("Finished batch ", i, " for ", search_query)
 
         # Break to avoid hitting rate limits.
-        Sys.sleep(0.2)
+        #Sys.sleep(0.2)
       }
 
       # Combines all unique IDs into one data frame per search string.
@@ -99,14 +99,40 @@ extract_pmd_list <- function(search_list_path){
     for (pmid in pmd_new) {
 
       # API call for one unique ID.
-      fetch_response <- xml2::read_xml(httr::content(httr::GET(paste0("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/", "efetch.fcgi?db=pubmed&id=", pmid, "&retmode=xml")), "text", encoding = "UTF-8"))
+      #fetch_response <- xml2::read_xml(httr::content(httr::GET(paste0("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/", "efetch.fcgi?db=pubmed&id=", pmid, "&retmode=xml")), "text", encoding = "UTF-8"))
+      base_url_pmd <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+      fetch_url <- paste0(base_url_pmd,"efetch.fcgi?db=pubmed&id=", pmid, "&retmode=xml")
+      fetch_response <- tryCatch(
+        xml2::read_xml(get_text_retry(fetch_url)),
+        error = function(e) {
+          message("FAILED PMID=", pmid, " : ", conditionMessage(e))
+          return(NULL)
+        }
+      )
+
+      if (is.null(fetch_response)) {
+        pubmed_results <- rbind(pubmed_results, data.frame(
+          author = NA_character_,
+          year = NA_character_,
+          title = NA_character_,
+          journal = NA_character_,
+          volume = NA_character_,
+          issue = NA_character_,
+          abstract = NA_character_,
+          doi = NA_character_,
+          source = "PubMed",
+          platform_id = pmid,
+          stringsAsFactors = FALSE
+        ))
+        next
+      }
 
       # Extracts authors.
       author_nodes <- xml2::xml_find_all(fetch_response, "//AuthorList/Author")
       pmd_authors <- if (length(author_nodes) > 0) {
         paste(xml2::xml_text(xml2::xml_find_all(author_nodes, "LastName")), collapse = ", ")
       } else {
-        NA
+        NA_character_
       }
 
       # Extracts year.
@@ -116,36 +142,32 @@ extract_pmd_list <- function(search_list_path){
 
       # Extracts article title.
       title_node <- xml2::xml_find_first(fetch_response, "//ArticleTitle")
-      pmd_title <- if (!is.na(title_node)) xml2::xml_text(title_node) else NA
+      pmd_title <- if (!is.null(title_node) && length(title_node) > 0) xml2::xml_text(title_node) else NA_character_
 
       # Extracts journal name.
       journal_node <- xml2::xml_find_first(fetch_response, "//Journal/Title")
-      pmd_journal <- if (!is.na(journal_node)) xml2::xml_text(journal_node) else NA
+      pmd_journal <- if (!is.null(journal_node) && length(journal_node) > 0) xml2::xml_text(journal_node) else NA_character_
 
       # Extracts volume.
       volume_node <- xml2::xml_find_first(fetch_response, "//JournalIssue/Volume")
-      pmd_volume <- as.character(
-        xml2::xml_text(volume_node, trim = TRUE),
-        na = c("", NA)
-      )
+      pmd_volume <- xml2::xml_text(volume_node, trim = TRUE)
+      if (length(pmd_volume) == 0 || identical(pmd_volume, "")) pmd_volume <- NA_character_
 
       # Extracts issue.
       issue_node <- xml2::xml_find_first(fetch_response, "//JournalIssue/Issue")
-      pmd_issue <- as.character(
-        xml2::xml_text(issue_node, trim = TRUE),
-        na = c("", NA)
-      )
+      pmd_issue <- xml2::xml_text(issue_node, trim = TRUE)
+      if (length(pmd_issue) == 0 || identical(pmd_issue, "")) pmd_issue <- NA_character_
 
       # Extracts abstract.
       abstract_node <- xml2::xml_find_first(fetch_response, "//AbstractText")
-      pmd_abstract <- if (!is.na(abstract_node)) xml2::xml_text(abstract_node) else NA
+      pmd_abstract <- if (!is.null(abstract_node) && length(abstract_node) > 0) xml2::xml_text(abstract_node) else NA_character_
 
       # Extracts DOI.
       pmd_doi <- xml2::xml_text(
         xml2::xml_find_first(fetch_response, ".//ArticleId[@IdType='doi']"),
         trim = TRUE
       )
-      if (length(pmd_doi) == 0) pmd_doi <- NA_character_
+      if (length(pmd_doi) == 0 || identical(pmd_doi, "")) pmd_doi <- NA_character_
 
       # Indicates the source platform of the reference.
       pmd_source <- "PubMed"
@@ -161,6 +183,7 @@ extract_pmd_list <- function(search_list_path){
         abstract = pmd_abstract[1],
         doi = pmd_doi[1],
         source = pmd_source[1],
+        platform_id = pmid,
         stringsAsFactors = FALSE
       ))
 
@@ -170,7 +193,7 @@ extract_pmd_list <- function(search_list_path){
       print(paste(pmd_doi,num_doi_pmd,"/",length(pmd_new)))
 
       # Break to prevent API rate limits. Does not work when too long though...
-      Sys.sleep(0.2)
+      Sys.sleep(0.1)
     }
 
     return(pubmed_results) # Returns the dataframe with all the references.

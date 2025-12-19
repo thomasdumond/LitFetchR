@@ -25,7 +25,7 @@ extract_scp_list <- function(search_list_path){
       # Call Scopus API to get total results
       base_url_scp <- 'https://api.elsevier.com/content/search/scopus?query=' # Creates the baseline API URL
       search_url_scp <- paste0(base_url_scp, search_scp, '&apiKey=', scp_api_key) # Adds the search information.
-      response_scp <- jsonlite::fromJSON(httr::content(httr::GET(search_url_scp), "text", encoding = "UTF-8")) # Extracts the content of the corresponding API call.
+      response_scp <- jsonlite::fromJSON(get_text_retry(search_url_scp), flatten = TRUE) # Extracts the content of the corresponding API call.
 
       # Check if the search gives results.
       if (is.null(response_scp$`search-results`$`opensearch:totalResults`)) {
@@ -44,12 +44,13 @@ extract_scp_list <- function(search_list_path){
       for (i in 1:imax_scp) {
         # Construct API call
         # Make the request with pagination
-        response_scp <- jsonlite::fromJSON(httr::content(httr::GET(paste0(base_url_scp, search_scp, '&start=', next_start_scp, '&apiKey=', scp_api_key)), as = "text"), flatten = TRUE)
+        search_url_scp <- paste0(base_url_scp, search_scp, '&start=', next_start_scp, '&apiKey=', scp_api_key) # Adds the search information.
+        response_scp <- jsonlite::fromJSON(get_text_retry(search_url_scp), flatten = TRUE)
         # Update the starting index for the next batch
         next_start_scp <- next_start_scp + 25
         # Check if ID list exists, and extracts the IDs.
         if (!is.null(response_scp$`search-results`$entry$`dc:identifier`)) {
-          dfs_scp[[i]] <- data.frame(scp_id = unlist(response_scp$`search-results`$entry$`dc:identifier`))
+          dfs_scp[[i]] <- data.frame(scopus_id = unlist(response_scp$`search-results`$entry$`dc:identifier`))
         } else {
           message("No more results found for ", query_scp) # When no more IDs are in the call, the extraction stops.
           break
@@ -59,7 +60,7 @@ extract_scp_list <- function(search_list_path){
         message("Finished batch number ", i)
 
         # Break to avoid hitting rate limits.
-        Sys.sleep(0.2)
+        #Sys.sleep(0.2)
       }
 
       # Combines all unique IDs into one data frame per search string.
@@ -81,7 +82,7 @@ extract_scp_list <- function(search_list_path){
     openxlsx::addWorksheet(history_id, sheet_name) # Adds a sheet with a unique name.
     openxlsx::writeData(history_id, sheet_name, scopus_df) # Writes data to the sheet.
     openxlsx::saveWorkbook(history_id, "history_id.xlsx", overwrite = TRUE) # Saves history excel.
-    scopus_id_vec <- unique(scopus_df$scp_id) # Makes sure there is no duplicates in the extracted IDs.
+    scopus_id_vec <- unique(scopus_df$scopus_id) # Makes sure there is no duplicates in the extracted IDs.
     last_list <- readxl::read_excel("history_id.xlsx", sheet = "updated_id_list") # Extract the IDs retrieved previously.
     last_list_vec <- last_list$id # Converts the list to a vector.
     scp_new <- setdiff(scopus_id_vec, last_list_vec) # Gets only the new IDs.
@@ -97,7 +98,30 @@ extract_scp_list <- function(search_list_path){
     for (x in scp_new){
 
       # Gets the JSON response.
-      scp_article <- jsonlite::fromJSON(httr::content(httr::GET(url = paste0("https://api.elsevier.com/content/abstract/scopus_id/",x), httr::add_headers("X-ELS-APIKey" = scp_api_key,"Accept" = "application/json")), "text", encoding = "UTF-8"))
+      search_url_scp <- paste0("https://api.elsevier.com/content/abstract/scopus_id/",x)
+      scp_article <- tryCatch(jsonlite::fromJSON(get_text_retry(url = search_url_scp, headers = c("X-ELS-APIKey" = scp_api_key, "Accept" = "application/json")), flatten = TRUE),
+                              error = function(e) {
+                                message("FAILED Scopus ID=", x, " : ", conditionMessage(e))
+                                data.frame(
+                                  author = NA_character_,
+                                  year = NA_character_,
+                                  title = NA_character_,
+                                  journal = NA_character_,
+                                  volume = NA_character_,
+                                  issue = NA_character_,
+                                  abstract = NA_character_,
+                                  doi = NA_character_,
+                                  source = "Scopus",
+                                  platform_id = x,
+                                  stringsAsFactors = FALSE
+                                )
+                              }
+      )
+
+      if (is.data.frame(scp_article)) {
+        scopus_results <- rbind(scopus_results, scp_article)
+        next
+      }
 
       # Extracts article entries from API response.
       scp_data <- scp_article$`abstracts-retrieval-response`$coredata
@@ -107,9 +131,9 @@ extract_scp_list <- function(search_list_path){
       # Extracts authors (set to NA if missing).
       names_list <- purrr::pluck(scp_data3,
                                   "authors", "author", "ce:surname",
-                                  .default = NA
+                                  .default = character(0)
                                   )
-      scp_authors <- paste(names_list, collapse = ", ")
+      scp_authors <- if (length(names_list) > 0) paste(names_list, collapse = ", ") else NA_character_
 
       # Extracts year (set to NA if missing).
       scp_year <- purrr::pluck(scp_data2,
@@ -118,10 +142,10 @@ extract_scp_list <- function(search_list_path){
                                )
 
       # Extracts title (set to NA if missing).
-      scp_titles <- ifelse("dc:title" %in% names(scp_data), scp_data$`dc:title`, NA)
+      scp_titles <- if ("dc:title" %in% names(scp_data)) scp_data$`dc:title` else NA_character_
 
       # Extracts journal.
-      scp_journal <- ifelse("prism:publicationName" %in% names(scp_data), scp_data$`prism:publicationName`, NA)
+      scp_journal <- if ("prism:publicationName" %in% names(scp_data)) scp_data$`prism:publicationName` else NA_character_
 
       # Extracts volume (set to NA if missing).
       scp_volume <- as.character(
@@ -133,10 +157,10 @@ extract_scp_list <- function(search_list_path){
       )
 
       # Extracts abstract (set to NA if missing).
-      scp_abstracts <- ifelse("dc:description" %in% names(scp_data), scp_data$`dc:description`, NA)
+      scp_abstracts <- if ("dc:description" %in% names(scp_data)) scp_data$`dc:description` else NA_character_
 
       # Extracts DOI (set to NA if missing).
-      scp_doi <- ifelse("prism:doi" %in% names(scp_data), scp_data$`prism:doi`, NA)
+      scp_doi <- if ("prism:doi" %in% names(scp_data)) scp_data$`prism:doi` else NA_character_
 
       # Extracts issue (set to NA if missing).
       scp_issue <- as.character(
@@ -161,6 +185,7 @@ extract_scp_list <- function(search_list_path){
         abstract = scp_abstracts[1],
         doi = scp_doi[1],
         source = scp_source[1],
+        platform_id = x,
         stringsAsFactors = FALSE
       )
 
@@ -173,7 +198,7 @@ extract_scp_list <- function(search_list_path){
       scopus_results <- rbind(scopus_results, scopus_results_x)
 
       # Break to prevent API rate limits. Does not work when too long though...
-      Sys.sleep(0.2)
+      #Sys.sleep(0.2)
     }
 
     return(scopus_results) # Returns the dataframe with all the references.

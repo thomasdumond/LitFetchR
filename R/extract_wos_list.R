@@ -1,34 +1,3 @@
-#' Internal helper to GET and parse Web of Science JSON with retries
-#'
-#' @param url Character scalar. Full WoS API URL.
-#' @param api_key Character scalar, WoS API key.
-#' @return A list parsed from JSON (jsonlite::fromJSON result).
-#' @keywords internal
-#' @noRd
-#'
-get_wos_json <- function(url, api_key) {
-  resp <- httr::RETRY(
-    verb  = "GET",
-    url   = url,
-    httr::add_headers("X-ApiKey" = api_key),
-    times = 6,          # total attempts
-    pause_base = 1,     # base backoff
-    pause_cap  = 30     # max wait between retries
-  )
-
-  # If the API rate-limits you and provides Retry-After, respect it
-  if (httr::status_code(resp) == 429) {
-    ra <- httr::headers(resp)[["retry-after"]]
-    if (!is.null(ra) && !is.na(ra)) Sys.sleep(as.numeric(ra))
-  }
-
-  httr::stop_for_status(resp)  # fail loudly on 4xx/5xx
-  jsonlite::fromJSON(httr::content(resp, as = "text", encoding = "UTF-8"))
-}
-
-
-
-
 #' extract the metadata from the new references from Web of Science
 #' based on the search strings found in search_list.txt
 #' @param search_list_path path to search_list
@@ -56,7 +25,7 @@ extract_wos_list <- function(search_list_path){
       # Call WoS API to get total results
       base_url_wos <- 'https://wos-api.clarivate.com/api/wos/?databaseId=WOK&usrQuery=' # Creates the baseline API URL
       search_url_wos <- paste0("https://wos-api.clarivate.com/api/wos/?databaseId=WOK&usrQuery=", search_wos) # Adds the search information.
-      response_wos <- get_wos_json(search_url_wos, wos_api_key)
+      response_wos <- jsonlite::fromJSON(get_text_retry(search_url_wos, headers = c("X-ApiKey" = wos_api_key)))
 
       # Gives the number of results from the API call.
       max_result_wos <- as.numeric(response_wos$QueryResult$RecordsFound)
@@ -70,7 +39,7 @@ extract_wos_list <- function(search_list_path){
         # Construct API call
         # Make the request with pagination
         search_url_wos <- paste0("https://wos-api.clarivate.com/api/wos/?databaseId=WOK&usrQuery=", search_wos,'&count=100', '&firstRecord=', next_start_wos)
-        response_wos <- get_wos_json(search_url_wos, wos_api_key)
+        response_wos <- jsonlite::fromJSON(get_text_retry(search_url_wos, headers = c("X-ApiKey" = wos_api_key)))
         # Update the starting index for the next batch
         next_start_wos <- next_start_wos + 100
         # Check if ID list exists, and extracts the IDs.
@@ -125,7 +94,7 @@ extract_wos_list <- function(search_list_path){
       # Gets the JSON response.
       search_url_wos <- paste0("https://wos-api.clarivate.com/api/wos/id/",x,"?databaseId=WOK")
       wos_article <- tryCatch(
-        get_wos_json(search_url_wos, wos_api_key),
+        jsonlite::fromJSON(get_text_retry(search_url_wos, headers = c("X-ApiKey" = wos_api_key))),
         error = function(e) {
           message("FAILED UID=", x, " : ", conditionMessage(e))
           data.frame(
@@ -138,7 +107,7 @@ extract_wos_list <- function(search_list_path){
             abstract = NA_character_,
             doi = NA_character_,
             source = "Web of Science",
-            UID = x,
+            platform_id = x,
             stringsAsFactors = FALSE
           )
 
@@ -242,7 +211,7 @@ extract_wos_list <- function(search_list_path){
         abstract = wos_abstract[1],
         doi = wos_doi[1],
         source = wos_source[1],
-        UID = x,
+        platform_id = x,
         stringsAsFactors = FALSE
       )
 

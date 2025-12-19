@@ -2,7 +2,7 @@
 % Please edit documentation in R/remove_scheduled_task.R
 \name{remove_scheduled_task}
 \alias{remove_scheduled_task}
-\title{Removes a scheduled task using the "task_ID" from Task Scheduler (Windows) or Cron (Mac/Linux).}
+\title{Removes a scheduled task.}
 \usage{
 remove_scheduled_task(taskname, dry_run = FALSE)
 }

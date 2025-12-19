@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_save_search.R
 \name{create_save_search}
 \alias{create_save_search}
-\title{Create and save search string(s).}
+\title{Creates and saves search string(s).}
 \usage{
 create_save_search(dry_run = FALSE)
 }

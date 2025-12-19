@@ -1,4 +1,4 @@
-#' Create and save search string(s).
+#' Creates and saves search string(s).
 #'
 #' An interactive function that
 #' ask the user to enter a search string and provide

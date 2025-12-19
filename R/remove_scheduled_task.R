@@ -1,4 +1,7 @@
+#' Removes a scheduled task.
+#'
 #' Removes a scheduled task using the "task_ID" from Task Scheduler (Windows) or Cron (Mac/Linux).
+#'
 #' @param taskname Name/ID of the scheduled task (Windows Task Scheduler or Cron).
 #' @param dry_run Simulation run option.
 #'

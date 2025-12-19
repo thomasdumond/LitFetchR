@@ -81,10 +81,10 @@ extract_scp_list <- function(search_list_path){
     openxlsx::addWorksheet(history_id, sheet_name) # Adds a sheet with a unique name.
     openxlsx::writeData(history_id, sheet_name, scopus_df) # Writes data to the sheet.
     openxlsx::saveWorkbook(history_id, "history_id.xlsx", overwrite = TRUE) # Saves history excel.
-    scopus_id <- scopus_df[!duplicated(scopus_df),] # Makes sure there is no duplicates in the extracted IDs.
+    scopus_id_vec <- unique(scopus_df$scp_id) # Makes sure there is no duplicates in the extracted IDs.
     last_list <- readxl::read_excel("history_id.xlsx", sheet = "updated_id_list") # Extract the IDs retrieved previously.
     last_list_vec <- last_list$id # Converts the list to a vector.
-    scp_new <- setdiff(scopus_id, last_list_vec) # Gets only the new IDs.
+    scp_new <- setdiff(scopus_id_vec, last_list_vec) # Gets only the new IDs.
     scopus_new_id <- data.frame(id = scp_new) # Creates a dataframe with only the new IDs.
     updated_list <- rbind(last_list, scopus_new_id) # Adds the new IDs to the current list.
     openxlsx::writeData(history_id, sheet = "updated_id_list", x = updated_list) # Writes the list updated with the new IDs.

@@ -2,8 +2,6 @@
 
 ## LitFetchR 0.2.0
 
-- First CRAN release.
-
 - New data extraction strategy improving quality and consistency.
 
 ## LitFetchR 0.1.1

@@ -1,3 +1,5 @@
+# LitFetchR 0.2.0
+
 # LitFetchR 0.1.2
 
 * New data extraction strategy improving quality and consistency.

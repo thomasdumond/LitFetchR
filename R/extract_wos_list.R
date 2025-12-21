@@ -123,11 +123,22 @@ extract_wos_list <- function(search_list_path){
       names <- purrr::pluck(wos_article,
                      "Data", "Records", "records", "REC",
                      "static_data", "summary", "names", "name",
-                     .default = NA)
+                     .default = NULL)
       names_tbl <- tryCatch(as.data.frame(names), error = function(e) NULL)
       wos_authors <- NA_character_
-      if (!is.null(names_tbl) && "last_name" %in% names(names_tbl)) {
-        wos_authors <- paste(stats::na.omit(names_tbl$last_name), collapse = ", ")
+      if (!is.null(names_tbl) && nrow(names_tbl) > 0) {
+
+        if ("last_name" %in% names(names_tbl)) {
+          vals <- stats::na.omit(names_tbl$last_name)
+        } else if ("full_name" %in% names(names_tbl)) {
+          vals <- stats::na.omit(names_tbl$full_name)
+        } else {
+          vals <- character(0)
+        }
+
+        if (length(vals) > 0) {
+          wos_authors <- paste(as.character(vals), collapse = ", ")
+        }
       }
 
       # Extracts year (set to NA if missing).
@@ -179,15 +190,26 @@ extract_wos_list <- function(search_list_path){
       identifiers <- purrr::pluck(wos_article,
                            "Data", "Records", "records", "REC",
                            "dynamic_data", "cluster_related", "identifiers", "identifier",
-                           .default = NA)
+                           .default = NULL)
 
       identifiers_df <- tryCatch(as.data.frame(identifiers), error = function(e) NULL)
       wos_doi <- NA_character_
-      if (!is.null(identifiers_df) && nrow(identifiers_df) > 0) {
-        doi_rows <- identifiers_df[identifiers_df$type == "doi", , drop = FALSE]
-        if (nrow(doi_rows) > 0) wos_doi <- as.character(doi_rows$value[[1]])
-      }
+      if (!is.null(identifiers_df) && nrow(identifiers_df) > 0 && all(c("type", "value") %in% names(identifiers_df))) {
 
+        # prefer "doi", then fallback to "xref_doi"
+        doi_rows <- identifiers_df[identifiers_df$type %in% c("doi", "xref_doi"), , drop = FALSE]
+
+        if (nrow(doi_rows) > 0) {
+          # ensure preference order (doi first)
+          doi_rows$type <- factor(doi_rows$type, levels = c("doi", "xref_doi"))
+          doi_rows <- doi_rows[order(doi_rows$type), , drop = FALSE]
+
+          # take first non-NA value
+          vals <- unlist(doi_rows$value, use.names = FALSE)
+          vals <- vals[!is.na(vals)]
+          if (length(vals) > 0) wos_doi <- as.character(vals[[1]])
+        }
+      }
 
       # Extracts issue (set to NA if missing).
       wos_issue <- as.character(purrr::pluck(wos_article,

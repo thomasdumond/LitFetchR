@@ -8,10 +8,7 @@ Authors@R: c(
             person("Torben", "Nielsen", role = "ctb", comment = c(ORCID = "0000-0002-8941-7376"))
             )
 Maintainer: Thomas Dumond <thomas.dumond@adelaide.edu.au>
-Description: Provides functions to automatically retrieve and deduplicate
-    reference metadata based on saved search strings.
-    Access to Web of Science and Scopus requires personal API keys,
-    while PubMed can be queried without one.
+Description: Provides functions to automatically retrieve and deduplicate reference metadata based on saved search strings. Access to Web of Science and Scopus requires personal API keys, while PubMed can be queried without one. The optional deduplication functionality requires the package `ASySD` available from <https://github.com/camaradesuk/ASySD>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports:

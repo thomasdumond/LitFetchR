@@ -7,7 +7,7 @@
 create_id_history()
 }
 \value{
-The excel file 'history_id.xlsx'.
+No return value, creates or updates the excel file 'history_id.xlsx'.
 }
 \description{
 Creates an excel file to store the references identification retrieved at each search.

@@ -7,7 +7,7 @@
 create_dedup_history()
 }
 \value{
-The excel file 'history_dedup.xlsx'.
+No return value, creates the excel file 'history_dedup.xlsx'.
 }
 \description{
 Creates an excel file to store the deduplication history.

@@ -11,6 +11,9 @@ remove_scheduled_task(taskname, dry_run = FALSE)
 
 \item{dry_run}{Simulation run option.}
 }
+\value{
+No return value, deletes a scheduled task saved using the function 'auto_LitFetchR_setup.R'.
+}
 \description{
 Removes a scheduled task using the "task_ID" from Task Scheduler (Windows) or Cron (Mac/Linux).
 }

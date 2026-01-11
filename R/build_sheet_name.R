@@ -2,7 +2,7 @@
 #'
 #' @param time System time at the time the function is run.
 #'
-#' @returns Return a unique name based on the system time
+#' @returns Character scalar, a unique name based on the system time
 #'          with the format YYYY-MM-DD-HHMMSS.
 #'
 #' @keywords internal

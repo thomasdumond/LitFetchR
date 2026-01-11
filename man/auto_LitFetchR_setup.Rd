@@ -36,7 +36,7 @@ auto_LitFetchR_setup(
 \item{dry_run}{Simulation run option.}
 }
 \value{
-Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
+No return value, creates a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux).
 }
 \description{
 Creates a read-only Rscript and a task to run the code automatically

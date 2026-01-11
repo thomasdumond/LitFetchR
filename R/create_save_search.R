@@ -8,7 +8,8 @@
 #'
 #' @param dry_run Simulation run option.
 #'
-#' @return One or more search string(s) in the file "search_list.txt" and the history of all searches in "history_search.xlsx".
+#' @return No return value, displays literature search results interactively and one or more search string(s) can be saved in the file "search_list.txt" and the history of all searches in "history_search.xlsx".
+#'
 #' @importFrom utils URLencode
 #'
 #' @examples
@@ -20,7 +21,7 @@
 #' @export
 
 
-create_save_search <- function(dry_run = FALSE){
+create_save_search <- function(directory, dry_run = FALSE){
 
   if (dry_run) {
     message('History had been created.
@@ -114,8 +115,8 @@ create_save_search <- function(dry_run = FALSE){
         cat("\nSelected search string:", search, "\n")
 
         # Select where to store saved search strings
-        search_file <- 'search_list.txt'
-        search_file <- paste0(getwd(), "/", search_file)
+        search_file <- file.path(directory, 'search_list.txt')
+        search_file <- normalizePath(search_file, mustWork = FALSE)
 
         # Load existing searches if file exists
         if (file.exists(search_file)) {
@@ -229,10 +230,10 @@ create_save_search <- function(dry_run = FALSE){
 
       # Print the search string following the results from
       # each database.
-      print(search)
-      print(paste0("Web of Science: ", max_result_wos, " results"))
-      print(paste0("Scopus: ", max_result_scp, " results"))
-      print(paste0("PubMed: ", max_result_pmd, " results"))
+      message(search)
+      message(paste0("Web of Science: ", max_result_wos, " results"))
+      message(paste0("Scopus: ", max_result_scp, " results"))
+      message(paste0("PubMed: ", max_result_pmd, " results"))
 
     }
   }

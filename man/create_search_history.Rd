@@ -8,7 +8,11 @@ made using \code{create_save_search()}.}
 create_search_history()
 }
 \value{
-An history_search R object workbook and sheet_name in a list.
+A list with elements:
+\describe{
+\item{history_search}{Workbook object.}
+\item{sheet_name}{Character scalar.}
+}
 }
 \description{
 Creates an excel file to store the history of searches

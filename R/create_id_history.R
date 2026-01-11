@@ -1,6 +1,7 @@
 #' Creates an excel file to store the references identification retrieved at each search.
 #'
-#' @return The excel file 'history_id.xlsx'.
+#' @return No return value, creates or updates the excel file 'history_id.xlsx'.
+#'
 #' @keywords internal
 
 # create history if does not exist

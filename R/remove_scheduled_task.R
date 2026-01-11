@@ -5,6 +5,8 @@
 #' @param taskname Name/ID of the scheduled task (Windows Task Scheduler or Cron).
 #' @param dry_run Simulation run option.
 #'
+#' @return No return value, deletes a scheduled task saved using the function 'auto_LitFetchR_setup.R'.
+#'
 #' @examples
 #' # This is a "dry run" example.
 #' # No task will actually be removed, it only shows how the function should react.

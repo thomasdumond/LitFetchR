@@ -1,7 +1,12 @@
 #' Creates an excel file to store the history of searches
 #' made using `create_save_search()`.
 #'
-#' @return An history_search R object workbook and sheet_name in a list.
+#' @return A list with elements:
+#' \describe{
+#'  \item{history_search}{Workbook object.}
+#'  \item{sheet_name}{Character scalar.}
+#' }
+#'
 #' @keywords internal
 
 create_search_history <- function(){

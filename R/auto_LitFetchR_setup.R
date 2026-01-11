@@ -14,7 +14,7 @@
 #' @param open_file Automatically opens the CSV file after reference retrieval.
 #' @param dry_run Simulation run option.
 #'
-#' @returns Create a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux)
+#' @return \code{NULL} (invisibly). Called for its side effects: writes an R script and schedules a task (Windows Task Scheduler or cron).
 #'
 #' @examples
 #' # This is a "dry run" example.
@@ -38,6 +38,7 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
                                  WOS = TRUE,
                                  SCP = TRUE,
                                  PMD = TRUE,
+                                 directory,
                                  dedup = FALSE,
                                  open_file = FALSE,
                                  dry_run = FALSE
@@ -49,9 +50,9 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
 
   # CREATE AUTOMATION CODE
   ########################
-
+  directory <- normalizePath(directory, mustWork = FALSE)
   # Build the list of selected databases
-  selected <- c(WOS = WOS, SCP = SCP, PMD = PMD, dedup = dedup, open_file = open_file)
+  selected <- c(WOS = WOS, SCP = SCP, PMD = PMD, directory = directory, dedup = dedup, open_file = open_file)
   # If no database was selected, then the code stops and mentions
   # that at least one database must be selected
   if (!any(c(WOS, SCP, PMD))) {
@@ -61,11 +62,13 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
   # Creates the path to the read-only R script containing the code
   # that will be run automatically. Different approach windows vs mac
   if (.Platform$OS.type == "windows") {
-    script_path <- file.path(getwd(), "auto_LitFetchR_code(READ_ONLY).R")
+    script_path <- file.path(directory, "auto_LitFetchR_code(READ_ONLY).R")
+    script_path <- normalizePath(script_path, mustWork = FALSE)
     #long paths can be problematic later when using `taskscheduler()`
     script_path <- get_short_path(script_path)
   } else {
-    script_path <- file.path(getwd(), "auto_LitFetchR_code(READ_ONLY).R")
+    script_path <- file.path(directory, "auto_LitFetchR_code(READ_ONLY).R")
+    script_path <- normalizePath(script_path, mustWork = FALSE)
   }
   # If the task needs to be modified or add a new task, then the read-only
   # file must be readable again, deleted and recreated. Windows only.
@@ -81,12 +84,6 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
 
   # Vector of code lines to be added in the Rscript
   lines <- character() #create the character vector
-  lines <- c(lines, paste0('setwd(', '"', getwd(), '"', ')')) #make sure to use the right directory
-  lines <- c(lines,paste0('search_list_path <- ',
-                          shQuote(file.path(getwd(),"search_list.txt"))
-                          )
-             ) #variable path to the search string(s)
-
   # Build the `manual_fetch()` call based on selected databases
   arg_strings <- sprintf("%s = %s",
                          names(selected),
@@ -112,7 +109,6 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
   #SCHEDULE TASK
   ##############
 
-  taskdirectory <- getwd() #make sure to use the right directory
   if (.Platform$OS.type == "windows") {
     # Windows: use taskscheduleR
     # create the scheduled task

@@ -10,7 +10,7 @@ create_save_search(dry_run = FALSE)
 \item{dry_run}{Simulation run option.}
 }
 \value{
-One or more search string(s) in the file "search_list.txt" and the history of all searches in "history_search.xlsx".
+No return value, displays literature search results interactively and one or more search string(s) can be saved in the file "search_list.txt" and the history of all searches in "history_search.xlsx".
 }
 \description{
 An interactive function that

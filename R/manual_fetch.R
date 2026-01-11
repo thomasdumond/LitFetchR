@@ -29,6 +29,7 @@
 manual_fetch <- function(WOS = TRUE,
                          SCP = TRUE,
                          PMD = TRUE,
+                         directory,
                          dedup = FALSE,
                          open_file = FALSE,
                          dry_run = FALSE
@@ -80,13 +81,12 @@ manual_fetch <- function(WOS = TRUE,
     return(invisible(NULL))
   }
 
-  #Makes sure to use the Projects' directory
-  wd <- getwd()
-  setwd(wd)
+  search_list_path <- file.path(directory, "search_list.txt")
+  search_list_path <- normalizePath(search_list_path, mustWork = FALSE)
 
   # Only runs if search string(s) are saved, else asks the user to do so.
-  if(file.exists("search_list.txt")){
-    search_list_path <- paste0(wd,"/search_list.txt")
+  if(file.exists(search_list_path)){
+    search_list_path <- search_list_path
   } else{
     # Asks the user to save a search string with the adequate function.
     stop("No search string saved. Please save a search string using the function create_save_search().")

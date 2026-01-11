@@ -11,4 +11,12 @@ create_search_history()
 
 ## Value
 
-An history_search R object workbook and sheet_name in a list.
+A list with elements:
+
+- history_search:
+
+  Workbook object.
+
+- sheet_name:
+
+  Character scalar.

@@ -10,4 +10,4 @@ create_dedup_history()
 
 ## Value
 
-The excel file 'history_dedup.xlsx'.
+No return value, creates the excel file 'history_dedup.xlsx'.

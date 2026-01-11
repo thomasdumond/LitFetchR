@@ -19,6 +19,11 @@ remove_scheduled_task(taskname, dry_run = FALSE)
 
   Simulation run option.
 
+## Value
+
+No return value, deletes a scheduled task saved using the function
+'auto_LitFetchR_setup.R'.
+
 ## Examples
 
 ``` r

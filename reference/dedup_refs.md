@@ -38,8 +38,9 @@ dedup_refs(
 
 ## Value
 
-A CSV file containing all the new references deduplicated and the
-history of the deduplication in an excel file.
+No return value, deduplicates the references from up to three databases
+and creates a CSV file containing all the references deduplicated and
+the history of the deduplication in an excel file.
 
 ## Examples
 

@@ -66,8 +66,8 @@ auto_LitFetchR_setup(
 
 ## Value
 
-Create a Rscript file (READ ONLY) and a task in Task Scheduler
-(Windows), or in Cron (Mac/Linux)
+No return value, creates a Rscript file (READ ONLY) and a task in Task
+Scheduler (Windows), or in Cron (Mac/Linux).
 
 ## Examples
 

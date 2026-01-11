@@ -19,8 +19,9 @@ create_save_search(dry_run = FALSE)
 
 ## Value
 
-One or more search string(s) in the file "search_list.txt" and the
-history of all searches in "history_search.xlsx".
+No return value, displays literature search results interactively and
+one or more search string(s) can be saved in the file "search_list.txt"
+and the history of all searches in "history_search.xlsx".
 
 ## Examples
 

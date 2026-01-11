@@ -17,5 +17,46 @@ extract_pmd_list(search_list_path)
 
 ## Value
 
-A dataframe containing the metadata from the new references found on
-PubMed.
+A data.frame with one row per retrieved PubMed record and columns:
+
+- author:
+
+  Character. Publication authors.
+
+- year:
+
+  Character. Publication year.
+
+- title:
+
+  Character. Publication title.
+
+- journal:
+
+  Character. Publication journal name.
+
+- volume:
+
+  Character. Publication journal volume.
+
+- issue:
+
+  Character. Publication journal issue.
+
+- abstract:
+
+  Character. Publication abstract.
+
+- doi:
+
+  Character. Publication Digital Object Identifier (DOI).
+
+- source:
+
+  Character. Data source.
+
+- platform_id:
+
+  Character. Publication unique identifier in data source.
+
+If `search_list_path` does not exist, returns `NULL`.

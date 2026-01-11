@@ -61,7 +61,38 @@ based on the search string(s) saved in "search_list.txt".</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A dataframe containing the metadata from the new references found on PubMed.</p>
+    <p>A data.frame with one row per retrieved PubMed record and columns:</p><dl><dt>author</dt>
+<dd><p>Character. Publication authors.</p></dd>
+
+<dt>year</dt>
+<dd><p>Character. Publication year.</p></dd>
+
+<dt>title</dt>
+<dd><p>Character. Publication title.</p></dd>
+
+<dt>journal</dt>
+<dd><p>Character. Publication journal name.</p></dd>
+
+<dt>volume</dt>
+<dd><p>Character. Publication journal volume.</p></dd>
+
+<dt>issue</dt>
+<dd><p>Character. Publication journal issue.</p></dd>
+
+<dt>abstract</dt>
+<dd><p>Character. Publication abstract.</p></dd>
+
+<dt>doi</dt>
+<dd><p>Character. Publication Digital Object Identifier (DOI).</p></dd>
+
+<dt>source</dt>
+<dd><p>Character. Data source.</p></dd>
+
+<dt>platform_id</dt>
+<dd><p>Character. Publication unique identifier in data source.</p></dd>
+
+
+</dl><p>If <code>search_list_path</code> does not exist, returns <code>NULL</code>.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

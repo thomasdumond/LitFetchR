@@ -11,4 +11,4 @@ create_id_history()
 
 ## Value
 
-The excel file 'history_id.xlsx'.
+No return value, creates or updates the excel file 'history_id.xlsx'.

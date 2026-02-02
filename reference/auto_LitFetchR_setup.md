@@ -84,5 +84,5 @@ auto_LitFetchR_setup(task_ID = "fish_vibrio",
                        open_file = FALSE,
                        dry_run = TRUE
                        )
-#> Task scheduled!
+#> Dry run: no task scheduled, the message "Task scheduled!" will appear when the function will run successfully.
 ```

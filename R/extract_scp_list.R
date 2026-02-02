@@ -205,7 +205,7 @@ extract_scp_list <- function(search_list_path){
   }
   else{
     # Asks the user to save a search string with the adequate function.
-    print("No search string saved. Please save a search string using the function create_save_search().")
+    message("No search string saved. Please save a search string using the function create_save_search().")
   }
 
 }

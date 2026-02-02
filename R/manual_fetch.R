@@ -6,6 +6,7 @@
 #' @param WOS Runs the search on Web of Science (TRUE or FALSE).
 #' @param SCP Runs the search on Scopus (TRUE or FALSE).
 #' @param PMD Runs the search on PubMed (TRUE or FALSE).
+#' @param directory
 #' @param dedup Deduplicates the retrieved references (TRUE or FALSE).
 #' @param open_file Automatically opens the CSV file after reference retrieval.
 #' @param dry_run Simulation run option.
@@ -101,7 +102,7 @@ manual_fetch <- function(WOS = TRUE,
     stop("At least one database must be set to TRUE (WOS, SCP, PMD).")
   }
 
-  # Created NULL databases to allow `dedup_refs()` to work in case some platforms are not selected.
+  # Create NULL databases to allow `dedup_refs()` to work in case some platforms are not selected.
   df1 <- df2 <- df3 <- NULL
 
   # Extract the metadata of the references retrieved on the platforms selected by user.

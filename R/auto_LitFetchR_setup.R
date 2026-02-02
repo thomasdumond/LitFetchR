@@ -10,6 +10,7 @@
 #' @param WOS Runs the search on Web of Science (TRUE or FALSE).
 #' @param SCP Runs the search on Scopus (TRUE or FALSE).
 #' @param PMD Runs the search on PubMed (TRUE or FALSE).
+#' @param directory Choose the directory in which the search string is saved (Project's directory). That is also where the references metadata will be saved.
 #' @param dedup Deduplicates the retrieved references (TRUE or FALSE).
 #' @param open_file Automatically opens the CSV file after reference retrieval.
 #' @param dry_run Simulation run option.
@@ -25,6 +26,7 @@
 #'                        WOS = TRUE,
 #'                        SCP = TRUE,
 #'                        PMD = TRUE,
+#'                        directory = tempdir(),
 #'                        dedup = FALSE,
 #'                        open_file = FALSE,
 #'                        dry_run = TRUE
@@ -44,15 +46,21 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
                                  dry_run = FALSE
                                  ) {
   if (dry_run) {
-    message("Task scheduled!")
+    message('Dry run: no task scheduled, the message "Task scheduled!" will appear when the function will run successfully.')
     return(invisible(NULL))
   }
 
   # CREATE AUTOMATION CODE
   ########################
+
+  if (missing(directory) || is.null(directory) || !nzchar(directory)) {
+    stop("`directory` must be provided (path to your project folder).")
+  }
   directory <- normalizePath(directory, mustWork = FALSE)
-  # Build the list of selected databases
-  selected <- c(WOS = WOS, SCP = SCP, PMD = PMD, directory = directory, dedup = dedup, open_file = open_file)
+  if (!dir.exists(directory)) stop("Directory does not exist: ", directory)
+
+    # Build the list of selected databases
+  selected <- c(WOS = WOS, SCP = SCP, PMD = PMD, dedup = dedup, open_file = open_file)
   # If no database was selected, then the code stops and mentions
   # that at least one database must be selected
   if (!any(c(WOS, SCP, PMD))) {
@@ -62,13 +70,10 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
   # Creates the path to the read-only R script containing the code
   # that will be run automatically. Different approach windows vs mac
   if (.Platform$OS.type == "windows") {
-    script_path <- file.path(directory, "auto_LitFetchR_code(READ_ONLY).R")
-    script_path <- normalizePath(script_path, mustWork = FALSE)
+    script_path <- file.path(directory, "auto_LitFetchR_code_READ_ONLY.R")
     #long paths can be problematic later when using `taskscheduler()`
-    script_path <- get_short_path(script_path)
   } else {
-    script_path <- file.path(directory, "auto_LitFetchR_code(READ_ONLY).R")
-    script_path <- normalizePath(script_path, mustWork = FALSE)
+    script_path <- file.path(directory, "auto_LitFetchR_code_READ_ONLY.R")
   }
   # If the task needs to be modified or add a new task, then the read-only
   # file must be readable again, deleted and recreated. Windows only.
@@ -80,15 +85,17 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
   }
 
   # Creates the Rscript from the path
-  file.create(script_path)
+  check <- file.create(script_path)
+  if (!check) stop("Could not create script file: ", script_path)
+  script_path_scheduler <- if (.Platform$OS.type == "windows") get_short_path(script_path) else script_path
 
   # Vector of code lines to be added in the Rscript
   lines <- character() #create the character vector
   # Build the `manual_fetch()` call based on selected databases
-  arg_strings <- sprintf("%s = %s",
-                         names(selected),
-                         ifelse(selected, "TRUE", "FALSE")
-                         ) #Creates a string vector showing with argument from `auto_LitFetchR_setup` parameters
+  arg_strings <- c(
+    sprintf("%s = %s", names(selected), ifelse(selected, "TRUE", "FALSE")), #Creates a string vector showing with argument from `auto_LitFetchR_setup` parameters
+    sprintf("directory = %s", shQuote(directory))
+  )
 
   lines <- c(lines, sprintf("LitFetchR::manual_fetch(%s)",
                             paste(arg_strings, collapse = ", ")
@@ -114,7 +121,7 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
     # create the scheduled task
     taskscheduleR::taskscheduler_create(
       taskname  = task_ID,
-      rscript   = script_path,
+      rscript   = script_path_scheduler,
       schedule  = when,
       starttime = time
     )
@@ -133,4 +140,5 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
     }
   }
   message("Task scheduled!")
+  invisible(NULL)
 }

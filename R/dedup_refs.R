@@ -46,7 +46,7 @@ dedup_refs <- function(df1 = NULL,
     return(invisible(NULL))
   }
 
-  # Guard code to inform that the package `ASySD` in necessary to use this function
+  # Guard code to inform that the package `ASySD` is necessary to use this function
   if (!requireNamespace("ASySD", quietly = TRUE)) {
     stop(
       "ASySD is required for deduplication but is not installed.\n",
@@ -82,15 +82,6 @@ dedup_refs <- function(df1 = NULL,
 
   unique_citations <- results_dedup$unique # Extract the unique references
 
-  # The code below does not work for now, but will allow users to use ASySD shiny app to check the manual deduplication list.
-  #starts the manual deduplication with ASySD shiny if required
-  # if (nrow(results_dedup$manual_dedup)!=0){
-  #   manual_review <- ASySD::manual_dedup_shiny(results_dedup$manual_dedup, cols=names(results_dedup$manual_dedup))
-  #   unique_citations <- ASySD::dedup_citations_add_manual(results_dedup$unique, additional_pairs = manual_review)
-  # } else{
-  #   unique_citations <- results_dedup$unique
-  # }
-
   openxlsx::writeData(history_dedup, "unique_citations", unique_citations) # Writes the unique citation list in forth sheet.
   openxlsx::saveWorkbook(history_dedup, hist_dedup_name, overwrite = TRUE) # Saves the sheet.
   ASySD::write_citations(unique_citations, type="csv", filename=csv_name) # Creates the CSV file only containing the unique citations.
@@ -99,7 +90,7 @@ dedup_refs <- function(df1 = NULL,
   if ("issue" %in% names(unique_citations)) unique_citations$issue <- NULL
 
   # Informs the user that the deduplication was done and exported.
-  cat("Deduplication script has been executed, concatenated deduplicated references had been exported.\n")
+  message("Deduplication script has been executed, concatenated deduplicated references had been exported.\n")
 
   # Automatically opens the CSV if required by the user.
   if (isTRUE(open_file)){

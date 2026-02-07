@@ -24,7 +24,6 @@ Just use the following function with the name of the scheduled task:
 library(LitFetchR)
 
 #remove a scheduled task using its name/identification
-remove_scheduled_task("taskID")
 
 #Example of what you should see:
 # > remove_scheduled_task("fish_vibrio")

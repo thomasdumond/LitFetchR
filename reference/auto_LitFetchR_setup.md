@@ -11,12 +11,13 @@ Science](https://clarivate.com/academia-government/scientific-and-academic-resea
 
 ``` r
 auto_LitFetchR_setup(
-  task_ID = "task_ID",
+  task_id = "task_id",
   when = "DAILY",
   time = "08:00",
-  WOS = TRUE,
-  SCP = TRUE,
-  PMD = TRUE,
+  wos = FALSE,
+  scp = FALSE,
+  pmd = FALSE,
+  directory,
   dedup = FALSE,
   open_file = FALSE,
   dry_run = FALSE
@@ -25,7 +26,7 @@ auto_LitFetchR_setup(
 
 ## Arguments
 
-- task_ID:
+- task_id:
 
   Name of the automated reference retrieval task (e.g. one keyword
   describing your review).
@@ -40,17 +41,22 @@ auto_LitFetchR_setup(
   Time of the automated reference retrieval task (must be HH:MM 24-hour
   clock format).
 
-- WOS:
+- wos:
 
   Runs the search on Web of Science (TRUE or FALSE).
 
-- SCP:
+- scp:
 
   Runs the search on Scopus (TRUE or FALSE).
 
-- PMD:
+- pmd:
 
   Runs the search on PubMed (TRUE or FALSE).
+
+- directory:
+
+  Choose the directory in which the search string is saved (Project's
+  directory). That is also where the references metadata will be saved.
 
 - dedup:
 
@@ -66,23 +72,28 @@ auto_LitFetchR_setup(
 
 ## Value
 
-No return value, creates a Rscript file (READ ONLY) and a task in Task
-Scheduler (Windows), or in Cron (Mac/Linux).
+`NULL` (invisibly). Called for its side effects: writes an R script and
+schedules a task (Windows Task Scheduler or cron) to run the script
+automatically.
 
 ## Examples
 
 ``` r
 # This is a "dry run" example.
-# No task will actually be scheduled, it only shows how the function should react.
-auto_LitFetchR_setup(task_ID = "fish_vibrio",
+# No task will actually be scheduled,
+# it only shows how the function should react.
+auto_LitFetchR_setup(task_id = "fish_vibrio",
                        when = "WEEKLY",
                        time = "14:00",
-                       WOS = TRUE,
-                       SCP = TRUE,
-                       PMD = TRUE,
+                       wos = TRUE,
+                       scp = TRUE,
+                       pmd = TRUE,
+                       directory,
                        dedup = FALSE,
                        open_file = FALSE,
                        dry_run = TRUE
                        )
-#> Dry run: no task scheduled, the message "Task scheduled!" will appear when the function will run successfully.
+#> Dry run: no task scheduled,
+#>             the message "Task scheduled!" will appear when the function will
+#>             run successfully.
 ```

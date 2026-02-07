@@ -1,17 +1,17 @@
 # Removes a scheduled task.
 
-Removes a scheduled task using the "task_ID" from Task Scheduler
+Removes a scheduled task using the "task_id" from Task Scheduler
 (Windows) or Cron (Mac/Linux).
 
 ## Usage
 
 ``` r
-remove_scheduled_task(taskname, dry_run = FALSE)
+remove_scheduled_task(task_id, dry_run = FALSE)
 ```
 
 ## Arguments
 
-- taskname:
+- task_id:
 
   Name/ID of the scheduled task (Windows Task Scheduler or Cron).
 
@@ -21,8 +21,8 @@ remove_scheduled_task(taskname, dry_run = FALSE)
 
 ## Value
 
-No return value, deletes a scheduled task saved using the function
-'auto_LitFetchR_setup.R'.
+`NULL` (invisibly). Called for its side effects: removes a scheduled
+task saved using the function 'auto_LitFetchR_setup'.
 
 ## Examples
 
@@ -32,6 +32,7 @@ No return value, deletes a scheduled task saved using the function
 remove_scheduled_task("fish_vibrio",
                       dry_run = TRUE
                       )
-#> SUCCESS: The scheduled task "fish_vibrio" was successfully deleted.
+#> This is the message from the dry run showing what you should be seeing when the function will be used:
+#>             SUCCESS: The scheduled task "fish_vibrio" was successfully deleted.
 #>             Windows task "fish_vibrio" removed (or did not exist).
 ```

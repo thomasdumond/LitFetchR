@@ -6,9 +6,20 @@ at each search.
 ## Usage
 
 ``` r
-create_id_history()
+create_id_history(directory)
 ```
+
+## Arguments
+
+- directory:
+
+  Choose the directory in which the references identification history
+  will be saved.
 
 ## Value
 
-No return value, creates or updates the excel file 'history_id.xlsx'.
+A list with element:
+
+- history_id:
+
+  A Workbook object (from openxlsx).

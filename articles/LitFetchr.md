@@ -13,7 +13,7 @@ review project. To do so in RStudio:
 
 - Go to `File`\>`New Project…`\>`New Directory`\>`New Project`
 
-- Choose a name for your directory (*e.g. review_fish_vibrio*), then
+- Choose a name for your directory (*e.g., review_fish_vibrio*), then
   `Browse...` to choose where to save the directory.
 
   *We suggest to save the directory on your computer
@@ -56,11 +56,10 @@ Save your API keys in your personal R environment:
 library(LitFetchR)
 
 #Save API keys in your R environment
-save_api_keys(WOS_API_KEY = "your-wos-api-key", SCP_API_KEY = "your-scp-api-key")
 
 #Example of what you should see:
-#> save_api_keys(WOS_API_KEY = "abcd01234", SCP_API_KEY = "efgh5678")
-#Saved key(s) WOS_API_KEY, SCP_API_KEY to -path-to-your-renvironment/.Renviron.
+#> save_api_keys(wos_api_key = "abcd01234", scp_api_key = "efgh5678")
+#Saved key(s) wos_api_key, scp_api_key to -path-to-your-renvironment/.Renviron.
 #Restart R for the new environment variable(s) to be available.
 ```
 
@@ -91,12 +90,15 @@ you should see:
 library(LitFetchR)
 
 #The following function can help to create your search string(s)
-#It has to be used to save your search string(s)
-create_save_search()
+#It has to be used to save your search string(s), we recommend choosing the R project directory as the directory in the function.
 
 # Example of what you should see building the search: fish AND "vibrio harveyi" AND diagnostic
 #
-# > create_save_search()
+# > create_save_search(wos = TRUE,
+#                      scp = TRUE,
+#                      pmd = TRUE,
+#                      directory = "C:/path-to-project-directory")
+#
 # History had been created.
 # Enter your search string (or 'summary' or 'exit'): fish
 # [1] "fish"
@@ -163,29 +165,21 @@ the system and setup the task for you using the following:
 ``` r
 #Load LitFetchR
 library(LitFetchR)
-
-#We recommend using a single word for the *task_ID* or to use underscores "_" to separate words.
+#We recommend choosing the R project directory as the directory in the function. It has to be the directory where "search_list.txt" and "history_search.xlsx" have been saved.
+#We recommend using a single word for the *task_id* or to use underscores "_" to separate words.
 #The retrieval frequency is currently available "DAILY", "WEEKLY" or "MONTHLY".
 #You need to use a 24H format for the time of reference retrieval.
 #If you do not have an API key for WOS and/or SCP or want to exclude any database,
-#change "TRUE" to "FALSE" in front of the corresponding database (e.g.`WOS = FALSE`).
-
-auto_LitFetchR_setup(task_ID = "name_of_your_task",
-                     when = "DAILY",
-                     time = "09:00",
-                     WOS = TRUE,
-                     SCP = TRUE,
-                     PMD = TRUE,
-                     dedup = FALSE,
-                     open_file = TRUE)
+#change "TRUE" to "FALSE" in front of the corresponding database (e.g.`wos = FALSE`).
 
 #Example of what you should see
-#> auto_LitFetchR_setup(task_ID = "fish_vibrio",
+#> auto_LitFetchR_setup(task_id = "fish_vibrio",
                      # when = "WEEKLY",
                      # time = "14:00",
-                     # WOS = TRUE,
-                     # SCP = TRUE,
-                     # PMD = TRUE
+                     # wos = TRUE,
+                     # scp = TRUE,
+                     # pmd = TRUE,
+                     # directory = "C:/path-to-project-directory",
                      # dedup = FALSE,
                      # open_file = TRUE)
 #Task scheduled!
@@ -216,7 +210,7 @@ for the first time, four new files will be created:
   This file automatically opens after the reference retrieval ends if
   the corresponding option is selected (open_file = TRUE).*
 
-- auto_LitFetchR_code(READ_ONLY).R
+- auto_LitFetchR_code_READ_ONLY.R
 
   *This file contains the code that is automatically run by the
   scheduled task (uses the function

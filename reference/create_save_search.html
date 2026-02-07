@@ -15,7 +15,7 @@ or more search strings to retrieve the references later."><meta property="og:ima
 
     <a class="navbar-brand me-2" href="../index.html">LitFetchR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,20 +57,44 @@ or more search strings to retrieve the references later.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_save_search</span><span class="op">(</span>dry_run <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_save_search</span><span class="op">(</span></span>
+<span>  wos <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  scp <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  pmd <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">directory</span>,</span>
+<span>  dry_run <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-dry-run">dry_run<a class="anchor" aria-label="anchor" href="#arg-dry-run"></a></dt>
+<dl><dt id="arg-wos">wos<a class="anchor" aria-label="anchor" href="#arg-wos"></a></dt>
+<dd><p>Runs the search on Web of Science (TRUE or FALSE).</p></dd>
+
+
+<dt id="arg-scp">scp<a class="anchor" aria-label="anchor" href="#arg-scp"></a></dt>
+<dd><p>Runs the search on Scopus (TRUE or FALSE).</p></dd>
+
+
+<dt id="arg-pmd">pmd<a class="anchor" aria-label="anchor" href="#arg-pmd"></a></dt>
+<dd><p>Runs the search on PubMed (TRUE or FALSE).</p></dd>
+
+
+<dt id="arg-directory">directory<a class="anchor" aria-label="anchor" href="#arg-directory"></a></dt>
+<dd><p>Choose the directory in which the search string
+and the search history will be saved.</p></dd>
+
+
+<dt id="arg-dry-run">dry_run<a class="anchor" aria-label="anchor" href="#arg-dry-run"></a></dt>
 <dd><p>Simulation run option.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>No return value, displays literature search results interactively and one or more search string(s) can be saved in the file "search_list.txt" and the history of all searches in "history_search.xlsx".</p>
+    <p><code>NULL</code> (invisibly). Called for its side effects:
+interactive querying and writing search history files.</p>
     </div>
 
     <div class="section level2">
@@ -78,37 +102,44 @@ or more search strings to retrieve the references later.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># This is a "dry run" example.</span></span></span>
 <span class="r-in"><span><span class="co"># No search will be created and no database will be accessed.</span></span></span>
 <span class="r-in"><span><span class="co"># It only shows how the function should react.</span></span></span>
-<span class="r-in"><span><span class="fu">create_save_search</span><span class="op">(</span>dry_run <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> History had been created.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             Enter your search string (or "summary" or "exit"): fish</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             [1] "fish"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             [1] "Web of Science: 1793296 results"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             [1] "Scopus: 718644 results"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             [1] "PubMed: 384742 results"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             Enter your search string (or "summary" or "exit"): fish AND "vibrio harveyi"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             [1] "fish AND "vibrio harveyi""</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             [1] "Web of Science: 2084 results"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             [1] "Scopus: 1080 results"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             [1] "PubMed: 727 results"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             Enter your search string (or "summary" or "exit"): fish AND "vibrio harveyi" AND diagnostic</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             [1] "fish AND "vibrio harveyi" AND diagnostic"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             [1] "Web of Science: 126 results"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             [1] "Scopus: 22 results"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             [1] "PubMed: 106 results"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             Enter your search string (or "summary" or "exit"): summary</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>                                            Search_Term Results_WOS Results_SCP Results_PMD</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             1                                     fish     1793296      718644      384742</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             2                fish AND "vibrio harveyi"        2084        1080         727</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             #3 fish AND "vibrio harveyi" AND diagnostic         126          22         106</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             Select the index number for the search string to use in automated retrieval: 3</span>
+<span class="r-in"><span><span class="fu">create_save_search</span><span class="op">(</span>wos <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                   scp <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                   pmd <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                   <span class="va">directory</span>,</span></span>
+<span class="r-in"><span>                   dry_run <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> This is the message from the dry run showing</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   what you should be seeing when the function will be used:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   History had been created.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Enter your search string (or "summary" or "exit"): fish</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   [1] "fish"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   [1] "Web of Science: 1793296 results"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   [1] "Scopus: 718644 results"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   [1] "PubMed: 384742 results"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Enter your search string (or "summary" or "exit"):</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   fish AND "vibrio harveyi"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   [1] "fish AND "vibrio harveyi""</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   [1] "Web of Science: 2084 results"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   [1] "Scopus: 1080 results"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   [1] "PubMed: 727 results"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Enter your search string (or "summary" or "exit"):</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   fish AND "vibrio harveyi" AND diagnostic</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   [1] "fish AND "vibrio harveyi" AND diagnostic"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   [1] "Web of Science: 126 results"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   [1] "Scopus: 22 results"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   [1] "PubMed: 106 results"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Enter your search string (or "summary" or "exit"): summary</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>                                  Search_Term Results_WOS Results_SCP Results_PMD</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   1                                     fish     1793296      718644      384742</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   2                fish AND "vibrio harveyi"        2084        1080         727</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   3 fish AND "vibrio harveyi" AND diagnostic         126          22         106</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Select the index number for the search string to use in automated retrieval: 3</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             Selected search string: fish AND "vibrio harveyi" AND diagnostic</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             Do you want to save the search string for future use? (yes/no): yes</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             Enter a name for the search identification: fish_vibrio</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             Search string saved successfully.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             Enter your search string (or "summary" or "exit"): exit</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             Exiting search tool.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>             </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Selected search string: fish AND "vibrio harveyi" AND diagnostic</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Do you want to save the search string for future use? (yes/no): yes</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Enter a name for the search identification: fish_vibrio</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Search string saved successfully.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Enter your search string (or "summary" or "exit"): exit</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Exiting search tool.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

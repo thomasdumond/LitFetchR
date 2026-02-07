@@ -6,8 +6,14 @@ Creates an excel file to store the history of searches made using
 ## Usage
 
 ``` r
-create_search_history()
+create_search_history(directory)
 ```
+
+## Arguments
+
+- directory:
+
+  Choose the directory in which the search history will be saved.
 
 ## Value
 

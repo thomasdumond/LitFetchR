@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">LitFetchR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,16 +97,13 @@ access the file <em>search_list.txt</em>, see <a href="https://thomasdumond.gith
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Retrieve the list of references corresponding to your saved search string(s)</span></span>
-<span><span class="fu"><a href="../reference/manual_fetch.html">manual_fetch</a></span><span class="op">(</span>WOS <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>             SCP <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>             PMD <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>             dedup <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>             open_file <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#We recommend choosing the R project directory as the directory in the function. It has to be the directory where "search_list.txt" and "history_search.xlsx" have been saved.</span></span>
 <span></span>
 <span><span class="co"># Example of what you should see: </span></span>
-<span><span class="co"># &gt; manual_fetch(WOS = TRUE,</span></span>
-<span><span class="co">#                SCP = TRUE,</span></span>
-<span><span class="co">#                PMD = TRUE,</span></span>
+<span><span class="co"># &gt; manual_fetch(wos = TRUE,</span></span>
+<span><span class="co">#                scp = TRUE,</span></span>
+<span><span class="co">#                pmd = TRUE,</span></span>
+<span><span class="co">#                directory = "C:/path-to-project-directory",</span></span>
 <span><span class="co">#                dedup = TRUE,</span></span>
 <span><span class="co">#                open_file = FALSE)</span></span>
 <span><span class="co"># [1] 126</span></span>

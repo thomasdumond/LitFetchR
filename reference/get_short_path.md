@@ -16,4 +16,4 @@ get_short_path(path)
 
 ## Value
 
-A shorter path.
+Character scalar, a shorter path to use in Windows OS.

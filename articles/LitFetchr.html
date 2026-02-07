@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">LitFetchR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,9 +86,9 @@ review project. To do so in RStudio:</p>
 <li><p>Go to
 <code>File</code>&gt;<code>New Project…</code>&gt;<code>New Directory</code>&gt;<code>New Project</code></p></li>
 <li>
-<p>Choose a name for your directory
-(<em>e.g. review_fish_vibrio</em>), then <code>Browse...</code> to
-choose where to save the directory.</p>
+<p>Choose a name for your directory (<em>e.g.,
+review_fish_vibrio</em>), then <code>Browse...</code> to choose where to
+save the directory.</p>
 <p><em>We suggest to save the directory on your computer
 (e.g. <code>C:/users/...</code>) instead of clouds (e.g. OneDrive, Box,
 etc.), as restriction access from institution might block
@@ -126,11 +126,10 @@ GitHub:</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#Save API keys in your R environment</span></span>
-<span><span class="fu"><a href="../reference/save_api_keys.html">save_api_keys</a></span><span class="op">(</span>WOS_API_KEY <span class="op">=</span> <span class="st">"your-wos-api-key"</span>, SCP_API_KEY <span class="op">=</span> <span class="st">"your-scp-api-key"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#Example of what you should see:</span></span>
-<span><span class="co">#&gt; save_api_keys(WOS_API_KEY = "abcd01234", SCP_API_KEY = "efgh5678")</span></span>
-<span><span class="co">#Saved key(s) WOS_API_KEY, SCP_API_KEY to -path-to-your-renvironment/.Renviron.</span></span>
+<span><span class="co">#&gt; save_api_keys(wos_api_key = "abcd01234", scp_api_key = "efgh5678")</span></span>
+<span><span class="co">#Saved key(s) wos_api_key, scp_api_key to -path-to-your-renvironment/.Renviron.</span></span>
 <span><span class="co">#Restart R for the new environment variable(s) to be available.</span></span></code></pre></div>
 <p>This will allow <code>LitFetchR</code> to locally access your
 personal API keys while keeping them confidential if you need to share
@@ -153,12 +152,15 @@ you through its workflow. Here is an example of what you should see:</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#The following function can help to create your search string(s)</span></span>
-<span><span class="co">#It has to be used to save your search string(s)</span></span>
-<span><span class="fu"><a href="../reference/create_save_search.html">create_save_search</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#It has to be used to save your search string(s), we recommend choosing the R project directory as the directory in the function.</span></span>
 <span></span>
 <span><span class="co"># Example of what you should see building the search: fish AND "vibrio harveyi" AND diagnostic</span></span>
 <span><span class="co">#</span></span>
-<span><span class="co"># &gt; create_save_search()</span></span>
+<span><span class="co"># &gt; create_save_search(wos = TRUE,</span></span>
+<span><span class="co">#                      scp = TRUE,</span></span>
+<span><span class="co">#                      pmd = TRUE,</span></span>
+<span><span class="co">#                      directory = "C:/path-to-project-directory")</span></span>
+<span><span class="co">#</span></span>
 <span><span class="co"># History had been created.</span></span>
 <span><span class="co"># Enter your search string (or 'summary' or 'exit'): fish</span></span>
 <span><span class="co"># [1] "fish"</span></span>
@@ -223,29 +225,21 @@ using the following:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#Load LitFetchR</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/thomasdumond/LitFetchR" class="external-link">LitFetchR</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#We recommend using a single word for the *task_ID* or to use underscores "_" to separate words.</span></span>
+<span><span class="co">#We recommend choosing the R project directory as the directory in the function. It has to be the directory where "search_list.txt" and "history_search.xlsx" have been saved.</span></span>
+<span><span class="co">#We recommend using a single word for the *task_id* or to use underscores "_" to separate words.</span></span>
 <span><span class="co">#The retrieval frequency is currently available "DAILY", "WEEKLY" or "MONTHLY".</span></span>
 <span><span class="co">#You need to use a 24H format for the time of reference retrieval.</span></span>
 <span><span class="co">#If you do not have an API key for WOS and/or SCP or want to exclude any database,</span></span>
-<span><span class="co">#change "TRUE" to "FALSE" in front of the corresponding database (e.g.`WOS = FALSE`).</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/auto_LitFetchR_setup.html">auto_LitFetchR_setup</a></span><span class="op">(</span>task_ID <span class="op">=</span> <span class="st">"name_of_your_task"</span>,</span>
-<span>                     when <span class="op">=</span> <span class="st">"DAILY"</span>,</span>
-<span>                     time <span class="op">=</span> <span class="st">"09:00"</span>,</span>
-<span>                     WOS <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                     SCP <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                     PMD <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                     dedup <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                     open_file <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#change "TRUE" to "FALSE" in front of the corresponding database (e.g.`wos = FALSE`).</span></span>
 <span></span>
 <span><span class="co">#Example of what you should see</span></span>
-<span><span class="co">#&gt; auto_LitFetchR_setup(task_ID = "fish_vibrio",</span></span>
+<span><span class="co">#&gt; auto_LitFetchR_setup(task_id = "fish_vibrio",</span></span>
 <span>                     <span class="co"># when = "WEEKLY",</span></span>
 <span>                     <span class="co"># time = "14:00",</span></span>
-<span>                     <span class="co"># WOS = TRUE,</span></span>
-<span>                     <span class="co"># SCP = TRUE,</span></span>
-<span>                     <span class="co"># PMD = TRUE</span></span>
+<span>                     <span class="co"># wos = TRUE,</span></span>
+<span>                     <span class="co"># scp = TRUE,</span></span>
+<span>                     <span class="co"># pmd = TRUE,</span></span>
+<span>                     <span class="co"># directory = "C:/path-to-project-directory",</span></span>
 <span>                     <span class="co"># dedup = FALSE,</span></span>
 <span>                     <span class="co"># open_file = TRUE)</span></span>
 <span><span class="co">#Task scheduled!</span></span></code></pre></div>
@@ -275,7 +269,7 @@ This file automatically opens after the reference retrieval ends if the
 corresponding option is selected (open_file = TRUE).</em></p>
 </li>
 <li>
-<p>auto_LitFetchR_code(READ_ONLY).R</p>
+<p>auto_LitFetchR_code_READ_ONLY.R</p>
 <p><em>This file contains the code that is automatically run by the
 scheduled task (uses the function <code><a href="../reference/manual_fetch.html">manual_fetch()</a></code>). It is
 set as “READ ONLY” to avoid accidental modification that would impair

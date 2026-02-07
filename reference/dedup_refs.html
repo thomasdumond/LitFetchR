@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">LitFetchR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,6 +49,7 @@
 <span>  df1 <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  df2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  df3 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">directory</span>,</span>
 <span>  open_file <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  dry_run <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -70,6 +71,11 @@
 <dd><p>Dataframe 3 (can be NULL)</p></dd>
 
 
+<dt id="arg-directory">directory<a class="anchor" aria-label="anchor" href="#arg-directory"></a></dt>
+<dd><p>Choose the directory in which
+the references deduplication history will be saved.</p></dd>
+
+
 <dt id="arg-open-file">open_file<a class="anchor" aria-label="anchor" href="#arg-open-file"></a></dt>
 <dd><p>Automatically opens the CSV file after reference retrieval.</p></dd>
 
@@ -80,7 +86,9 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>No return value, deduplicates the references from up to three databases and creates a CSV file containing all the references deduplicated and the history of the deduplication in an excel file.</p>
+    <p><code>NULL</code> (invisibly). Called for its side effects:
+writes a CSV of deduplicated citations and
+an Excel workbook recording the deduplication history.</p>
     </div>
 
     <div class="section level2">
@@ -88,12 +96,16 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># This is a "dry run" example.</span></span></span>
 <span class="r-in"><span><span class="co"># No deduplication will happen.</span></span></span>
 <span class="r-in"><span><span class="co"># It only shows how the function should react.</span></span></span>
-<span class="r-in"><span><span class="fu">dedup_refs</span><span class="op">(</span><span class="va">df_vibrio_wos</span>,</span></span>
-<span class="r-in"><span>           <span class="va">df_vibrio_scp</span>,</span></span>
-<span class="r-in"><span>           <span class="va">df_vibrio_pmd</span>,</span></span>
+<span class="r-in"><span><span class="fu">dedup_refs</span><span class="op">(</span>df1 <span class="op">=</span> <span class="va">df_vibrio_wos</span>,</span></span>
+<span class="r-in"><span>           df2 <span class="op">=</span> <span class="va">df_vibrio_scp</span>,</span></span>
+<span class="r-in"><span>           df3 <span class="op">=</span> <span class="va">df_vibrio_pmd</span>,</span></span>
+<span class="r-in"><span>           directory <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>           open_file <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>           dry_run <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span>           <span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Warning: The following columns are missing: pages, number, record_id, isbn</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> This is the message from the dry run showing what you should</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     be seeing when the function will be used:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     Warning: The following columns are missing: pages, number, record_id, isbn</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     formatting data...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     identifying potential duplicates...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     identified duplicates!</span>
@@ -102,7 +114,8 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     254 citations loaded...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     14 duplicate citations removed...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     240 unique citations remaining!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     Deduplication script has been executed, concatenated deduplicated references had been exported.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     Deduplication script has been executed,</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     concatenated deduplicated references had been exported.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     Warning message:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     In add_missing_cols(raw_citations) :</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     Search contains missing values for the record_id column.</span>

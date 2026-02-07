@@ -9,7 +9,7 @@ based on the search string(s) saved in "search_list.txt".'><meta property="og:im
 
     <a class="navbar-brand me-2" href="../index.html">LitFetchR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@ based on the search string(s) saved in "search_list.txt".</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">extract_scp_list</span><span class="op">(</span><span class="va">search_list_path</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">extract_scp_list</span><span class="op">(</span><span class="va">search_list_path</span>, <span class="va">directory</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -58,10 +58,46 @@ based on the search string(s) saved in "search_list.txt".</p>
 <dl><dt id="arg-search-list-path">search_list_path<a class="anchor" aria-label="anchor" href="#arg-search-list-path"></a></dt>
 <dd><p>Path to "search_list.txt".</p></dd>
 
+
+<dt id="arg-directory">directory<a class="anchor" aria-label="anchor" href="#arg-directory"></a></dt>
+<dd><p>Choose the directory in which the references
+identification history will be saved.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A dataframe containing the metadata from the new references found on Scopus.</p>
+    <p>A data.frame with one row per retrieved Scopus record and columns:</p><dl><dt>author</dt>
+<dd><p>Character. Publication authors.</p></dd>
+
+<dt>year</dt>
+<dd><p>Character. Publication year.</p></dd>
+
+<dt>title</dt>
+<dd><p>Character. Publication title.</p></dd>
+
+<dt>journal</dt>
+<dd><p>Character. Publication journal name.</p></dd>
+
+<dt>volume</dt>
+<dd><p>Character. Publication journal volume.</p></dd>
+
+<dt>issue</dt>
+<dd><p>Character. Publication journal issue.</p></dd>
+
+<dt>abstract</dt>
+<dd><p>Character. Publication abstract.</p></dd>
+
+<dt>doi</dt>
+<dd><p>Character. Publication Digital Object Identifier (DOI).</p></dd>
+
+<dt>source</dt>
+<dd><p>Character. Data source.</p></dd>
+
+<dt>platform_id</dt>
+<dd><p>Character. Publication unique identifier in data source.</p></dd>
+
+
+</dl><p>If <code>search_list_path</code> does not exist, returns <code>NULL</code>.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

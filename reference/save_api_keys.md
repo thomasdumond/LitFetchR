@@ -1,21 +1,21 @@
 # Saves Web of Science and/or Scopus API keys in .Renviron.
 
-You can set WOS_API_KEY, SCP_API_KEY, or both at the same time. Remember
+You can set wos_api_key, scp_api_key, or both at the same time. Remember
 to restart the R session after saving your API keys.
 
 ## Usage
 
 ``` r
-save_api_keys(WOS_API_KEY = NULL, SCP_API_KEY = NULL, dry_run = FALSE)
+save_api_keys(wos_api_key = NULL, scp_api_key = NULL, dry_run = FALSE)
 ```
 
 ## Arguments
 
-- WOS_API_KEY:
+- wos_api_key:
 
   The API key value for Web of Science (use quotation marks).
 
-- SCP_API_KEY:
+- scp_api_key:
 
   The API key value for Scopus (use quotation marks).
 
@@ -25,15 +25,17 @@ save_api_keys(WOS_API_KEY = NULL, SCP_API_KEY = NULL, dry_run = FALSE)
 
 ## Value
 
-TRUE if at least one value was written, FALSE if left unchanged.
+Logical. TRUE if at least one value was written, FALSE if left
+unchanged.
 
 ## Examples
 
 ``` r
-save_api_keys(WOS_API_KEY = "abcd01234",
-               SCP_API_KEY = "efgh5678",
+save_api_keys(wos_api_key = "abcd01234",
+               scp_api_key = "efgh5678",
                dry_run = TRUE
                )
-#> Saved key(s) WOS_API_KEY, SCP_API_KEY to -path-to-your-renvironment/.Renviron.
+#> This is the message from the dry run showing what you should be seeing when the function will be used:
+#>             Saved key(s) wos_api_key, scp_api_key to -path-to-your-renvironment/.Renviron.
 #>             Restart R for the new environment variable(s) to be available.
 ```

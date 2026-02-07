@@ -10,9 +10,10 @@ Science](https://clarivate.com/academia-government/scientific-and-academic-resea
 
 ``` r
 manual_fetch(
-  WOS = TRUE,
-  SCP = TRUE,
-  PMD = TRUE,
+  wos = FALSE,
+  scp = FALSE,
+  pmd = FALSE,
+  directory,
   dedup = FALSE,
   open_file = FALSE,
   dry_run = FALSE
@@ -21,17 +22,22 @@ manual_fetch(
 
 ## Arguments
 
-- WOS:
+- wos:
 
   Runs the search on Web of Science (TRUE or FALSE).
 
-- SCP:
+- scp:
 
   Runs the search on Scopus (TRUE or FALSE).
 
-- PMD:
+- pmd:
 
   Runs the search on PubMed (TRUE or FALSE).
+
+- directory:
+
+  Choose the directory in which the search string is saved (Project's
+  directory). That is also where the references metadata will be saved.
 
 - dedup:
 
@@ -47,23 +53,26 @@ manual_fetch(
 
 ## Value
 
-Create a CSV file with the references metadata, a history file of the
-references retrieved and a history file of the deduplication (if the
-option is selected).
+`NULL` (invisibly). Called for its side effects: Create a CSV file with
+the references metadata, a history file of the references retrieved and
+a history file of the deduplication (if the option is selected).
 
 ## Examples
 
 ``` r
 # This is a "dry run" example.
 # No references will actually be scheduled, it only shows how the function should react.
-manual_fetch(WOS = TRUE,
-             SCP = TRUE,
-             PMD = TRUE,
+manual_fetch(wos = TRUE,
+             scp = TRUE,
+             pmd = TRUE,
+             directory,
              dedup = TRUE,
              open_file = FALSE,
              dry_run = TRUE
              )
-#> [1] 126
+#> This is the message from the dry run showing what you should be
+#>             seeing when the function will be used:
+#>               [1] 126
 #>               Finished batch number 1
 #>               Finished batch number 2
 #>               [1] "10.1016/j.aaf.2023.11.002 1 / 126"
@@ -99,7 +108,8 @@ manual_fetch(WOS = TRUE,
 #>               254 citations loaded...
 #>               14 duplicate citations removed...
 #>               240 unique citations remaining!
-#>               Deduplication script has been executed, concatenated deduplicated references had been exported.
+#>               Deduplication script has been executed,
+#>               concatenated deduplicated references had been exported.
 #>               Warning message:
 #>               In add_missing_cols(raw_citations) :
 #>                Search contains missing values for the record_id column.

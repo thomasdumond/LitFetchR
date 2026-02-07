@@ -6,7 +6,7 @@ the search string(s) saved in "search_list.txt".
 ## Usage
 
 ``` r
-extract_pmd_list(search_list_path)
+extract_pmd_list(search_list_path, directory)
 ```
 
 ## Arguments
@@ -14,6 +14,11 @@ extract_pmd_list(search_list_path)
 - search_list_path:
 
   Path to "search_list.txt".
+
+- directory:
+
+  Choose the directory in which the references identification history
+  will be saved.
 
 ## Value
 

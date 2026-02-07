@@ -16,5 +16,5 @@ build_sheet_name(time = Sys.time())
 
 ## Value
 
-Character scalar, a unique name based on the system time with the format
+Character scalar. A unique name based on the system time with the format
 YYYY-MM-DD-HHMMSS.

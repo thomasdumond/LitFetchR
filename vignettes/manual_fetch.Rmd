@@ -31,16 +31,13 @@ Make sure to have saved your search string using `create_save_search()` as the f
 library(LitFetchR)
 
 # Retrieve the list of references corresponding to your saved search string(s)
-manual_fetch(WOS = TRUE,
-             SCP = TRUE,
-             PMD = TRUE,
-             dedup = TRUE,
-             open_file = FALSE)
+#We recommend choosing the R project directory as the directory in the function. It has to be the directory where "search_list.txt" and "history_search.xlsx" have been saved.
 
 # Example of what you should see: 
-# > manual_fetch(WOS = TRUE,
-#                SCP = TRUE,
-#                PMD = TRUE,
+# > manual_fetch(wos = TRUE,
+#                scp = TRUE,
+#                pmd = TRUE,
+#                directory = "C:/path-to-project-directory",
 #                dedup = TRUE,
 #                open_file = FALSE)
 # [1] 126

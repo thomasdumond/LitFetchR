@@ -1,4 +1,5 @@
-#' Internal HTTP GET helper with retries when extracting data using WOS/SCP or PMD APIs
+#' Internal HTTP GET helper with retries when
+#'  extracting data using WOS/SCP or PMD APIs
 #'
 #' @param url API call for the platform
 #' @param headers Named character vector of headers (optional).

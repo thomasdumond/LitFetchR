@@ -5,13 +5,29 @@
 \title{extract the metadata from the new references from Web of Science
 based on the search strings found in search_list.txt}
 \usage{
-extract_wos_list(search_list_path)
+extract_wos_list(search_list_path, directory)
 }
 \arguments{
 \item{search_list_path}{path to search_list}
+
+\item{directory}{Choose the directory in which the references
+identification history will be saved.}
 }
 \value{
-A dataframe containing the metadata from the new references on Web of Science
+A data.frame with one row per retrieved Web of Science record and columns:
+\describe{
+\item{author}{Character. Publication authors.}
+\item{year}{Character. Publication year.}
+\item{title}{Character. Publication title.}
+\item{journal}{Character. Publication journal name.}
+\item{volume}{Character. Publication journal volume.}
+\item{issue}{Character. Publication journal issue.}
+\item{abstract}{Character. Publication abstract.}
+\item{doi}{Character. Publication Digital Object Identifier (DOI).}
+\item{source}{Character. Data source.}
+\item{platform_id}{Character. Publication unique identifier in data source.}
+}
+If \code{search_list_path} does not exist, returns \code{NULL}.
 }
 \description{
 extract the metadata from the new references from Web of Science

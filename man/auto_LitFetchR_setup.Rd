@@ -5,29 +5,37 @@
 \title{Automating the retrieval of references based on a saved search string(s).}
 \usage{
 auto_LitFetchR_setup(
-  task_ID = "task_ID",
+  task_id = "task_id",
   when = "DAILY",
   time = "08:00",
-  WOS = TRUE,
-  SCP = TRUE,
-  PMD = TRUE,
+  wos = FALSE,
+  scp = FALSE,
+  pmd = FALSE,
+  directory,
   dedup = FALSE,
   open_file = FALSE,
   dry_run = FALSE
 )
 }
 \arguments{
-\item{task_ID}{Name of the automated reference retrieval task (e.g. one keyword describing your review).}
+\item{task_id}{Name of the automated reference retrieval task
+(e.g. one keyword describing your review).}
 
-\item{when}{Frequency of the automated reference retrieval task (DAILY, WEEKLY or MONTHLY).}
+\item{when}{Frequency of the automated reference retrieval task
+(DAILY, WEEKLY or MONTHLY).}
 
-\item{time}{Time of the automated reference retrieval task (must be HH:MM 24-hour clock format).}
+\item{time}{Time of the automated reference retrieval task
+(must be HH:MM 24-hour clock format).}
 
-\item{WOS}{Runs the search on Web of Science (TRUE or FALSE).}
+\item{wos}{Runs the search on Web of Science (TRUE or FALSE).}
 
-\item{SCP}{Runs the search on Scopus (TRUE or FALSE).}
+\item{scp}{Runs the search on Scopus (TRUE or FALSE).}
 
-\item{PMD}{Runs the search on PubMed (TRUE or FALSE).}
+\item{pmd}{Runs the search on PubMed (TRUE or FALSE).}
+
+\item{directory}{Choose the directory in which the search string is saved
+(Project's directory). That is also where the references metadata
+will be saved.}
 
 \item{dedup}{Deduplicates the retrieved references (TRUE or FALSE).}
 
@@ -36,22 +44,29 @@ auto_LitFetchR_setup(
 \item{dry_run}{Simulation run option.}
 }
 \value{
-No return value, creates a Rscript file (READ ONLY) and a task in Task Scheduler (Windows), or in Cron (Mac/Linux).
+\code{NULL} (invisibly). Called for its side effects:
+writes an R script and schedules a task (Windows Task Scheduler or cron)
+to run the script automatically.
 }
 \description{
 Creates a read-only Rscript and a task to run the code automatically
-at a specified frequency and time, to retrieve references corresponding to the saved search string(s) on up to three platforms (e.g. \href{https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/}{Web of Science},
-\href{https://www.elsevier.com/en-au/products/scopus}{Scopus} and \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed}).
+at a specified frequency and time, to retrieve references corresponding to
+the saved search string(s) on up to three platforms
+(e.g. \href{https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/}{Web of Science},
+\href{https://www.elsevier.com/en-au/products/scopus}{Scopus}
+and \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed}).
 }
 \examples{
 # This is a "dry run" example.
-# No task will actually be scheduled, it only shows how the function should react.
-auto_LitFetchR_setup(task_ID = "fish_vibrio",
+# No task will actually be scheduled,
+# it only shows how the function should react.
+auto_LitFetchR_setup(task_id = "fish_vibrio",
                        when = "WEEKLY",
                        time = "14:00",
-                       WOS = TRUE,
-                       SCP = TRUE,
-                       PMD = TRUE,
+                       wos = TRUE,
+                       scp = TRUE,
+                       pmd = TRUE,
+                       directory,
                        dedup = FALSE,
                        open_file = FALSE,
                        dry_run = TRUE

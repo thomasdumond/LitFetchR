@@ -5,13 +5,29 @@
 \title{Extracts the metadata from the new references found on Scopus
 based on the search string(s) saved in "search_list.txt".}
 \usage{
-extract_scp_list(search_list_path)
+extract_scp_list(search_list_path, directory)
 }
 \arguments{
 \item{search_list_path}{Path to "search_list.txt".}
+
+\item{directory}{Choose the directory in which the references
+identification history will be saved.}
 }
 \value{
-A dataframe containing the metadata from the new references found on Scopus.
+A data.frame with one row per retrieved Scopus record and columns:
+\describe{
+\item{author}{Character. Publication authors.}
+\item{year}{Character. Publication year.}
+\item{title}{Character. Publication title.}
+\item{journal}{Character. Publication journal name.}
+\item{volume}{Character. Publication journal volume.}
+\item{issue}{Character. Publication journal issue.}
+\item{abstract}{Character. Publication abstract.}
+\item{doi}{Character. Publication Digital Object Identifier (DOI).}
+\item{source}{Character. Data source.}
+\item{platform_id}{Character. Publication unique identifier in data source.}
+}
+If \code{search_list_path} does not exist, returns \code{NULL}.
 }
 \description{
 Extracts the metadata from the new references found on Scopus

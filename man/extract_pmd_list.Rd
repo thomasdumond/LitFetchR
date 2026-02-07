@@ -5,10 +5,13 @@
 \title{Extracts the metadata from the new references found on PubMed
 based on the search string(s) saved in "search_list.txt".}
 \usage{
-extract_pmd_list(search_list_path)
+extract_pmd_list(search_list_path, directory)
 }
 \arguments{
 \item{search_list_path}{Path to "search_list.txt".}
+
+\item{directory}{Choose the directory in which
+the references identification history will be saved.}
 }
 \value{
 A data.frame with one row per retrieved PubMed record and columns:

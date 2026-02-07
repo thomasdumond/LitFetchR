@@ -4,13 +4,29 @@
 \alias{create_save_search}
 \title{Creates and saves search string(s).}
 \usage{
-create_save_search(dry_run = FALSE)
+create_save_search(
+  wos = FALSE,
+  scp = FALSE,
+  pmd = FALSE,
+  directory,
+  dry_run = FALSE
+)
 }
 \arguments{
+\item{wos}{Runs the search on Web of Science (TRUE or FALSE).}
+
+\item{scp}{Runs the search on Scopus (TRUE or FALSE).}
+
+\item{pmd}{Runs the search on PubMed (TRUE or FALSE).}
+
+\item{directory}{Choose the directory in which the search string
+and the search history will be saved.}
+
 \item{dry_run}{Simulation run option.}
 }
 \value{
-No return value, displays literature search results interactively and one or more search string(s) can be saved in the file "search_list.txt" and the history of all searches in "history_search.xlsx".
+\code{NULL} (invisibly). Called for its side effects:
+interactive querying and writing search history files.
 }
 \description{
 An interactive function that
@@ -23,6 +39,10 @@ or more search strings to retrieve the references later.
 # This is a "dry run" example.
 # No search will be created and no database will be accessed.
 # It only shows how the function should react.
-create_save_search(dry_run = TRUE)
+create_save_search(wos = TRUE,
+                   scp = TRUE,
+                   pmd = TRUE,
+                   directory,
+                   dry_run = TRUE)
 
 }

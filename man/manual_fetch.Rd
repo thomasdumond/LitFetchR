@@ -5,20 +5,24 @@
 \title{Manual literature retrieval.}
 \usage{
 manual_fetch(
-  WOS = TRUE,
-  SCP = TRUE,
-  PMD = TRUE,
+  wos = FALSE,
+  scp = FALSE,
+  pmd = FALSE,
+  directory,
   dedup = FALSE,
   open_file = FALSE,
   dry_run = FALSE
 )
 }
 \arguments{
-\item{WOS}{Runs the search on Web of Science (TRUE or FALSE).}
+\item{wos}{Runs the search on Web of Science (TRUE or FALSE).}
 
-\item{SCP}{Runs the search on Scopus (TRUE or FALSE).}
+\item{scp}{Runs the search on Scopus (TRUE or FALSE).}
 
-\item{PMD}{Runs the search on PubMed (TRUE or FALSE).}
+\item{pmd}{Runs the search on PubMed (TRUE or FALSE).}
+
+\item{directory}{Choose the directory in which the search string is saved
+(Project's directory). That is also where the references metadata will be saved.}
 
 \item{dedup}{Deduplicates the retrieved references (TRUE or FALSE).}
 
@@ -27,18 +31,22 @@ manual_fetch(
 \item{dry_run}{Simulation run option.}
 }
 \value{
-Create a CSV file with the references metadata, a history file of the references retrieved and a history file of the deduplication (if the option is selected).
+\code{NULL} (invisibly). Called for its side effects: Create a CSV file with the references metadata, a history file of the references retrieved and a history file of the deduplication (if the option is selected).
 }
 \description{
-Retrieves references corresponding to the saved search string(s) on up to three platforms (e.g. \href{https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/}{Web of Science},
-\href{https://www.elsevier.com/en-au/products/scopus}{Scopus} and \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed}).
+Retrieves references corresponding to the saved search string(s)
+on up to three platforms
+(e.g. \href{https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/}{Web of Science},
+\href{https://www.elsevier.com/en-au/products/scopus}{Scopus} and
+\href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed}).
 }
 \examples{
 # This is a "dry run" example.
 # No references will actually be scheduled, it only shows how the function should react.
-manual_fetch(WOS = TRUE,
-             SCP = TRUE,
-             PMD = TRUE,
+manual_fetch(wos = TRUE,
+             scp = TRUE,
+             pmd = TRUE,
+             directory,
              dedup = TRUE,
              open_file = FALSE,
              dry_run = TRUE

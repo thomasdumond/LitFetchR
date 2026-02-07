@@ -10,7 +10,7 @@ get_short_path(path)
 \item{path}{Path to the document.}
 }
 \value{
-A shorter path.
+Character scalar, a shorter path to use in Windows OS.
 }
 \description{
 Transforms a long computer path into a shorter.

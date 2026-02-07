@@ -5,7 +5,11 @@
 \title{Creates an excel file to store the history of searches
 made using \code{create_save_search()}.}
 \usage{
-create_search_history()
+create_search_history(directory)
+}
+\arguments{
+\item{directory}{Choose the directory in which
+the search history will be saved.}
 }
 \value{
 A list with elements:

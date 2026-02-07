@@ -10,7 +10,7 @@ build_sheet_name(time = Sys.time())
 \item{time}{System time at the time the function is run.}
 }
 \value{
-Character scalar, a unique name based on the system time
+Character scalar. A unique name based on the system time
 with the format YYYY-MM-DD-HHMMSS.
 }
 \description{

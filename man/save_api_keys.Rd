@@ -4,25 +4,25 @@
 \alias{save_api_keys}
 \title{Saves Web of Science and/or Scopus API keys in .Renviron.}
 \usage{
-save_api_keys(WOS_API_KEY = NULL, SCP_API_KEY = NULL, dry_run = FALSE)
+save_api_keys(wos_api_key = NULL, scp_api_key = NULL, dry_run = FALSE)
 }
 \arguments{
-\item{WOS_API_KEY}{The API key value for Web of Science (use quotation marks).}
+\item{wos_api_key}{The API key value for Web of Science (use quotation marks).}
 
-\item{SCP_API_KEY}{The API key value for Scopus (use quotation marks).}
+\item{scp_api_key}{The API key value for Scopus (use quotation marks).}
 
 \item{dry_run}{Simulation run option.}
 }
 \value{
-TRUE if at least one value was written, FALSE if left unchanged.
+Logical. TRUE if at least one value was written, FALSE if left unchanged.
 }
 \description{
-You can set WOS_API_KEY, SCP_API_KEY, or both at the same time.
+You can set wos_api_key, scp_api_key, or both at the same time.
 Remember to restart the R session after saving your API keys.
 }
 \examples{
-save_api_keys(WOS_API_KEY = "abcd01234",
-               SCP_API_KEY = "efgh5678",
+save_api_keys(wos_api_key = "abcd01234",
+               scp_api_key = "efgh5678",
                dry_run = TRUE
                )
 

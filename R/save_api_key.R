@@ -1,41 +1,42 @@
 #' Saves Web of Science and/or Scopus API keys in .Renviron.
 #'
-#' You can set WOS_API_KEY, SCP_API_KEY, or both at the same time.
+#' You can set wos_api_key, scp_api_key, or both at the same time.
 #' Remember to restart the R session after saving your API keys.
 #'
-#' @param WOS_API_KEY The API key value for Web of Science (use quotation marks).
-#' @param SCP_API_KEY The API key value for Scopus (use quotation marks).
+#' @param wos_api_key The API key value for Web of Science (use quotation marks).
+#' @param scp_api_key The API key value for Scopus (use quotation marks).
 #' @param dry_run Simulation run option.
 #'
-#' @return TRUE if at least one value was written, FALSE if left unchanged.
+#' @return Logical. TRUE if at least one value was written, FALSE if left unchanged.
 #'
 #' @examples
-#' save_api_keys(WOS_API_KEY = "abcd01234",
-#'                SCP_API_KEY = "efgh5678",
+#' save_api_keys(wos_api_key = "abcd01234",
+#'                scp_api_key = "efgh5678",
 #'                dry_run = TRUE
 #'                )
 #'
 #' @export
 
-save_api_keys <- function(WOS_API_KEY = NULL,
-                          SCP_API_KEY = NULL,
+save_api_keys <- function(wos_api_key = NULL,
+                          scp_api_key = NULL,
                           dry_run = FALSE
                           ) {
 
   if (dry_run) {
-    message('Saved key(s) WOS_API_KEY, SCP_API_KEY to -path-to-your-renvironment/.Renviron.
-            Restart R for the new environment variable(s) to be available.')
+    message("This is the message from the dry run showing what you should be seeing when the function will be used:
+            Saved key(s) wos_api_key, scp_api_key to -path-to-your-renvironment/.Renviron.
+            Restart R for the new environment variable(s) to be available.")
     return(invisible(NULL))
   }
 
   # Collects keys in a list.
   keys <- list()
-  if (!missing(WOS_API_KEY) && !is.null(WOS_API_KEY)) keys$WOS_API_KEY <- WOS_API_KEY
-  if (!missing(SCP_API_KEY) && !is.null(SCP_API_KEY)) keys$SCP_API_KEY <- SCP_API_KEY
+  if (!missing(wos_api_key) && !is.null(wos_api_key)) keys$wos_api_key <- wos_api_key
+  if (!missing(scp_api_key) && !is.null(scp_api_key)) keys$scp_api_key <- scp_api_key
 
   # Informs the user if there is no API keys.
   if (!length(keys)) {
-    stop("Please provide at least one of WOS_API_KEY or SCP_API_KEY.")
+    stop("Please provide at least one of wos_api_key or scp_api_key.")
   }
 
   # Locates .Renviron.
@@ -43,7 +44,7 @@ save_api_keys <- function(WOS_API_KEY = NULL,
   if (!nzchar(renviron_path)) {
     renviron_path <- file.path(Sys.getenv("HOME"), ".Renviron")
   }
-
+  renviron_path <- normalizePath(renviron_path, mustWork = FALSE)
   if (!file.exists(renviron_path)) {
     file.create(renviron_path)
   }

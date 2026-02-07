@@ -1,32 +1,43 @@
 #' Automating the retrieval of references based on a saved search string(s).
 #'
 #' Creates a read-only Rscript and a task to run the code automatically
-#' at a specified frequency and time, to retrieve references corresponding to the saved search string(s) on up to three platforms (e.g. [Web of Science](https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/),
-#' [Scopus](https://www.elsevier.com/en-au/products/scopus) and [PubMed](https://pubmed.ncbi.nlm.nih.gov/)).
+#' at a specified frequency and time, to retrieve references corresponding to
+#' the saved search string(s) on up to three platforms
+#' (e.g. [Web of Science](https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/),
+#' [Scopus](https://www.elsevier.com/en-au/products/scopus)
+#' and [PubMed](https://pubmed.ncbi.nlm.nih.gov/)).
 #'
-#' @param task_ID Name of the automated reference retrieval task (e.g. one keyword describing your review).
-#' @param when Frequency of the automated reference retrieval task (DAILY, WEEKLY or MONTHLY).
-#' @param time Time of the automated reference retrieval task (must be HH:MM 24-hour clock format).
-#' @param WOS Runs the search on Web of Science (TRUE or FALSE).
-#' @param SCP Runs the search on Scopus (TRUE or FALSE).
-#' @param PMD Runs the search on PubMed (TRUE or FALSE).
-#' @param directory Choose the directory in which the search string is saved (Project's directory). That is also where the references metadata will be saved.
+#' @param task_id Name of the automated reference retrieval task
+#'  (e.g. one keyword describing your review).
+#' @param when Frequency of the automated reference retrieval task
+#'  (DAILY, WEEKLY or MONTHLY).
+#' @param time Time of the automated reference retrieval task
+#'  (must be HH:MM 24-hour clock format).
+#' @param wos Runs the search on Web of Science (TRUE or FALSE).
+#' @param scp Runs the search on Scopus (TRUE or FALSE).
+#' @param pmd Runs the search on PubMed (TRUE or FALSE).
+#' @param directory Choose the directory in which the search string is saved
+#'  (Project's directory). That is also where the references metadata
+#'  will be saved.
 #' @param dedup Deduplicates the retrieved references (TRUE or FALSE).
 #' @param open_file Automatically opens the CSV file after reference retrieval.
 #' @param dry_run Simulation run option.
 #'
-#' @return \code{NULL} (invisibly). Called for its side effects: writes an R script and schedules a task (Windows Task Scheduler or cron).
+#' @return \code{NULL} (invisibly). Called for its side effects:
+#'  writes an R script and schedules a task (Windows Task Scheduler or cron)
+#'  to run the script automatically.
 #'
 #' @examples
 #' # This is a "dry run" example.
-#' # No task will actually be scheduled, it only shows how the function should react.
-#' auto_LitFetchR_setup(task_ID = "fish_vibrio",
+#' # No task will actually be scheduled,
+#' # it only shows how the function should react.
+#' auto_LitFetchR_setup(task_id = "fish_vibrio",
 #'                        when = "WEEKLY",
 #'                        time = "14:00",
-#'                        WOS = TRUE,
-#'                        SCP = TRUE,
-#'                        PMD = TRUE,
-#'                        directory = tempdir(),
+#'                        wos = TRUE,
+#'                        scp = TRUE,
+#'                        pmd = TRUE,
+#'                        directory,
 #'                        dedup = FALSE,
 #'                        open_file = FALSE,
 #'                        dry_run = TRUE
@@ -34,19 +45,21 @@
 #'
 #' @export
 
-auto_LitFetchR_setup <- function(task_ID = "task_ID",
+auto_LitFetchR_setup <- function(task_id = "task_id",
                                  when = "DAILY",
                                  time = "08:00",
-                                 WOS = TRUE,
-                                 SCP = TRUE,
-                                 PMD = TRUE,
+                                 wos = FALSE,
+                                 scp = FALSE,
+                                 pmd = FALSE,
                                  directory,
                                  dedup = FALSE,
                                  open_file = FALSE,
                                  dry_run = FALSE
                                  ) {
   if (dry_run) {
-    message('Dry run: no task scheduled, the message "Task scheduled!" will appear when the function will run successfully.')
+    message('Dry run: no task scheduled,
+            the message "Task scheduled!" will appear when the function will
+            run successfully.')
     return(invisible(NULL))
   }
 
@@ -60,11 +73,15 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
   if (!dir.exists(directory)) stop("Directory does not exist: ", directory)
 
     # Build the list of selected databases
-  selected <- c(WOS = WOS, SCP = SCP, PMD = PMD, dedup = dedup, open_file = open_file)
+  selected <- c(wos = wos,
+                scp = scp,
+                pmd = pmd,
+                dedup = dedup,
+                open_file = open_file)
   # If no database was selected, then the code stops and mentions
   # that at least one database must be selected
-  if (!any(c(WOS, SCP, PMD))) {
-    stop("At least one database must be set to TRUE (WOS, SCP, PMD).")
+  if (!any(c(wos, scp, pmd))) {
+    stop("At least one database must be set to TRUE (wos, scp, pmd).")
   }
 
   # Creates the path to the read-only R script containing the code
@@ -87,20 +104,28 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
   # Creates the Rscript from the path
   check <- file.create(script_path)
   if (!check) stop("Could not create script file: ", script_path)
-  script_path_scheduler <- if (.Platform$OS.type == "windows") get_short_path(script_path) else script_path
+  script_path_scheduler <- if (.Platform$OS.type == "windows") {
+    get_short_path(script_path)
+  } else {
+    script_path
+  }
 
   # Vector of code lines to be added in the Rscript
   lines <- character() #create the character vector
   # Build the `manual_fetch()` call based on selected databases
   arg_strings <- c(
-    sprintf("%s = %s", names(selected), ifelse(selected, "TRUE", "FALSE")), #Creates a string vector showing with argument from `auto_LitFetchR_setup` parameters
+    sprintf("%s = %s",
+            names(selected),
+            ifelse(selected, "TRUE", "FALSE")
+            ), #Creates a vector with argument from `auto_LitFetchR_setup`
     sprintf("directory = %s", shQuote(directory))
   )
-
+  #Creates a string vector with the `manual_fetch`
+  #function containing the same arguments as `auto_LitFetchR_setup`
   lines <- c(lines, sprintf("LitFetchR::manual_fetch(%s)",
                             paste(arg_strings, collapse = ", ")
                             )
-             ) #Creates a string vector with the `manual_fetch` function containing the same arguments as `auto_LitFetchR_setup`
+             )
 
   # Create the R script
   writeLines(lines, script_path)
@@ -120,7 +145,7 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
     # Windows: use taskscheduleR
     # create the scheduled task
     taskscheduleR::taskscheduler_create(
-      taskname  = task_ID,
+      taskname  = task_id,
       rscript   = script_path_scheduler,
       schedule  = when,
       starttime = time
@@ -133,10 +158,11 @@ auto_LitFetchR_setup <- function(task_ID = "task_ID",
         command   = cron_cmd,
         frequency = when,
         at        = time,
-        id        = task_ID
+        id        = task_id
       )
     } else {
-      stop("The 'cronR' package is required for scheduling on this OS, but is not installed.")
+      stop("The 'cronR' package is required for scheduling on this OS,
+           but is not installed.")
     }
   }
   message("Task scheduled!")

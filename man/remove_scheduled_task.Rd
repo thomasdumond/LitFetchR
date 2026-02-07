@@ -4,18 +4,19 @@
 \alias{remove_scheduled_task}
 \title{Removes a scheduled task.}
 \usage{
-remove_scheduled_task(taskname, dry_run = FALSE)
+remove_scheduled_task(task_id, dry_run = FALSE)
 }
 \arguments{
-\item{taskname}{Name/ID of the scheduled task (Windows Task Scheduler or Cron).}
+\item{task_id}{Name/ID of the scheduled task (Windows Task Scheduler or Cron).}
 
 \item{dry_run}{Simulation run option.}
 }
 \value{
-No return value, deletes a scheduled task saved using the function 'auto_LitFetchR_setup.R'.
+\code{NULL} (invisibly). Called for its side effects: removes a scheduled task saved using the function 'auto_LitFetchR_setup'.
 }
 \description{
-Removes a scheduled task using the "task_ID" from Task Scheduler (Windows) or Cron (Mac/Linux).
+Removes a scheduled task using the "task_id"
+from Task Scheduler (Windows) or Cron (Mac/Linux).
 }
 \examples{
 # This is a "dry run" example.

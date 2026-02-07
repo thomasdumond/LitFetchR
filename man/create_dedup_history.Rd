@@ -4,10 +4,18 @@
 \alias{create_dedup_history}
 \title{Creates an excel file to store the deduplication history.}
 \usage{
-create_dedup_history()
+create_dedup_history(directory)
+}
+\arguments{
+\item{directory}{Choose the directory in which
+the references deduplication history will be saved.}
 }
 \value{
-No return value, creates the excel file 'history_dedup.xlsx'.
+A list with elements:
+\describe{
+\item{history_dedup}{A Workbook object (from \pkg{openxlsx}).}
+\item{hist_dedup_path}{Character. Path to the created .xlsx file.}
+}
 }
 \description{
 Creates an excel file to store the deduplication history.

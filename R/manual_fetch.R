@@ -1,24 +1,29 @@
 #' Manual literature retrieval.
 #'
-#' Retrieves references corresponding to the saved search string(s) on up to three platforms (e.g. [Web of Science](https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/),
-#' [Scopus](https://www.elsevier.com/en-au/products/scopus) and [PubMed](https://pubmed.ncbi.nlm.nih.gov/)).
+#' Retrieves references corresponding to the saved search string(s)
+#'  on up to three platforms
+#'  (e.g. [Web of Science](https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/),
+#'  [Scopus](https://www.elsevier.com/en-au/products/scopus) and
+#'  [PubMed](https://pubmed.ncbi.nlm.nih.gov/)).
 #'
-#' @param WOS Runs the search on Web of Science (TRUE or FALSE).
-#' @param SCP Runs the search on Scopus (TRUE or FALSE).
-#' @param PMD Runs the search on PubMed (TRUE or FALSE).
-#' @param directory
+#' @param wos Runs the search on Web of Science (TRUE or FALSE).
+#' @param scp Runs the search on Scopus (TRUE or FALSE).
+#' @param pmd Runs the search on PubMed (TRUE or FALSE).
+#' @param directory Choose the directory in which the search string is saved
+#'  (Project's directory). That is also where the references metadata will be saved.
 #' @param dedup Deduplicates the retrieved references (TRUE or FALSE).
 #' @param open_file Automatically opens the CSV file after reference retrieval.
 #' @param dry_run Simulation run option.
 #'
-#' @return Create a CSV file with the references metadata, a history file of the references retrieved and a history file of the deduplication (if the option is selected).
+#' @return \code{NULL} (invisibly). Called for its side effects: Create a CSV file with the references metadata, a history file of the references retrieved and a history file of the deduplication (if the option is selected).
 #'
 #' @examples
 #' # This is a "dry run" example.
 #' # No references will actually be scheduled, it only shows how the function should react.
-#' manual_fetch(WOS = TRUE,
-#'              SCP = TRUE,
-#'              PMD = TRUE,
+#' manual_fetch(wos = TRUE,
+#'              scp = TRUE,
+#'              pmd = TRUE,
+#'              directory,
 #'              dedup = TRUE,
 #'              open_file = FALSE,
 #'              dry_run = TRUE
@@ -27,17 +32,19 @@
 #'
 #' @export
 
-manual_fetch <- function(WOS = TRUE,
-                         SCP = TRUE,
-                         PMD = TRUE,
+manual_fetch <- function(wos = FALSE,
+                         scp = FALSE,
+                         pmd = FALSE,
                          directory,
                          dedup = FALSE,
                          open_file = FALSE,
                          dry_run = FALSE
-                         ){
+                         ) {
 
   if (dry_run) {
-    message('[1] 126
+    message('This is the message from the dry run showing what you should be
+            seeing when the function will be used:
+              [1] 126
               Finished batch number 1
               Finished batch number 2
               [1] "10.1016/j.aaf.2023.11.002 1 / 126"
@@ -73,7 +80,8 @@ manual_fetch <- function(WOS = TRUE,
               254 citations loaded...
               14 duplicate citations removed...
               240 unique citations remaining!
-              Deduplication script has been executed, concatenated deduplicated references had been exported.
+              Deduplication script has been executed,
+              concatenated deduplicated references had been exported.
               Warning message:
               In add_missing_cols(raw_citations) :
                Search contains missing values for the record_id column.
@@ -82,71 +90,78 @@ manual_fetch <- function(WOS = TRUE,
     return(invisible(NULL))
   }
 
+  if (missing(directory) || is.null(directory) || !nzchar(directory)) {
+    stop("`directory` must be provided (path to your project folder).")
+  }
+  directory <- normalizePath(directory, mustWork = FALSE)
+  if (!dir.exists(directory)) stop("Directory does not exist: ", directory)
+
   search_list_path <- file.path(directory, "search_list.txt")
   search_list_path <- normalizePath(search_list_path, mustWork = FALSE)
 
   # Only runs if search string(s) are saved, else asks the user to do so.
-  if(file.exists(search_list_path)){
-    search_list_path <- search_list_path
-  } else{
-    # Asks the user to save a search string with the adequate function.
-    stop("No search string saved. Please save a search string using the function create_save_search().")
+  if (!file.exists(search_list_path)) {
+    stop("No search string saved.
+         Please save a search string using the function create_save_search().")
   }
 
   # Builds a list of databases selected by user.
-  selected <- c(WOS = WOS, SCP = SCP, PMD = PMD)
+  selected <- c(wos = wos, scp = scp, pmd = pmd)
   selected <- names(selected)[selected]  # keep only TRUE ones
 
   # Informs the user if no databases were selected.
   if (length(selected) == 0) {
-    stop("At least one database must be set to TRUE (WOS, SCP, PMD).")
+    stop("At least one database must be set to TRUE (wos, scp, pmd).")
   }
 
-  # Create NULL databases to allow `dedup_refs()` to work in case some platforms are not selected.
+  # Create NULL databases to allow `dedup_refs()`
+  # to work in case some platforms are not selected.
   df1 <- df2 <- df3 <- NULL
 
-  # Extract the metadata of the references retrieved on the platforms selected by user.
-  if ("WOS" %in% selected) {
-    df1 <- extract_wos_list(search_list_path)
+  # Extract the metadata of the references retrieved
+  # on the platforms selected by user.
+  if ("wos" %in% selected) {
+    df1 <- extract_wos_list(search_list_path, directory)
   }
-  if ("SCP" %in% selected) {
-    df2 <- extract_scp_list(search_list_path)
+  if ("scp" %in% selected) {
+    df2 <- extract_scp_list(search_list_path, directory)
   }
-  if ("PMD" %in% selected) {
-    df3 <- extract_pmd_list(search_list_path)
+  if ("pmd" %in% selected) {
+    df3 <- extract_pmd_list(search_list_path, directory)
   }
 
   # Deduplicates the results if the option was selected by user.
-  if (isTRUE(dedup)){
-    dedup_refs(df1, df2, df3, open_file = open_file)
+  if (isTRUE(dedup)) {
+    dedup_refs(df1, df2, df3, directory = directory, open_file = open_file)
 
   # If not, the function returns the CSV file with all the references.
-  } else{
+  } else {
     date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
-    csv_name <- paste0("citationsCSV_", date_suffix,".csv")
+    csv_name <- paste0("citationsCSV_", date_suffix, ".csv")
+    csv_path <- file.path(directory, csv_name)
+
     dfs <- Filter(Negate(is.null), list(df1, df2, df3))
     citations <- dplyr::bind_rows(dfs)
 
-    utils::write.csv(citations, csv_name, row.names = FALSE)
+    utils::write.csv(citations, file = csv_path, row.names = FALSE)
 
     # Opens the CSV file if the option was selected by user
-    if (isTRUE(open_file)){
+    if (isTRUE(open_file)) {
 
       if (.Platform$OS.type == "windows") {
         # Windows: opens in default app (e.g. Excel, Calc)
-        shell.exec(csv_name)
+        shell.exec(csv_path)
 
       } else if (Sys.info()[["sysname"]] == "Darwin") {
         # macOS: opens in default app (e.g. Excel, Calc)
-        system2("open", csv_name)
+        system2("open", csv_path)
 
       } else {
         # Linux: opens in default app (e.g. Excel, Calc)
-        system2("xdg-open", csv_name)
+        system2("xdg-open", csv_path)
       }
     }
   }
 
-
+  invisible(NULL)
 }
-

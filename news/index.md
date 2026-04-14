@@ -2,6 +2,8 @@
 
 ## LitFetchR 0.2.1
 
+CRAN release: 2026-02-10
+
 - Added ‘directory’ arguments to functions creating files so users can
   choose in which directory they are created.
 

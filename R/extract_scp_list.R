@@ -23,11 +23,6 @@
 
 extract_scp_list <- function(search_list_path, directory) {
 
-  if (!nzchar(scp_api_key)) {
-    stop("Scopus API key not found.
-         Set env var `scp_api_key` using the function `save_api_key`.",
-         call. = FALSE)
-  }
   # Only runs if search string(s) are saved, else asks the user to do so.
   if (file.exists(search_list_path)) {
     # Initializes an empty list to store results for all queries.

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">LitFetchR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,10 +39,15 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.2" id="litfetchr-022">LitFetchR 0.2.2<a class="anchor" aria-label="anchor" href="#litfetchr-022"></a></h2>
+<ul><li>Fixes bug in <code><a href="../reference/manual_fetch.html">manual_fetch()</a></code>: removed a chunk of code that was calling ‘scp_api_key’ before it was created in the internal function <code><a href="../reference/extract_scp_list.html">extract_scp_list()</a></code>. (see github issue <a href="https://github.com/thomasdumond/LitFetchR/issues/2#issue-4259003613" class="external-link uri">https://github.com/thomasdumond/LitFetchR/issues/2#issue-4259003613</a>)</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="litfetchr-021">LitFetchR 0.2.1<a class="anchor" aria-label="anchor" href="#litfetchr-021"></a></h2><p class="text-muted">CRAN release: 2026-02-10</p>
-<ul><li><p>Added ‘directory’ arguments to functions creating files so users can choose in which directory they are created.</p></li>
-<li><p>Added option to choose which literature platform to access when creating the search string using <code><a href="../reference/create_save_search.html">create_save_search()</a></code> function.</p></li>
+<p><em>CRAN release: 2026-02-10</em> * Added ‘directory’ arguments to functions creating files so users can choose in which directory they are created.</p>
+<ul><li><p>Added option to choose which literature platform to access when creating the search string using <code><a href="../reference/create_save_search.html">create_save_search()</a></code> function.</p></li>
 <li><p>Information messages can now be suppressed, if needed, using the function <code><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages()</a></code>.</p></li>
+<li><p>This was the first version</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="litfetchr-020">LitFetchR 0.2.0<a class="anchor" aria-label="anchor" href="#litfetchr-020"></a></h2>

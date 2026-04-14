@@ -1,10 +1,15 @@
-# LitFetchR 0.2.1
+# LitFetchR 0.2.2
+* Fixes bug in `manual_fetch()`: removed a chunk of code that was calling 'scp_api_key' before it was created in the internal function `extract_scp_list()`. (see github issue https://github.com/thomasdumond/LitFetchR/issues/2#issue-4259003613)
 
+# LitFetchR 0.2.1
+*CRAN release: 2026-02-10*
 * Added 'directory' arguments to functions creating files so users can choose in which directory they are created.
 
 * Added option to choose which literature platform to access when creating the search string using `create_save_search()` function.
 
 * Information messages can now be suppressed, if needed, using the function `suppressMessages()`.
+
+* This was the first version 
 
 # LitFetchR 0.2.0
 

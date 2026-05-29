@@ -11,6 +11,7 @@ to learn how to set up a task.
 From your individual review R directory, load `LitFetchR`:
 
 ``` r
+
 #Load LitFetchR
 library(LitFetchR)
 ```
@@ -20,6 +21,7 @@ library(LitFetchR)
 Just use the following function with the name of the scheduled task:
 
 ``` r
+
 #Load LitFetchR
 library(LitFetchR)
 

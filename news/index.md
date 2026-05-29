@@ -2,6 +2,8 @@
 
 ## LitFetchR 0.2.2
 
+CRAN release: 2026-04-14
+
 - Fixes bug in
   [`manual_fetch()`](https://thomasdumond.github.io/LitFetchR/reference/manual_fetch.md):
   removed a chunk of code that was calling ‘scp_api_key’ before it was

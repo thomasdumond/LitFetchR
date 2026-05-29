@@ -11,6 +11,7 @@ You can install the development version of `LitFetchR` from
 [GitHub](https://github.com/) using `devtools` or `remotes`:
 
 ``` r
+
 #install via devtools
 install.packages("devtools")
 devtools::install_github("thomasdumond/LitFetchR")

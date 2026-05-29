@@ -25,6 +25,7 @@ review project. To do so in RStudio:
 From your new directory, install `LitFetchR` from GitHub:
 
 ``` r
+
 #This step can be skipped if `LitFetchR` is already installed
 
 #Install using devtools package
@@ -41,6 +42,7 @@ remotes::install_github("thomasdumond/LitFetchR")
 Then load the package:
 
 ``` r
+
 #Load `LitFetchR`
 library(LitFetchR)
 ```
@@ -50,6 +52,7 @@ library(LitFetchR)
 Save your API keys in your personal R environment:
 
 ``` r
+
 #This step can be skipped if your API keys have already been saved. Repeat this step if your API keys changed.
 
 #Load `LitFetchR`
@@ -86,6 +89,7 @@ function will guide you through its workflow. Here is an example of what
 you should see:
 
 ``` r
+
 #Load LitFetchR
 library(LitFetchR)
 
@@ -163,6 +167,7 @@ Cron (Mac/Linux). You do not have to specify it, `LitFetchR` will detect
 the system and setup the task for you using the following:
 
 ``` r
+
 #Load LitFetchR
 library(LitFetchR)
 #We recommend choosing the R project directory as the directory in the function. It has to be the directory where "search_list.txt" and "history_search.xlsx" have been saved.

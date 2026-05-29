@@ -72,13 +72,18 @@ extract_scp_list <- function(search_list_path, directory) {
         )
       message(max_result_scp)
 
+      if (max_result_scp == 0) {
+        message("No results found on Scopus for the saved seach string.")
+        next
+      }
+
       # Creates the indicator for the number of batches
       # required to get all the references.
       # "25" represents the max number of references per batch.
       imax_scp <- ceiling(max_result_scp / 25)
 
       # STEP 1: Collect all the unique platform IDs in batches
-      for (i in 1:imax_scp) {
+      for (i in seq_len(imax_scp)) {
         # Construct API call
         # Make the request with pagination
         # Adds the search information.
@@ -125,6 +130,15 @@ extract_scp_list <- function(search_list_path, directory) {
     history_id_path <- file.path(directory, "history_id.xlsx")
     # Combines all results into a single dataframe.
     scopus_df <- dplyr::bind_rows(dfs_scp_all)
+    if (nrow(scopus_df) == 0) {
+      message("No new record from Scopus retrieved.")
+      return(data.frame(author = character(), year = character(),
+                        title = character(), journal = character(),
+                        volume = character(), issue = character(),
+                        abstract = character(), doi = character(),
+                        source = character(), platform_id = character(),
+                        stringsAsFactors = FALSE))
+    }
     # System date time.
     date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
     # Creates a unique name.

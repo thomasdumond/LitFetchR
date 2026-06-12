@@ -154,15 +154,6 @@ extract_pmd_list <- function(search_list_path, directory) {
     pmd_new_id <- data.frame(id = pmd_new)
     # Adds the new IDs to the current list.
     updated_list <- rbind(last_list, pmd_new_id)
-    # Writes the list updated with the new IDs.
-    openxlsx::writeData(history_id,
-                        sheet = "updated_id_list",
-                        x = updated_list)
-    # Saves the updated list.
-    openxlsx::saveWorkbook(history_id,
-                           file = history_id_path,
-                           overwrite = TRUE)
-
     # STEP 2: Fetch article details using unique platform IDs
     pubmed_results <- data.frame(author = character(),
                                  year = character(),
@@ -302,6 +293,14 @@ extract_pmd_list <- function(search_list_path, directory) {
       # Break to prevent API rate limits. (not working when too long)
       Sys.sleep(0.1)
     }
+
+    # Writes the list updated with the new IDs only after Step 2 succeeds.
+    openxlsx::writeData(history_id,
+                        sheet = "updated_id_list",
+                        x = updated_list)
+    openxlsx::saveWorkbook(history_id,
+                           file = history_id_path,
+                           overwrite = TRUE)
 
     return(pubmed_results) # Returns the dataframe with all the references.
   } else {

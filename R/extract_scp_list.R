@@ -164,15 +164,6 @@ extract_scp_list <- function(search_list_path, directory) {
     scopus_new_id <- data.frame(id = scp_new)
     # Adds the new IDs to the current list.
     updated_list <- rbind(last_list, scopus_new_id)
-    # Writes the list updated with the new IDs.
-    openxlsx::writeData(history_id,
-                        sheet = "updated_id_list",
-                        x = updated_list)
-    # Saves the updated list.
-    openxlsx::saveWorkbook(history_id,
-                           file = history_id_path,
-                           overwrite = TRUE)
-
     # STEP 2: Fetch article details using unique platform IDs
     # Creates an empty dataframe.
     scopus_results <- data.frame(author = character(),
@@ -317,6 +308,14 @@ extract_scp_list <- function(search_list_path, directory) {
       scopus_results <- rbind(scopus_results, scopus_results_x)
 
     }
+
+    # Writes the list updated with the new IDs only after Step 2 succeeds.
+    openxlsx::writeData(history_id,
+                        sheet = "updated_id_list",
+                        x = updated_list)
+    openxlsx::saveWorkbook(history_id,
+                           file = history_id_path,
+                           overwrite = TRUE)
 
     scopus_results # Returns the dataframe with all the references.
   } else {

@@ -39,6 +39,7 @@ extract_wos_list <- function(search_list_path, directory) {
     # Convert file contents into a list of search strings.
     search_list <- stats::setNames(sub(".*=", "", lines), sub("=.*", "", lines))
 
+    total_results_wos <- 0
     # Loop to fetch data for each search term
     for (query_wos in search_list) {
       # Initializes an empty list for current search.
@@ -59,7 +60,8 @@ extract_wos_list <- function(search_list_path, directory) {
 
       # Gives the number of results from the API call.
       max_result_wos <- as.numeric(response_wos$QueryResult$RecordsFound)
-      message(max_result_wos)
+      total_results_wos <- total_results_wos + max_result_wos
+      message(max_result_wos, " total results found on Web of Science for: ", query_wos)
 
       if (max_result_wos == 0) {
         message("No results found on WoS for the saved seach string.")
@@ -150,6 +152,7 @@ extract_wos_list <- function(search_list_path, directory) {
     last_list_vec <- last_list$id
     # Gets only the new IDs.
     wos_new <- setdiff(wos_id_vec, last_list_vec)
+    message(length(wos_new), " new records found among ", total_results_wos, " total results.")
     # Creates a dataframe with only the new IDs.
     wos_new_id <- data.frame(id = wos_new)
     # Adds the new IDs to the current list.

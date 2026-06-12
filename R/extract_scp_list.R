@@ -40,6 +40,7 @@ extract_scp_list <- function(search_list_path, directory) {
     search_list <- stats::setNames(sub(".*=", "", lines),
                                    sub("=.*", "", lines))
 
+    total_results_scp <- 0
     # Loop to fetch data for each search term
     for (query_scp in search_list) {
       # Initializes an empty list for current search.
@@ -70,7 +71,8 @@ extract_scp_list <- function(search_list_path, directory) {
       max_result_scp <- as.numeric(
         response_scp$`search-results`$`opensearch:totalResults`
         )
-      message(max_result_scp)
+      total_results_scp <- total_results_scp + max_result_scp
+      message(max_result_scp, " total results found on Scopus for: ", query_scp)
 
       if (max_result_scp == 0) {
         message("No results found on Scopus for the saved seach string.")
@@ -160,6 +162,7 @@ extract_scp_list <- function(search_list_path, directory) {
     last_list_vec <- last_list$id
     # Gets only the new IDs.
     scp_new <- setdiff(scopus_id_vec, last_list_vec)
+    message(length(scp_new), " new records found among ", total_results_scp, " total results.")
     # Creates a dataframe with only the new IDs.
     scopus_new_id <- data.frame(id = scp_new)
     # Adds the new IDs to the current list.

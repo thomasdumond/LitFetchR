@@ -35,6 +35,7 @@ extract_pmd_list <- function(search_list_path, directory) {
     search_list <- stats::setNames(sub(".*=", "", lines),
                                    sub("=.*", "", lines))
 
+    total_results_pmd <- 0
     # Loop to fetch data for each search string.
     for (search_query in search_list) {
       # Initializes an empty list for current search.
@@ -61,7 +62,8 @@ extract_pmd_list <- function(search_list_path, directory) {
 
       # Gives the number of results from the API call.
       max_result_pmd <- as.numeric(response_pmd$esearchresult$count)
-      message(max_result_pmd)
+      total_results_pmd <- total_results_pmd + max_result_pmd
+      message(max_result_pmd, " total results found on PubMed for: ", search_query)
 
       if (max_result_pmd == 0) {
         message("No results found on PubMed for the saved seach string.")
@@ -150,6 +152,7 @@ extract_pmd_list <- function(search_list_path, directory) {
     last_list_vec <- last_list$id
     # Gets only the new IDs.
     pmd_new <- setdiff(pmid_vec, last_list_vec)
+    message(length(pmd_new), " new records found among ", total_results_pmd, " total results.")
     # Creates a dataframe with only the new IDs.
     pmd_new_id <- data.frame(id = pmd_new)
     # Adds the new IDs to the current list.

@@ -15,6 +15,7 @@ get_text_retry <- function(url, headers = NULL) {
   for (attempt in seq_len(3)) {
     resp <- httr::RETRY(
       "GET", url, hdrs,
+      httr::timeout(60),
       times = 6,
       pause_base = 1,
       pause_cap  = 30,

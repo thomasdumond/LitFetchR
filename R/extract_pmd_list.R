@@ -35,6 +35,10 @@ extract_pmd_list <- function(search_list_path, directory) {
     search_list <- stats::setNames(sub("^[^=]+=", "", lines),
                                    sub("=.*", "", lines))
 
+    ncbi_api_key <- Sys.getenv("NCBI_API_KEY")
+    ncbi_key_param <- if (nzchar(ncbi_api_key)) paste0("&api_key=", ncbi_api_key) else ""
+    pmd_sleep <- if (nzchar(ncbi_api_key)) 0.1 else 0.34
+
     total_results_pmd <- 0
     # Loop to fetch data for each search string.
     for (search_query in search_list) {
@@ -50,7 +54,8 @@ extract_pmd_list <- function(search_list_path, directory) {
       search_url_pmd <- paste0(base_url_pmd,
                                "esearch.fcgi?db=pubmed&term=",
                                utils::URLencode(search_query),
-                               "&retmax=1&retmode=json")
+                               "&retmax=1&retmode=json",
+                               ncbi_key_param)
       # Extracts the content of the corresponding API call.
       response_pmd <- jsonlite::fromJSON(get_text_retry(search_url_pmd))
 
@@ -84,7 +89,8 @@ extract_pmd_list <- function(search_list_path, directory) {
           utils::URLencode(search_query),
           "&retstart=",
           next_start_pmd,
-          "&retmax=200&retmode=json"
+          "&retmax=200&retmode=json",
+          ncbi_key_param
         )
         response_pmd <- jsonlite::fromJSON(get_text_retry(batch_url_pmd))
         # Check if ID list exists, and extracts the IDs.
@@ -161,7 +167,8 @@ extract_pmd_list <- function(search_list_path, directory) {
       fetch_url <- paste0(base_url_pmd,
                           "efetch.fcgi?db=pubmed&id=",
                           paste(batch, collapse = ","),
-                          "&retmode=xml")
+                          "&retmode=xml",
+                          ncbi_key_param)
       fetch_response <- tryCatch(
         xml2::read_xml(get_text_retry(fetch_url)),
         error = function(e) {
@@ -256,7 +263,7 @@ extract_pmd_list <- function(search_list_path, directory) {
         message(paste(pmd_doi, num_doi_pmd, "/", length(pmd_new)))
       }
 
-      Sys.sleep(0.1)
+      Sys.sleep(pmd_sleep)
     }
 
     pubmed_results <- dplyr::bind_rows(pubmed_results)

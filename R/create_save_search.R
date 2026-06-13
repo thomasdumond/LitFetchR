@@ -144,50 +144,45 @@ create_save_search <- function(wos = FALSE,
                                  Results_PMD = unlist(results_pmd))
       print(search_table)
 
-      # The user chooses which search string(s) to save in "search_list.txt"
-      # Ask user to select a previous search
-      choice <- as.integer(
-        readline(
-          prompt = "Select the index number for the search string to use in automated retrieval: "))
+      # Ask whether the user wants to save a search string
+      save_search <- readline(
+        prompt = "Do you want to save a search string for automated retrieval? (yes/no): ")
 
-      if (!is.na(choice) && choice > 0 && choice <= length(search_history)) {
-        search <- search_history[[choice]]
-        message("\nSelected search string:", search, "\n")
+      if (tolower(save_search) == "yes") {
+        # Ask which search string to save
+        choice <- as.integer(
+          readline(
+            prompt = "Select the index number of the search string to save: "))
 
-        # Select where to store saved search strings
-        search_file <- file.path(directory, "search_list.txt")
-        search_file <- normalizePath(search_file, mustWork = FALSE)
+        if (!is.na(choice) && choice > 0 && choice <= length(search_history)) {
+          search <- search_history[[choice]]
+          message("\nSelected search string: ", search, "\n")
 
-        # Load existing searches if file exists
-        if (file.exists(search_file)) {
-          search_content <- readLines(search_file, warn = FALSE)
-        } else {
-          #If the file does not exist we start by creating a character vector
-          search_content <- character()
-        }
+          # Select where to store saved search strings
+          search_file <- file.path(directory, "search_list.txt")
+          search_file <- normalizePath(search_file, mustWork = FALSE)
 
-        # Ask if the user wants to save the search string
-        save_search <- readline(
-          prompt = "Do you want to save the search string for future use? (yes/no): ")
+          # Load existing searches if file exists
+          if (file.exists(search_file)) {
+            search_content <- readLines(search_file, warn = FALSE)
+          } else {
+            search_content <- character()
+          }
 
-        if (tolower(save_search) == "yes") {
           repeat {
             # Ask a name for the saved search
             save_name <- readline(prompt = "Enter a name for the search identification: ")
             # Check if the name already exists in "search_list.txt"
             existing_entry <- grep(paste0("^", save_name, "="), search_content, value = TRUE)
 
-            #Ask the user to chose another name or overwrite the search string if it already exists
             if (length(existing_entry) > 0) {
               message("Variable name already exists:\n", existing_entry, "\n")
-              choice <- readline(prompt = "Enter a different name or type 'overwrite' to replace: ")
+              overwrite_choice <- readline(
+                prompt = "Enter a different name or type 'overwrite' to replace: ")
 
-              # Remove existing entry
-              if (tolower(choice) == "overwrite") {
+              if (tolower(overwrite_choice) == "overwrite") {
                 search_content <- search_content[!grepl(paste0("^", save_name, "="),
-                                                        search_content
-                                                        )
-                                                 ]
+                                                        search_content)]
                 break
               }
             } else {
@@ -205,13 +200,11 @@ create_save_search <- function(wos = FALSE,
           message("Search string saved successfully.\n")
 
         } else {
-          message("Exiting without saving.\n")
+          message("Invalid choice. Nothing saved.\n")
         }
 
-
       } else {
-        message("Invalid choice. Exiting.\n")
-        break
+        message("Returning to search.\n")
       }
 
     } else {

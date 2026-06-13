@@ -23,19 +23,30 @@ create_id_history <- function(directory) {
   history_id_path <- file.path(directory, "history_id.xlsx")
 
   if (!file.exists(history_id_path)) {
-    history_id <- openxlsx::createWorkbook() #create the excel workbook in R
-    openxlsx::addWorksheet(history_id, "updated_id_list") #add a sheet
+    history_id <- openxlsx::createWorkbook()
+    openxlsx::addWorksheet(history_id, "updated_id_list")
     openxlsx::writeData(history_id,
                         sheet = "updated_id_list",
                         x = "id",
                         startCol = 1,
-                        startRow = 1) #column name is "id"
-    #save the R workbook to an excel file
+                        startRow = 1)
+    openxlsx::addWorksheet(history_id, "id_log")
+    openxlsx::writeData(history_id, "id_log",
+                        data.frame(id = character(), platform = character(),
+                                   timestamp = character(),
+                                   stringsAsFactors = FALSE))
     openxlsx::saveWorkbook(history_id, history_id_path, overwrite = TRUE)
   } else {
-    # If the ID history already exist, just load it to an R workbook object
     message("File already exists")
     history_id <- openxlsx::loadWorkbook(history_id_path)
+    # Add id_log sheet if opening a file created before this version.
+    if (!"id_log" %in% names(history_id)) {
+      openxlsx::addWorksheet(history_id, "id_log")
+      openxlsx::writeData(history_id, "id_log",
+                          data.frame(id = character(), platform = character(),
+                                     timestamp = character(),
+                                     stringsAsFactors = FALSE))
+    }
   }
 
   # Returns the R workbook object named history_id

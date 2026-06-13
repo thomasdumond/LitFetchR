@@ -131,14 +131,12 @@ extract_pmd_list <- function(search_list_path, directory) {
                         source = character(), platform_id = character(),
                         stringsAsFactors = FALSE))
     }
-    # System date time.
+    # Appends raw IDs to the id_log sheet with platform and timestamp.
     date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
-    # Creates a unique name.
-    sheet_name <- paste0("pmd_search", date_suffix)
-    # Adds a sheet with a unique name.
-    openxlsx::addWorksheet(history_id, sheet_name)
-    # Writes data to the sheet.
-    openxlsx::writeData(history_id, sheet_name, pmd_df)
+    existing_log <- openxlsx::readWorkbook(history_id, sheet = "id_log")
+    new_log_rows <- data.frame(id = pmd_df$PMID, platform = "PubMed",
+                               timestamp = date_suffix, stringsAsFactors = FALSE)
+    openxlsx::writeData(history_id, "id_log", rbind(existing_log, new_log_rows))
     # Makes sure there is no duplicates in the extracted IDs.
     pmid_vec <- unique(pmd_df$PMID)
     # Extract the IDs retrieved previously from the in-memory workbook.

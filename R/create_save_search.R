@@ -144,16 +144,16 @@ create_save_search <- function(wos = FALSE,
                                  Results_PMD = unlist(results_pmd))
       print(search_table)
 
-      # The search(es) results are saved in the "search_history.xlsx"
+      # Appends this session's searches to the search_history sheet.
+      search_table$timestamp <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
       history_search_path <- file.path(directory, "history_search.xlsx")
-      openxlsx::writeData(history_search,
-                          sheet_name,
-                          search_table
-                          ) #write data to the sheet
+      existing_searches <- openxlsx::readWorkbook(history_search,
+                                                  sheet = "search_history")
+      openxlsx::writeData(history_search, "search_history",
+                          rbind(existing_searches, search_table))
       openxlsx::saveWorkbook(history_search,
                              file = history_search_path,
-                             overwrite = TRUE
-                             ) #save history excel
+                             overwrite = TRUE)
 
       # The user chooses which search string(s) to save in "search_list.txt"
       # Ask user to select a previous search

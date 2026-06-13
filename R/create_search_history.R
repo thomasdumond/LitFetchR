@@ -22,38 +22,33 @@ create_search_history <- function(directory) {
 
   history_search_path <- file.path(directory, "history_search.xlsx")
 
-  # Create history if does not exist
   if (!file.exists(history_search_path)) {
-    # creates the excel workbook in R
     history_search <- openxlsx::createWorkbook()
-    # creates a unique name for the new sheet
-    sheet_name <- build_sheet_name()
-    # Adds a sheet with a unique name
-    openxlsx::addWorksheet(history_search, sheet_name)
-    # saves the R workbook to an excel file
+    openxlsx::addWorksheet(history_search, "search_history")
+    openxlsx::writeData(history_search, "search_history",
+                        data.frame(Search_Term = character(), Results_WOS = numeric(),
+                                   Results_SCP = numeric(), Results_PMD = numeric(),
+                                   timestamp = character(), stringsAsFactors = FALSE))
     openxlsx::saveWorkbook(history_search,
                            file = history_search_path,
                            overwrite = TRUE)
   } else {
     message("File already exists")
-    # loads the excel workbook in R
     history_search <- openxlsx::loadWorkbook(history_search_path)
-    # creates a unique name for the new sheet
-    date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
-    sheet_name <- paste0("search", date_suffix)
-    # Adds a sheet with a unique name
-    openxlsx::addWorksheet(history_search, sheet_name)
-    # saves the R workbook to an excel file
-    openxlsx::saveWorkbook(history_search,
-                           file = history_search_path,
-                           overwrite = TRUE)
+    # Add search_history sheet if opening a file created before this version.
+    if (!"search_history" %in% names(history_search)) {
+      openxlsx::addWorksheet(history_search, "search_history")
+      openxlsx::writeData(history_search, "search_history",
+                          data.frame(Search_Term = character(), Results_WOS = numeric(),
+                                     Results_SCP = numeric(), Results_PMD = numeric(),
+                                     timestamp = character(), stringsAsFactors = FALSE))
+    }
   }
   message("History had been created.")
 
-  # return history_search R object workbook and sheet_name in a list
   list(
     history_search = history_search,
-    sheet_name = sheet_name
+    sheet_name = "search_history"
   )
 
 }

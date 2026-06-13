@@ -168,19 +168,7 @@ extract_scp_list <- function(search_list_path, directory) {
     # Adds the new IDs to the current list.
     updated_list <- rbind(last_list, scopus_new_id)
     # STEP 2: Fetch article details using unique platform IDs
-    # Creates an empty dataframe.
-    scopus_results <- data.frame(author = character(),
-                                 year = character(),
-                                 title = character(),
-                                 journal = character(),
-                                 volume = character(),
-                                 issue = character(),
-                                 abstract = character(),
-                                 doi = character(),
-                                 source = character(),
-                                 platform_id = character(),
-                                 stringsAsFactors = FALSE
-                                 )
+    scopus_results <- list()
     # Sets up the count to inform user of which reference is being retrieved.
     num_doi_scp <- 0
 
@@ -211,7 +199,7 @@ extract_scp_list <- function(search_list_path, directory) {
       )
 
       if (is.data.frame(scp_article)) {
-        scopus_results <- rbind(scopus_results, scp_article)
+        scopus_results[[length(scopus_results) + 1]] <- scp_article
         next
       }
 
@@ -231,11 +219,14 @@ extract_scp_list <- function(search_list_path, directory) {
         NA_character_
       }
 
-      # Extracts year (set to NA if missing).
-      scp_year <- purrr::pluck(scp_data2,
-                               "source", "publicationdate", "year",
-                               .default = NA_character_
-                               )
+      # Extracts year from prism:coverDate (set to NA if missing).
+      scp_cover_date <- purrr::pluck(scp_data, "prism:coverDate",
+                                     .default = NA_character_)
+      scp_year <- if (!is.na(scp_cover_date) && nchar(scp_cover_date) >= 4) {
+        substr(scp_cover_date, 1, 4)
+      } else {
+        NA_character_
+      }
 
       # Extracts title (set to NA if missing).
       scp_titles <- if ("dc:title" %in% names(scp_data)) {
@@ -307,10 +298,11 @@ extract_scp_list <- function(search_list_path, directory) {
       # Informs the user of the advancement.
       message(paste(scp_doi, num_doi_scp, "/", length(scp_new)))
 
-      # Merges the dataframes.
-      scopus_results <- rbind(scopus_results, scopus_results_x)
+      scopus_results[[length(scopus_results) + 1]] <- scopus_results_x
 
     }
+
+    scopus_results <- dplyr::bind_rows(scopus_results)
 
     # Writes the list updated with the new IDs only after Step 2 succeeds.
     openxlsx::writeData(history_id,

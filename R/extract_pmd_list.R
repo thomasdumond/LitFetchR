@@ -158,18 +158,7 @@ extract_pmd_list <- function(search_list_path, directory) {
     # Adds the new IDs to the current list.
     updated_list <- rbind(last_list, pmd_new_id)
     # STEP 2: Fetch article details using unique platform IDs
-    pubmed_results <- data.frame(author = character(),
-                                 year = character(),
-                                 title = character(),
-                                 journal = character(),
-                                 volume = character(),
-                                 issue = character(),
-                                 abstract = character(),
-                                 doi = character(),
-                                 source = character(),
-                                 platform_id = character(),
-                                 stringsAsFactors = FALSE
-                                 ) # Creates an empty dataframe.
+    pubmed_results <- list()
 
     # Sets up the count to inform user of which reference is being retrieved.
     num_doi_pmd <- 0
@@ -191,7 +180,7 @@ extract_pmd_list <- function(search_list_path, directory) {
       )
 
       if (is.null(fetch_response)) {
-        pubmed_results <- rbind(pubmed_results, data.frame(
+        pubmed_results[[length(pubmed_results) + 1]] <- data.frame(
           author = NA_character_,
           year = NA_character_,
           title = NA_character_,
@@ -203,7 +192,7 @@ extract_pmd_list <- function(search_list_path, directory) {
           source = "PubMed",
           platform_id = pmid,
           stringsAsFactors = FALSE
-        ))
+        )
         next
       }
 
@@ -272,9 +261,7 @@ extract_pmd_list <- function(search_list_path, directory) {
       # Indicates the source platform of the reference.
       pmd_source <- "PubMed"
 
-      # Store results in a dataframe,
-      #"[1]" is to make sure that each extracted data has the same size.
-      pubmed_results <- rbind(pubmed_results, data.frame(
+      pubmed_results[[length(pubmed_results) + 1]] <- data.frame(
         author = pmd_authors[1],
         year = pmd_year[1],
         title = pmd_title[1],
@@ -286,7 +273,7 @@ extract_pmd_list <- function(search_list_path, directory) {
         source = pmd_source[1],
         platform_id = pmid,
         stringsAsFactors = FALSE
-      ))
+      )
 
       # Increase the counter by 1.
       num_doi_pmd <- num_doi_pmd + 1
@@ -296,6 +283,8 @@ extract_pmd_list <- function(search_list_path, directory) {
       # Break to prevent API rate limits. (not working when too long)
       Sys.sleep(0.1)
     }
+
+    pubmed_results <- dplyr::bind_rows(pubmed_results)
 
     # Writes the list updated with the new IDs only after Step 2 succeeds.
     openxlsx::writeData(history_id,

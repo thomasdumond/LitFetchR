@@ -158,19 +158,7 @@ extract_wos_list <- function(search_list_path, directory) {
     # Adds the new IDs to the current list.
     updated_list <- rbind(last_list, wos_new_id)
     # STEP 2: Fetch article details using unique platform IDs
-    # Creates an empty dataframe.
-    wos_results <- data.frame(author = character(),
-                              year = character(),
-                              title = character(),
-                              journal = character(),
-                              volume = character(),
-                              issue = character(),
-                              abstract = character(),
-                              doi = character(),
-                              source = character(),
-                              platform_id = character(),
-                              stringsAsFactors = FALSE
-                              )
+    wos_results <- list()
     # Sets up the count to inform user of which reference is being retrieved.
     num_doi_wos <- 0
 
@@ -203,7 +191,7 @@ extract_wos_list <- function(search_list_path, directory) {
       )
 
       if (is.data.frame(wos_article)) {
-        wos_results <- rbind(wos_results, wos_article)
+        wos_results[[length(wos_results) + 1]] <- wos_article
         next
       }
 
@@ -343,10 +331,11 @@ extract_wos_list <- function(search_list_path, directory) {
       # Informs the user of the advancement.
       message(paste(wos_doi, num_doi_wos, "/", length(wos_new)))
 
-      # Merges the dataframes.
-      wos_results <- rbind(wos_results, wos_results_x)
+      wos_results[[length(wos_results) + 1]] <- wos_results_x
 
     }
+
+    wos_results <- dplyr::bind_rows(wos_results)
 
     # Writes the list updated with the new IDs only after Step 2 succeeds.
     openxlsx::writeData(history_id,

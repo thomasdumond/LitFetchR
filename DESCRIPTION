@@ -17,7 +17,6 @@ Imports:
     jsonlite,
     openxlsx,
     purrr,
-    readxl,
     xml2
 Suggests:
     ASySD,

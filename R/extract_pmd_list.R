@@ -157,130 +157,112 @@ extract_pmd_list <- function(search_list_path, directory) {
     pmd_new_id <- data.frame(id = pmd_new)
     # Adds the new IDs to the current list.
     updated_list <- rbind(last_list, pmd_new_id)
-    # STEP 2: Fetch article details using unique platform IDs
+    # STEP 2: Fetch article details in batches of 200 PMIDs per call
     pubmed_results <- list()
-
-    # Sets up the count to inform user of which reference is being retrieved.
     num_doi_pmd <- 0
+    base_url_pmd <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+    batches_pmd <- split(pmd_new, ceiling(seq_along(pmd_new) / 200))
 
-    for (pmid in pmd_new) {
+    for (batch in batches_pmd) {
 
-      # API call for one unique ID.
-      base_url_pmd <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
       fetch_url <- paste0(base_url_pmd,
                           "efetch.fcgi?db=pubmed&id=",
-                          pmid,
+                          paste(batch, collapse = ","),
                           "&retmode=xml")
       fetch_response <- tryCatch(
         xml2::read_xml(get_text_retry(fetch_url)),
         error = function(e) {
-          message("FAILED PMID=", pmid, " : ", conditionMessage(e))
+          message("FAILED batch starting at PMID ", batch[1], ": ", conditionMessage(e))
           return(NULL)
         }
       )
 
       if (is.null(fetch_response)) {
-        pubmed_results[[length(pubmed_results) + 1]] <- data.frame(
-          author = NA_character_,
-          year = NA_character_,
-          title = NA_character_,
-          journal = NA_character_,
-          volume = NA_character_,
-          issue = NA_character_,
-          abstract = NA_character_,
-          doi = NA_character_,
-          source = "PubMed",
-          platform_id = pmid,
-          stringsAsFactors = FALSE
-        )
+        for (pmid in batch) {
+          pubmed_results[[length(pubmed_results) + 1]] <- data.frame(
+            author = NA_character_, year = NA_character_, title = NA_character_,
+            journal = NA_character_, volume = NA_character_, issue = NA_character_,
+            abstract = NA_character_, doi = NA_character_, source = "PubMed",
+            platform_id = pmid, stringsAsFactors = FALSE
+          )
+        }
         next
       }
 
-      # Extracts authors.
-      author_nodes <- xml2::xml_find_all(fetch_response,
-                                         "//AuthorList/Author")
-      pmd_authors <- if (length(author_nodes) > 0) {
-        paste(xml2::xml_text(xml2::xml_find_all(author_nodes, "LastName")),
-              collapse = ", ")
-      } else {
-        NA_character_
+      articles <- xml2::xml_find_all(fetch_response, "//PubmedArticle")
+
+      for (article in articles) {
+
+        pmid <- xml2::xml_text(
+          xml2::xml_find_first(article, ".//MedlineCitation/PMID"), trim = TRUE
+        )
+
+        # Extracts authors.
+        author_nodes <- xml2::xml_find_all(article, ".//AuthorList/Author")
+        pmd_authors <- if (length(author_nodes) > 0) {
+          paste(xml2::xml_text(xml2::xml_find_all(author_nodes, "LastName")),
+                collapse = ", ")
+        } else {
+          NA_character_
+        }
+
+        # Extracts year.
+        year_node <- xml2::xml_find_first(article, ".//PubDate/Year")
+        pmd_year <- xml2::xml_text(year_node, trim = TRUE)
+        pmd_year[pmd_year == ""] <- NA_character_
+
+        # Extracts article title.
+        title_node <- xml2::xml_find_first(article, ".//ArticleTitle")
+        pmd_title <- if (!is.null(title_node) && length(title_node) > 0) {
+          xml2::xml_text(title_node)
+        } else {
+          NA_character_
+        }
+
+        # Extracts journal name.
+        journal_node <- xml2::xml_find_first(article, ".//Journal/Title")
+        pmd_journal <- if (!is.null(journal_node) && length(journal_node) > 0) {
+          xml2::xml_text(journal_node)
+        } else {
+          NA_character_
+        }
+
+        # Extracts volume.
+        volume_node <- xml2::xml_find_first(article, ".//JournalIssue/Volume")
+        pmd_volume <- xml2::xml_text(volume_node, trim = TRUE)
+        if (length(pmd_volume) == 0 || identical(pmd_volume, "")) pmd_volume <- NA_character_
+
+        # Extracts issue.
+        issue_node <- xml2::xml_find_first(article, ".//JournalIssue/Issue")
+        pmd_issue <- xml2::xml_text(issue_node, trim = TRUE)
+        if (length(pmd_issue) == 0 || identical(pmd_issue, "")) pmd_issue <- NA_character_
+
+        # Extracts abstract.
+        abstract_node <- xml2::xml_find_first(article, ".//AbstractText")
+        pmd_abstract <- if (!is.null(abstract_node) && length(abstract_node) > 0) {
+          xml2::xml_text(abstract_node)
+        } else {
+          NA_character_
+        }
+
+        # Extracts DOI.
+        pmd_doi <- xml2::xml_text(
+          xml2::xml_find_first(article, ".//ArticleId[@IdType='doi']"),
+          trim = TRUE
+        )
+        if (length(pmd_doi) == 0 || identical(pmd_doi, "")) pmd_doi <- NA_character_
+
+        pubmed_results[[length(pubmed_results) + 1]] <- data.frame(
+          author = pmd_authors[1], year = pmd_year[1], title = pmd_title[1],
+          journal = pmd_journal[1], volume = pmd_volume[1], issue = pmd_issue[1],
+          abstract = pmd_abstract[1], doi = pmd_doi[1], source = "PubMed",
+          platform_id = pmid, stringsAsFactors = FALSE
+        )
+
+        num_doi_pmd <- num_doi_pmd + 1
+        message(paste(pmd_doi, num_doi_pmd, "/", length(pmd_new)))
       }
 
-      # Extracts year.
-      year_node <- xml2::xml_find_first(fetch_response, "//PubDate/Year")
-      pmd_year <- xml2::xml_text(year_node, trim = TRUE)
-      pmd_year[pmd_year == ""] <- NA_character_
-
-      # Extracts article title.
-      title_node <- xml2::xml_find_first(fetch_response, "//ArticleTitle")
-      pmd_title <- if (!is.null(title_node) && length(title_node) > 0) {
-        xml2::xml_text(title_node)
-      } else {
-        NA_character_
-      }
-
-      # Extracts journal name.
-      journal_node <- xml2::xml_find_first(fetch_response, "//Journal/Title")
-      pmd_journal <- if (!is.null(journal_node) && length(journal_node) > 0) {
-        xml2::xml_text(journal_node)
-      } else {
-        NA_character_
-      }
-
-      # Extracts volume.
-      volume_node <- xml2::xml_find_first(fetch_response, "//JournalIssue/Volume")
-      pmd_volume <- xml2::xml_text(volume_node, trim = TRUE)
-      if (length(pmd_volume) == 0 || identical(pmd_volume, "")) {
-        pmd_volume <- NA_character_
-      }
-
-      # Extracts issue.
-      issue_node <- xml2::xml_find_first(fetch_response, "//JournalIssue/Issue")
-      pmd_issue <- xml2::xml_text(issue_node, trim = TRUE)
-      if (length(pmd_issue) == 0 || identical(pmd_issue, "")) {
-        pmd_issue <- NA_character_
-      }
-
-      # Extracts abstract.
-      abstract_node <- xml2::xml_find_first(fetch_response, "//AbstractText")
-      pmd_abstract <- if (!is.null(abstract_node) && length(abstract_node) > 0) {
-        xml2::xml_text(abstract_node)
-      } else {
-        NA_character_
-      }
-
-      # Extracts DOI.
-      pmd_doi <- xml2::xml_text(
-        xml2::xml_find_first(fetch_response, ".//ArticleId[@IdType='doi']"),
-        trim = TRUE
-      )
-      if (length(pmd_doi) == 0 || identical(pmd_doi, "")) {
-        pmd_doi <- NA_character_
-      }
-
-      # Indicates the source platform of the reference.
-      pmd_source <- "PubMed"
-
-      pubmed_results[[length(pubmed_results) + 1]] <- data.frame(
-        author = pmd_authors[1],
-        year = pmd_year[1],
-        title = pmd_title[1],
-        journal = pmd_journal[1],
-        volume = pmd_volume[1],
-        issue = pmd_issue[1],
-        abstract = pmd_abstract[1],
-        doi = pmd_doi[1],
-        source = pmd_source[1],
-        platform_id = pmid,
-        stringsAsFactors = FALSE
-      )
-
-      # Increase the counter by 1.
-      num_doi_pmd <- num_doi_pmd + 1
-      # Informs the user of the advancement.
-      message(paste(pmd_doi, num_doi_pmd, "/", length(pmd_new)))
-
-      # Break to prevent API rate limits. (not working when too long)
       Sys.sleep(0.1)
     }
 

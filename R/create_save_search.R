@@ -246,13 +246,7 @@ create_save_search <- function(wos = FALSE,
                                "esearch.fcgi?db=pubmed&term=",
                                utils::URLencode(search),
                                "&retmax=200&retmode=json")
-      # 1 second delay before the request to make sure the right URL is called
-      Sys.sleep(1)
-      response_pmd <- jsonlite::fromJSON(httr::content(httr::GET(search_url_pmd),
-                                                       "text",
-                                                       encoding = "UTF-8"
-                                                       )
-                                         ) #stores the metadata accessed
+      response_pmd <- jsonlite::fromJSON(get_text_retry(search_url_pmd))
       # Extract the total number of results
       max_result_pmd <- as.numeric(response_pmd$`esearchresult`$`count`)
       }
@@ -272,11 +266,7 @@ create_save_search <- function(wos = FALSE,
                                scp_api_key
                                )
       #stores the metadata accessed
-      response_scp <- jsonlite::fromJSON(httr::content(httr::GET(search_url_scp),
-                                                       "text",
-                                                       encoding = "UTF-8"
-                                                       )
-                                         )
+      response_scp <- jsonlite::fromJSON(get_text_retry(search_url_scp))
       # Extract the total number of results
       max_result_scp <- as.numeric(response_scp$`search-results`$`opensearch:totalResults`)
       }
@@ -287,11 +277,8 @@ create_save_search <- function(wos = FALSE,
                                utils::URLencode(paste0("TS=(", search, ")"))
                                ) #URL accessing Web of Science API
       #stores the metadata accessed
-      response_wos <- jsonlite::fromJSON(httr::content(httr::GET(search_url_wos, httr::add_headers("X-ApiKey" = wos_api_key)),
-                                                       "text",
-                                                       encoding = "UTF-8"
-                                                       )
-                                         )
+      response_wos <- jsonlite::fromJSON(get_text_retry(search_url_wos,
+                                                        headers = c("X-ApiKey" = wos_api_key)))
       # Extract the total number of results
       max_result_wos <- as.numeric(response_wos$QueryResult$RecordsFound)
       }

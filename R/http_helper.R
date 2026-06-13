@@ -17,10 +17,18 @@ get_text_retry <- function(url, headers = NULL) {
       "GET", url, hdrs,
       times = 6,
       pause_base = 1,
-      pause_cap  = 30
+      pause_cap  = 30,
+      terminate_on = c(401L, 403L)
     )
 
-    if (httr::status_code(resp) != 429) break
+    status <- httr::status_code(resp)
+
+    if (status %in% c(401L, 403L)) {
+      stop("Authentication failed (HTTP ", status, "). ",
+           "Check your API key with save_api_keys().", call. = FALSE)
+    }
+
+    if (status != 429) break
 
     ra <- httr::headers(resp)[["retry-after"]]
     wait <- if (!is.null(ra) && !is.na(as.numeric(ra))) as.numeric(ra) else 60

@@ -139,15 +139,10 @@ extract_pmd_list <- function(search_list_path, directory) {
     openxlsx::addWorksheet(history_id, sheet_name)
     # Writes data to the sheet.
     openxlsx::writeData(history_id, sheet_name, pmd_df)
-    # Saves history excel.
-    openxlsx::saveWorkbook(history_id,
-                           file = history_id_path,
-                           overwrite = TRUE)
     # Makes sure there is no duplicates in the extracted IDs.
     pmid_vec <- unique(pmd_df$PMID)
-    # Extract the IDs retrieved previously.
-    last_list <- readxl::read_excel(history_id_path,
-                                    sheet = "updated_id_list")
+    # Extract the IDs retrieved previously from the in-memory workbook.
+    last_list <- openxlsx::readWorkbook(history_id, sheet = "updated_id_list")
     # Converts the list to a vector.
     last_list_vec <- last_list$id
     # Gets only the new IDs.

@@ -144,17 +144,6 @@ create_save_search <- function(wos = FALSE,
                                  Results_PMD = unlist(results_pmd))
       print(search_table)
 
-      # Appends this session's searches to the search_history sheet.
-      search_table$timestamp <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
-      history_search_path <- file.path(directory, "history_search.xlsx")
-      existing_searches <- openxlsx::readWorkbook(history_search,
-                                                  sheet = "search_history")
-      openxlsx::writeData(history_search, "search_history",
-                          rbind(existing_searches, search_table))
-      openxlsx::saveWorkbook(history_search,
-                             file = history_search_path,
-                             overwrite = TRUE)
-
       # The user chooses which search string(s) to save in "search_list.txt"
       # Ask user to select a previous search
       choice <- as.integer(
@@ -287,6 +276,25 @@ create_save_search <- function(wos = FALSE,
       results_pmd <- append(results_pmd, max_result_pmd)
       results_scp <- append(results_scp, max_result_scp)
       results_wos <- append(results_wos, max_result_wos)
+
+      # Save this search to history immediately so it is recorded even if the
+      # user exits without typing 'summary'.
+      history_search_path <- file.path(directory, "history_search.xlsx")
+      new_row <- data.frame(
+        Search_Term = search,
+        Results_WOS = max_result_wos,
+        Results_SCP = max_result_scp,
+        Results_PMD = max_result_pmd,
+        timestamp   = format(Sys.time(), "%Y-%m-%d-%H%M%S"),
+        stringsAsFactors = FALSE
+      )
+      existing_searches <- openxlsx::readWorkbook(history_search,
+                                                  sheet = "search_history")
+      openxlsx::writeData(history_search, "search_history",
+                          rbind(existing_searches, new_row))
+      openxlsx::saveWorkbook(history_search,
+                             file = history_search_path,
+                             overwrite = TRUE)
 
       # Print the search string following the results from
       # each database.

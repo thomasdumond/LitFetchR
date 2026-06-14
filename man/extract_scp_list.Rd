@@ -21,9 +21,11 @@ A data.frame with one row per retrieved Scopus record and columns:
 \item{title}{Character. Publication title.}
 \item{journal}{Character. Publication journal name.}
 \item{volume}{Character. Publication journal volume.}
-\item{issue}{Character. Publication journal issue.}
+\item{number}{Character. Publication journal issue number.}
 \item{abstract}{Character. Publication abstract.}
 \item{doi}{Character. Publication Digital Object Identifier (DOI).}
+\item{pages}{Character. Publication page range (e.g. "179-192").}
+\item{isbn}{Character. ISBN for book chapters (NA for journal articles).}
 \item{source}{Character. Data source.}
 \item{platform_id}{Character. Publication unique identifier in data source.}
 }

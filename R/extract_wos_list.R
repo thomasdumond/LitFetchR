@@ -12,7 +12,8 @@
 #'  \item{volume}{Character. Publication journal volume.}
 #'  \item{issue}{Character. Publication journal issue.}
 #'  \item{abstract}{Character. Publication abstract.}
-#'  \item{doi}{Character. Publication Digital Object Identifier (DOI).}
+#'  \item{doi}{Character. Publication DOI, or article URL when DOI is unavailable.}
+#'  \item{pages}{Character. Publication page range (e.g. "179-192").}
 #'  \item{source}{Character. Data source.}
 #'  \item{platform_id}{Character. Publication unique identifier in data source.}
 #' }
@@ -130,7 +131,8 @@ extract_wos_list <- function(search_list_path, directory) {
                         title = character(), journal = character(),
                         volume = character(), issue = character(),
                         abstract = character(), doi = character(),
-                        source = character(), platform_id = character(),
+                        pages = character(), source = character(),
+                        platform_id = character(),
                         stringsAsFactors = FALSE))
     }
     # Appends raw IDs to the id_log sheet with platform and timestamp.
@@ -177,6 +179,7 @@ extract_wos_list <- function(search_list_path, directory) {
             issue = NA_character_,
             abstract = NA_character_,
             doi = NA_character_,
+            pages = NA_character_,
             source = "Web of Science",
             platform_id = x,
             stringsAsFactors = FALSE
@@ -337,6 +340,13 @@ extract_wos_list <- function(search_list_path, directory) {
         )
       )
 
+      # Extracts page range (set to NA if missing).
+      wos_pages <- as.character(purrr::pluck(wos_article,
+                                "Data", "Records", "records", "REC",
+                                "static_data", "summary", "pub_info",
+                                "page", "content",
+                                .default = NA))
+
       # Indicates the source platform of the reference.
       wos_source <- "Web of Science"
 
@@ -352,6 +362,7 @@ extract_wos_list <- function(search_list_path, directory) {
         issue = wos_issue[1],
         abstract = wos_abstract[1],
         doi = wos_doi[1],
+        pages = wos_pages[1],
         source = wos_source[1],
         platform_id = x,
         stringsAsFactors = FALSE

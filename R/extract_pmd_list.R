@@ -13,6 +13,7 @@
 #'  \item{issue}{Character. Publication journal issue.}
 #'  \item{abstract}{Character. Publication abstract.}
 #'  \item{doi}{Character. Publication Digital Object Identifier (DOI).}
+#'  \item{pages}{Character. Publication page range (e.g. "179-192").}
 #'  \item{source}{Character. Data source.}
 #'  \item{platform_id}{Character. Publication unique identifier in data source.}
 #' }
@@ -135,7 +136,8 @@ extract_pmd_list <- function(search_list_path, directory) {
                         title = character(), journal = character(),
                         volume = character(), issue = character(),
                         abstract = character(), doi = character(),
-                        source = character(), platform_id = character(),
+                        pages = character(), source = character(),
+                        platform_id = character(),
                         stringsAsFactors = FALSE))
     }
     # Appends raw IDs to the id_log sheet with platform and timestamp.
@@ -183,8 +185,8 @@ extract_pmd_list <- function(search_list_path, directory) {
           pubmed_results[[length(pubmed_results) + 1]] <- data.frame(
             author = NA_character_, year = NA_character_, title = NA_character_,
             journal = NA_character_, volume = NA_character_, issue = NA_character_,
-            abstract = NA_character_, doi = NA_character_, source = "PubMed",
-            platform_id = pmid, stringsAsFactors = FALSE
+            abstract = NA_character_, doi = NA_character_, pages = NA_character_,
+            source = "PubMed", platform_id = pmid, stringsAsFactors = FALSE
           )
         }
         next
@@ -253,11 +255,17 @@ extract_pmd_list <- function(search_list_path, directory) {
         )
         if (length(pmd_doi) == 0 || identical(pmd_doi, "")) pmd_doi <- NA_character_
 
+        # Extracts page range (set to NA if missing).
+        pmd_pages <- xml2::xml_text(
+          xml2::xml_find_first(article, ".//MedlinePgn"), trim = TRUE
+        )
+        if (length(pmd_pages) == 0 || identical(pmd_pages, "")) pmd_pages <- NA_character_
+
         pubmed_results[[length(pubmed_results) + 1]] <- data.frame(
           author = pmd_authors[1], year = pmd_year[1], title = pmd_title[1],
           journal = pmd_journal[1], volume = pmd_volume[1], issue = pmd_issue[1],
-          abstract = pmd_abstract[1], doi = pmd_doi[1], source = "PubMed",
-          platform_id = pmid, stringsAsFactors = FALSE
+          abstract = pmd_abstract[1], doi = pmd_doi[1], pages = pmd_pages[1],
+          source = "PubMed", platform_id = pmid, stringsAsFactors = FALSE
         )
 
         num_doi_pmd <- num_doi_pmd + 1

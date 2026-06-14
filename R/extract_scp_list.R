@@ -13,6 +13,7 @@
 #'  \item{issue}{Character. Publication journal issue.}
 #'  \item{abstract}{Character. Publication abstract.}
 #'  \item{doi}{Character. Publication Digital Object Identifier (DOI).}
+#'  \item{pages}{Character. Publication page range (e.g. "179-192").}
 #'  \item{source}{Character. Data source.}
 #'  \item{platform_id}{Character. Publication unique identifier in data source.}
 #' }
@@ -139,7 +140,8 @@ extract_scp_list <- function(search_list_path, directory) {
                         title = character(), journal = character(),
                         volume = character(), issue = character(),
                         abstract = character(), doi = character(),
-                        source = character(), platform_id = character(),
+                        pages = character(), source = character(),
+                        platform_id = character(),
                         stringsAsFactors = FALSE))
     }
     # Appends raw IDs to the id_log sheet with platform and timestamp.
@@ -185,6 +187,7 @@ extract_scp_list <- function(search_list_path, directory) {
                                   issue = NA_character_,
                                   abstract = NA_character_,
                                   doi = NA_character_,
+                                  pages = NA_character_,
                                   source = "Scopus",
                                   platform_id = x,
                                   stringsAsFactors = FALSE
@@ -268,6 +271,11 @@ extract_scp_list <- function(search_list_path, directory) {
         )
       )
 
+      # Extracts page range (set to NA if missing).
+      scp_pages <- as.character(
+        purrr::pluck(scp_data, "prism:pageRange", .default = NA_character_)
+      )
+
       # Indicates the source platform of the reference.
       scp_source <- "Scopus"
 
@@ -282,6 +290,7 @@ extract_scp_list <- function(search_list_path, directory) {
         issue = scp_issue[1],
         abstract = scp_abstracts[1],
         doi = scp_doi[1],
+        pages = scp_pages[1],
         source = scp_source[1],
         platform_id = x,
         stringsAsFactors = FALSE

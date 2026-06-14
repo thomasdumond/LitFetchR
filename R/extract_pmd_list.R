@@ -31,6 +31,7 @@ extract_pmd_list <- function(search_list_path, directory) {
     dfs_pmd_all <- list()
     # Read the file "search_list.txt".
     lines <- readLines(search_list_path, warn = FALSE)
+    lines <- lines[nzchar(trimws(lines))]
     # Convert file contents into a list of search strings.
     search_list <- stats::setNames(sub("^[^=]+=", "", lines),
                                    sub("=.*", "", lines))

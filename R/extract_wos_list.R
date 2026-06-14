@@ -36,6 +36,7 @@ extract_wos_list <- function(search_list_path, directory) {
     }
     # Read the file "search_list.txt".
     lines <- readLines(search_list_path, warn = FALSE)
+    lines <- lines[nzchar(trimws(lines))]
     # Convert file contents into a list of search strings.
     search_list <- stats::setNames(sub("^[^=]+=", "", lines), sub("=.*", "", lines))
 
@@ -76,10 +77,11 @@ extract_wos_list <- function(search_list_path, directory) {
       for (i in seq_len(imax_wos)) {
         # Construct API call
         # Make the request with pagination
+        batch_count <- min(100L, max_result_wos - next_start_wos + 1L)
         search_url_wos <- paste0(
           "https://wos-api.clarivate.com/api/wos/?databaseId=WOK&usrQuery=",
           search_wos,
-          "&count=100",
+          "&count=", batch_count,
           "&firstRecord=",
           next_start_wos)
 
@@ -227,10 +229,21 @@ extract_wos_list <- function(search_list_path, directory) {
       wos_journal <- NA_character_
 
       if (!is.null(titles_df) && all(c("type", "content") %in% names(titles_df))) {
-        item <- titles_df[titles_df$type == "item", "content", drop = TRUE]
-        src  <- titles_df[titles_df$type == "source", "content", drop = TRUE]
-        if (length(item) > 0) wos_title <- as.character(item[[1]])
-        if (length(src)  > 0) wos_journal <- as.character(src[[1]])
+        item_row <- titles_df[titles_df$type == "item",   , drop = FALSE]
+        src_row  <- titles_df[titles_df$type == "source", , drop = FALSE]
+        if (nrow(item_row) > 0) {
+          content_vec <- unlist(item_row$content)
+          italic_vec  <- if ("i" %in% names(item_row)) unlist(item_row$i) else character(0)
+          italic_vec  <- italic_vec[!is.na(italic_vec)]
+          if (length(italic_vec) > 0) {
+            wos_title <- interleave_italic_content(content_vec, italic_vec)
+          } else {
+            wos_title <- paste(as.character(content_vec), collapse = " ")
+          }
+        }
+        if (nrow(src_row) > 0) {
+          wos_journal <- as.character(unlist(src_row$content)[[1]])
+        }
       }
 
       # Extracts volume (set to NA if missing).
@@ -256,11 +269,18 @@ extract_wos_list <- function(search_list_path, directory) {
 
       wos_abstract <- NA_character_
       if (is.data.frame(abstract) && "content" %in% names(abstract)) {
-        wos_abstract <- paste(abstract$content, collapse = " ")
+        content_vec <- unlist(abstract$content)
+        italic_vec  <- if ("italic" %in% names(abstract)) unlist(abstract$italic) else character(0)
+        italic_vec  <- italic_vec[!is.na(italic_vec)]
+        if (length(italic_vec) > 0) {
+          wos_abstract <- interleave_italic_content(content_vec, italic_vec)
+        } else {
+          wos_abstract <- paste(content_vec, collapse = " ")
+        }
       } else if (is.list(abstract) && length(abstract) > 0) {
         wos_abstract <- as.character(abstract[[1]][1])
       } else if (is.atomic(abstract) && length(abstract) > 0) {
-        wos_abstract <- as.character(abstract[1])
+        wos_abstract <- paste(as.character(abstract), collapse = " ")
       }
 
       # Extracts DOI (set to NA if missing).
@@ -346,4 +366,23 @@ extract_wos_list <- function(search_list_path, directory) {
     invisible(NULL)
   }
 
+}
+
+# Interleaves italic terms back into plain-text content fragments.
+# CABI records in the WoS API store abstracts and titles as two parallel arrays:
+# `content` (text between italic spans) and `italic`/`i` (the italic terms).
+# Which array leads depends on length: if content has more items it comes first,
+# otherwise italic comes first (equal → italic first, as observed in the API data).
+interleave_italic_content <- function(content_vec, italic_vec) {
+  n_c <- length(content_vec)
+  n_i <- length(italic_vec)
+  result <- character(n_c + n_i)
+  if (n_c > n_i) {
+    result[seq(1L, by = 2L, length.out = n_c)] <- content_vec
+    result[seq(2L, by = 2L, length.out = n_i)] <- italic_vec
+  } else {
+    result[seq(1L, by = 2L, length.out = n_i)] <- italic_vec
+    result[seq(2L, by = 2L, length.out = n_c)] <- content_vec
+  }
+  trimws(paste(trimws(result), collapse = " "))
 }

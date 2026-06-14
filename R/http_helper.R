@@ -19,7 +19,7 @@ get_text_retry <- function(url, headers = NULL) {
       times = 6,
       pause_base = 1,
       pause_cap  = 30,
-      terminate_on = c(401L, 403L)
+      terminate_on = c(400L, 401L, 403L)
     )
 
     status <- httr::status_code(resp)

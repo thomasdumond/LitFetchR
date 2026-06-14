@@ -44,9 +44,9 @@ A data.frame with one row per retrieved PubMed record and columns:
 
   Character. Publication journal volume.
 
-- issue:
+- number:
 
-  Character. Publication journal issue.
+  Character. Publication journal issue number.
 
 - abstract:
 
@@ -55,6 +55,14 @@ A data.frame with one row per retrieved PubMed record and columns:
 - doi:
 
   Character. Publication Digital Object Identifier (DOI).
+
+- pages:
+
+  Character. Publication page range (e.g. "179-192").
+
+- isbn:
+
+  Character. ISBN for book chapters (NA for journal articles).
 
 - source:
 

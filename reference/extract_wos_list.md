@@ -45,9 +45,9 @@ columns:
 
   Character. Publication journal volume.
 
-- issue:
+- number:
 
-  Character. Publication journal issue.
+  Character. Publication journal issue number.
 
 - abstract:
 
@@ -55,7 +55,15 @@ columns:
 
 - doi:
 
-  Character. Publication Digital Object Identifier (DOI).
+  Character. Publication DOI, or article URL when DOI is unavailable.
+
+- pages:
+
+  Character. Publication page range (e.g. "179-192").
+
+- isbn:
+
+  Character. ISBN for book chapters (NA for journal articles).
 
 - source:
 

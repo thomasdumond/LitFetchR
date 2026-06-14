@@ -10,7 +10,7 @@
 #'  \item{title}{Character. Publication title.}
 #'  \item{journal}{Character. Publication journal name.}
 #'  \item{volume}{Character. Publication journal volume.}
-#'  \item{issue}{Character. Publication journal issue.}
+#'  \item{number}{Character. Publication journal issue number.}
 #'  \item{abstract}{Character. Publication abstract.}
 #'  \item{doi}{Character. Publication Digital Object Identifier (DOI).}
 #'  \item{pages}{Character. Publication page range (e.g. "179-192").}
@@ -135,7 +135,7 @@ extract_pmd_list <- function(search_list_path, directory) {
       message("No new record from PubMed retrieved.")
       return(data.frame(author = character(), year = character(),
                         title = character(), journal = character(),
-                        volume = character(), issue = character(),
+                        volume = character(), number = character(),
                         abstract = character(), doi = character(),
                         pages = character(), isbn = character(),
                         source = character(),
@@ -186,7 +186,7 @@ extract_pmd_list <- function(search_list_path, directory) {
         for (pmid in batch) {
           pubmed_results[[length(pubmed_results) + 1]] <- data.frame(
             author = NA_character_, year = NA_character_, title = NA_character_,
-            journal = NA_character_, volume = NA_character_, issue = NA_character_,
+            journal = NA_character_, volume = NA_character_, number = NA_character_,
             abstract = NA_character_, doi = NA_character_, pages = NA_character_,
             isbn = NA_character_, source = "PubMed",
             platform_id = pmid, stringsAsFactors = FALSE
@@ -272,7 +272,7 @@ extract_pmd_list <- function(search_list_path, directory) {
 
         pubmed_results[[length(pubmed_results) + 1]] <- data.frame(
           author = pmd_authors[1], year = pmd_year[1], title = pmd_title[1],
-          journal = pmd_journal[1], volume = pmd_volume[1], issue = pmd_issue[1],
+          journal = pmd_journal[1], volume = pmd_volume[1], number = pmd_issue[1],
           abstract = pmd_abstract[1], doi = pmd_doi[1], pages = pmd_pages[1],
           isbn = pmd_isbn[1], source = "PubMed",
           platform_id = pmid, stringsAsFactors = FALSE

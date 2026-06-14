@@ -10,7 +10,7 @@
 #'  \item{title}{Character. Publication title.}
 #'  \item{journal}{Character. Publication journal name.}
 #'  \item{volume}{Character. Publication journal volume.}
-#'  \item{issue}{Character. Publication journal issue.}
+#'  \item{number}{Character. Publication journal issue number.}
 #'  \item{abstract}{Character. Publication abstract.}
 #'  \item{doi}{Character. Publication Digital Object Identifier (DOI).}
 #'  \item{pages}{Character. Publication page range (e.g. "179-192").}
@@ -139,7 +139,7 @@ extract_scp_list <- function(search_list_path, directory) {
       message("No new record from Scopus retrieved.")
       return(data.frame(author = character(), year = character(),
                         title = character(), journal = character(),
-                        volume = character(), issue = character(),
+                        volume = character(), number = character(),
                         abstract = character(), doi = character(),
                         pages = character(), isbn = character(),
                         source = character(),
@@ -186,7 +186,7 @@ extract_scp_list <- function(search_list_path, directory) {
                                   title = NA_character_,
                                   journal = NA_character_,
                                   volume = NA_character_,
-                                  issue = NA_character_,
+                                  number = NA_character_,
                                   abstract = NA_character_,
                                   doi = NA_character_,
                                   pages = NA_character_,
@@ -295,7 +295,7 @@ extract_scp_list <- function(search_list_path, directory) {
         title = scp_titles[1],
         journal = scp_journal[1],
         volume = scp_volume[1],
-        issue = scp_issue[1],
+        number = scp_issue[1],
         abstract = scp_abstracts[1],
         doi = scp_doi[1],
         pages = scp_pages[1],

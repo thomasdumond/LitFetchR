@@ -10,7 +10,7 @@
 #'  \item{title}{Character. Publication title.}
 #'  \item{journal}{Character. Publication journal name.}
 #'  \item{volume}{Character. Publication journal volume.}
-#'  \item{issue}{Character. Publication journal issue.}
+#'  \item{number}{Character. Publication journal issue number.}
 #'  \item{abstract}{Character. Publication abstract.}
 #'  \item{doi}{Character. Publication DOI, or article URL when DOI is unavailable.}
 #'  \item{pages}{Character. Publication page range (e.g. "179-192").}
@@ -130,7 +130,7 @@ extract_wos_list <- function(search_list_path, directory) {
       message("No new record from WoS retrieved.")
       return(data.frame(author = character(), year = character(),
                         title = character(), journal = character(),
-                        volume = character(), issue = character(),
+                        volume = character(), number = character(),
                         abstract = character(), doi = character(),
                         pages = character(), isbn = character(),
                         source = character(), platform_id = character(),
@@ -177,7 +177,7 @@ extract_wos_list <- function(search_list_path, directory) {
             title = NA_character_,
             journal = NA_character_,
             volume = NA_character_,
-            issue = NA_character_,
+            number = NA_character_,
             abstract = NA_character_,
             doi = NA_character_,
             pages = NA_character_,
@@ -350,10 +350,13 @@ extract_wos_list <- function(search_list_path, directory) {
                                 .default = NA))
 
       # Extracts ISBN (set to NA if missing; reuses identifiers_df from DOI extraction).
+      # Looks for both "isbn" and "eisbn" types, preferring "isbn".
       wos_isbn <- NA_character_
       if (!is.null(identifiers_df) && nrow(identifiers_df) > 0 && all(c("type", "value") %in% names(identifiers_df))) {
-        isbn_rows <- identifiers_df[identifiers_df$type == "isbn", , drop = FALSE]
+        isbn_rows <- identifiers_df[identifiers_df$type %in% c("isbn", "eisbn"), , drop = FALSE]
         if (nrow(isbn_rows) > 0) {
+          isbn_rows$type <- factor(isbn_rows$type, levels = c("isbn", "eisbn"))
+          isbn_rows <- isbn_rows[order(isbn_rows$type), , drop = FALSE]
           vals <- unlist(isbn_rows$value, use.names = FALSE)
           vals <- vals[!is.na(vals)]
           if (length(vals) > 0) wos_isbn <- as.character(vals[[1]])
@@ -372,7 +375,7 @@ extract_wos_list <- function(search_list_path, directory) {
         title = wos_title[1],
         journal = wos_journal[1],
         volume = wos_volume[1],
-        issue = wos_issue[1],
+        number = wos_issue[1],
         abstract = wos_abstract[1],
         doi = wos_doi[1],
         pages = wos_pages[1],

@@ -310,6 +310,24 @@ extract_wos_list <- function(search_list_path, directory) {
         }
       }
 
+      # Fallback: use article URL from address_spec when no DOI is available (e.g. CABI records).
+      if (is.na(wos_doi)) {
+        address_name <- purrr::pluck(wos_article,
+                                     "Data", "Records", "records", "REC",
+                                     "static_data", "fullrecord_metadata",
+                                     "addresses", "address_name",
+                                     .default = NULL)
+        if (!is.null(address_name)) {
+          first_url <- tryCatch({
+            url_vec <- address_name[[1]]$address_spec$url_spec$url
+            if (!is.null(url_vec) && length(url_vec) > 0) as.character(url_vec[[1]]) else NULL
+          }, error = function(e) NULL)
+          if (!is.null(first_url) && !is.na(first_url)) {
+            wos_doi <- first_url
+          }
+        }
+      }
+
       # Extracts issue (set to NA if missing).
       wos_issue <- as.character(purrr::pluck(wos_article,
                                 "Data", "Records", "records",

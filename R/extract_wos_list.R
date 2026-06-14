@@ -14,6 +14,7 @@
 #'  \item{abstract}{Character. Publication abstract.}
 #'  \item{doi}{Character. Publication DOI, or article URL when DOI is unavailable.}
 #'  \item{pages}{Character. Publication page range (e.g. "179-192").}
+#'  \item{isbn}{Character. ISBN for book chapters (NA for journal articles).}
 #'  \item{source}{Character. Data source.}
 #'  \item{platform_id}{Character. Publication unique identifier in data source.}
 #' }
@@ -131,8 +132,8 @@ extract_wos_list <- function(search_list_path, directory) {
                         title = character(), journal = character(),
                         volume = character(), issue = character(),
                         abstract = character(), doi = character(),
-                        pages = character(), source = character(),
-                        platform_id = character(),
+                        pages = character(), isbn = character(),
+                        source = character(), platform_id = character(),
                         stringsAsFactors = FALSE))
     }
     # Appends raw IDs to the id_log sheet with platform and timestamp.
@@ -180,6 +181,7 @@ extract_wos_list <- function(search_list_path, directory) {
             abstract = NA_character_,
             doi = NA_character_,
             pages = NA_character_,
+            isbn = NA_character_,
             source = "Web of Science",
             platform_id = x,
             stringsAsFactors = FALSE
@@ -347,6 +349,17 @@ extract_wos_list <- function(search_list_path, directory) {
                                 "page", "content",
                                 .default = NA))
 
+      # Extracts ISBN (set to NA if missing; reuses identifiers_df from DOI extraction).
+      wos_isbn <- NA_character_
+      if (!is.null(identifiers_df) && nrow(identifiers_df) > 0 && all(c("type", "value") %in% names(identifiers_df))) {
+        isbn_rows <- identifiers_df[identifiers_df$type == "isbn", , drop = FALSE]
+        if (nrow(isbn_rows) > 0) {
+          vals <- unlist(isbn_rows$value, use.names = FALSE)
+          vals <- vals[!is.na(vals)]
+          if (length(vals) > 0) wos_isbn <- as.character(vals[[1]])
+        }
+      }
+
       # Indicates the source platform of the reference.
       wos_source <- "Web of Science"
 
@@ -363,6 +376,7 @@ extract_wos_list <- function(search_list_path, directory) {
         abstract = wos_abstract[1],
         doi = wos_doi[1],
         pages = wos_pages[1],
+        isbn = wos_isbn[1],
         source = wos_source[1],
         platform_id = x,
         stringsAsFactors = FALSE

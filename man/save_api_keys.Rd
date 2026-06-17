@@ -2,14 +2,26 @@
 % Please edit documentation in R/save_api_key.R
 \name{save_api_keys}
 \alias{save_api_keys}
-\title{Saves Web of Science and/or Scopus API keys in .Renviron.}
+\title{Saves Web of Science, Scopus, and/or NCBI/PubMed API keys in .Renviron.}
 \usage{
-save_api_keys(wos_api_key = NULL, scp_api_key = NULL, dry_run = FALSE)
+save_api_keys(
+  wos_api_key = NULL,
+  scp_api_key = NULL,
+  scp_insttoken = NULL,
+  ncbi_api_key = NULL,
+  dry_run = FALSE
+)
 }
 \arguments{
 \item{wos_api_key}{The API key value for Web of Science (use quotation marks).}
 
 \item{scp_api_key}{The API key value for Scopus (use quotation marks).}
+
+\item{scp_insttoken}{The institutional token for Scopus (use quotation marks).
+Required by some institutional Scopus subscriptions alongside the API key.}
+
+\item{ncbi_api_key}{The API key value for NCBI/PubMed (use quotation marks).
+Optional; when set, PubMed requests run at a higher rate limit.}
 
 \item{dry_run}{Simulation run option.}
 }
@@ -17,8 +29,8 @@ save_api_keys(wos_api_key = NULL, scp_api_key = NULL, dry_run = FALSE)
 Logical. TRUE if at least one value was written, FALSE if left unchanged.
 }
 \description{
-You can set wos_api_key, scp_api_key, or both at the same time.
-Remember to restart the R session after saving your API keys.
+You can set wos_api_key, scp_api_key, scp_insttoken, ncbi_api_key, or any
+combination. Remember to restart the R session after saving your API keys.
 }
 \examples{
 save_api_keys(wos_api_key = "abcd01234",

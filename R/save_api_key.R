@@ -1,12 +1,14 @@
-#' Saves Web of Science and/or Scopus API keys in .Renviron.
+#' Saves Web of Science, Scopus, and/or NCBI/PubMed API keys in .Renviron.
 #'
-#' You can set wos_api_key, scp_api_key, scp_insttoken, or any combination.
-#' Remember to restart the R session after saving your API keys.
+#' You can set wos_api_key, scp_api_key, scp_insttoken, ncbi_api_key, or any
+#' combination. Remember to restart the R session after saving your API keys.
 #'
 #' @param wos_api_key The API key value for Web of Science (use quotation marks).
 #' @param scp_api_key The API key value for Scopus (use quotation marks).
 #' @param scp_insttoken The institutional token for Scopus (use quotation marks).
 #'   Required by some institutional Scopus subscriptions alongside the API key.
+#' @param ncbi_api_key The API key value for NCBI/PubMed (use quotation marks).
+#'   Optional; when set, PubMed requests run at a higher rate limit.
 #' @param dry_run Simulation run option.
 #'
 #' @return Logical. TRUE if at least one value was written, FALSE if left unchanged.
@@ -22,6 +24,7 @@
 save_api_keys <- function(wos_api_key = NULL,
                           scp_api_key = NULL,
                           scp_insttoken = NULL,
+                          ncbi_api_key = NULL,
                           dry_run = FALSE
                           ) {
 
@@ -32,15 +35,16 @@ save_api_keys <- function(wos_api_key = NULL,
     return(invisible(NULL))
   }
 
-  # Collects keys in a list.
+  # Collects keys in a list, keyed by the environment variable name to write.
   keys <- list()
   if (!missing(wos_api_key) && !is.null(wos_api_key)) keys$wos_api_key <- wos_api_key
   if (!missing(scp_api_key) && !is.null(scp_api_key)) keys$scp_api_key <- scp_api_key
   if (!missing(scp_insttoken) && !is.null(scp_insttoken)) keys$scp_insttoken <- scp_insttoken
+  if (!missing(ncbi_api_key) && !is.null(ncbi_api_key)) keys$ncbi_api_key <- ncbi_api_key
 
   # Informs the user if there is no API keys.
   if (!length(keys)) {
-    stop("Please provide at least one of wos_api_key or scp_api_key.")
+    stop("Please provide at least one of wos_api_key, scp_api_key, scp_insttoken, or ncbi_api_key.")
   }
 
   # Locates .Renviron.

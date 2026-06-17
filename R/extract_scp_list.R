@@ -148,11 +148,11 @@ extract_scp_list <- function(search_list_path, directory) {
           all_scp_records[[length(all_scp_records) + 1L]] <- data.frame(
             author      = scp_authors,
             year        = scp_year,
-            title       = scp_field(e, "dc:title"),
+            title       = strip_markup(scp_field(e, "dc:title")),
             journal     = scp_field(e, "prism:publicationName"),
             volume      = scp_field(e, "prism:volume"),
             number      = scp_field(e, "prism:issueIdentifier"),
-            abstract    = scp_field(e, "dc:description"),
+            abstract    = strip_markup(scp_field(e, "dc:description")),
             doi         = scp_field(e, "prism:doi"),
             pages       = scp_field(e, "prism:pageRange"),
             isbn        = scp_field(e, "prism:isbn"),

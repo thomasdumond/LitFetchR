@@ -389,11 +389,11 @@ extract_wos_list <- function(search_list_path, directory) {
             data.frame(
               author = wos_authors[1],
               year = wos_year[1],
-              title = wos_title[1],
+              title = strip_markup(wos_title[1]),
               journal = wos_journal[1],
               volume = wos_volume[1],
               number = wos_issue[1],
-              abstract = wos_abstract[1],
+              abstract = strip_markup(wos_abstract[1]),
               doi = wos_doi[1],
               pages = wos_pages[1],
               isbn = wos_isbn[1],

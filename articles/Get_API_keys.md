@@ -8,6 +8,11 @@ institution/organisation credentials. DO NOT SHARE THEM.
 In the context of a literature review, which needs a low request rate
 and quota, you do not need a key to use the PubMed API.
 
+If you want a higher request rate (about 10 requests/second instead of
+3), you can optionally register a free NCBI API key from your NCBI
+account, under Account Settings → API Key Management. It remains
+entirely optional.
+
 More info at: <https://pmc.ncbi.nlm.nih.gov/tools/developers/>
 
 ## Scopus
@@ -25,6 +30,12 @@ More info at: <https://pmc.ncbi.nlm.nih.gov/tools/developers/>
 - Click “Submit”
 - You will be redirected to “My API Key” where you will find your API
   key
+
+Some institutional Scopus subscriptions also require an **institutional
+token** (insttoken) in addition to the API key. If your API calls return
+an authentication error (HTTP 401) even with a valid key, contact
+Elsevier support to request an institutional token for your account. If
+your key works on its own, you do not need an institutional token.
 
 ## Web of science
 

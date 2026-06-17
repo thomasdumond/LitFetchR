@@ -1,12 +1,19 @@
-# Saves Web of Science and/or Scopus API keys in .Renviron.
+# Saves Web of Science, Scopus, and/or NCBI/PubMed API keys in .Renviron.
 
-You can set wos_api_key, scp_api_key, or both at the same time. Remember
-to restart the R session after saving your API keys.
+You can set wos_api_key, scp_api_key, scp_insttoken, ncbi_api_key, or
+any combination. Remember to restart the R session after saving your API
+keys.
 
 ## Usage
 
 ``` r
-save_api_keys(wos_api_key = NULL, scp_api_key = NULL, dry_run = FALSE)
+save_api_keys(
+  wos_api_key = NULL,
+  scp_api_key = NULL,
+  scp_insttoken = NULL,
+  ncbi_api_key = NULL,
+  dry_run = FALSE
+)
 ```
 
 ## Arguments
@@ -18,6 +25,16 @@ save_api_keys(wos_api_key = NULL, scp_api_key = NULL, dry_run = FALSE)
 - scp_api_key:
 
   The API key value for Scopus (use quotation marks).
+
+- scp_insttoken:
+
+  The institutional token for Scopus (use quotation marks). Required by
+  some institutional Scopus subscriptions alongside the API key.
+
+- ncbi_api_key:
+
+  The API key value for NCBI/PubMed (use quotation marks). Optional;
+  when set, PubMed requests run at a higher rate limit.
 
 - dry_run:
 

@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">LitFetchR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,6 +79,10 @@ institution/organisation credentials. DO NOT SHARE THEM.</p>
 </h2>
 <p>In the context of a literature review, which needs a low request rate
 and quota, you do not need a key to use the PubMed API.</p>
+<p>If you want a higher request rate (about 10 requests/second instead
+of 3), you can optionally register a free NCBI API key from your NCBI
+account, under Account Settings → API Key Management. It remains
+entirely optional.</p>
 <p>More info at: <a href="https://pmc.ncbi.nlm.nih.gov/tools/developers/" class="external-link uri">https://pmc.ncbi.nlm.nih.gov/tools/developers/</a></p>
 </div>
 <div class="section level2">
@@ -101,6 +105,12 @@ name)</li>
 <li>You will be redirected to “My API Key” where you will find your API
 key</li>
 </ul>
+<p>Some institutional Scopus subscriptions also require an
+<strong>institutional token</strong> (insttoken) in addition to the API
+key. If your API calls return an authentication error (HTTP 401) even
+with a valid key, contact Elsevier support to request an institutional
+token for your account. If your key works on its own, you do not need an
+institutional token.</p>
 </div>
 <div class="section level2">
 <h2 id="web-of-science">Web of science<a class="anchor" aria-label="anchor" href="#web-of-science"></a>

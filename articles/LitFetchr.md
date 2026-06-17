@@ -70,6 +70,28 @@ This will allow `LitFetchR` to locally access your personal API keys
 while keeping them confidential if you need to share your code with
 collaborators.
 
+[`save_api_keys()`](https://thomasdumond.github.io/LitFetchR/reference/save_api_keys.md)
+accepts the following, in any combination:
+
+- `wos_api_key` — Web of Science API key.
+- `scp_api_key` — Scopus API key.
+- `scp_insttoken` — optional Scopus institutional token, required by
+  some institutional subscriptions.
+- `ncbi_api_key` — optional NCBI/PubMed key, for a higher PubMed request
+  rate.
+
+For instructions on how to obtain each of these, see [Get API
+keys](https://thomasdumond.github.io/LitFetchR/articles/Get_API_keys.html).
+The optional tokens can be saved at the same time as your keys, for
+example:
+
+``` r
+
+save_api_keys(scp_api_key = "efgh5678",
+              scp_insttoken = "your-insttoken",
+              ncbi_api_key = "your-ncbi-key")
+```
+
 As mentioned by R, it is important to restart your session before
 continuing:
 

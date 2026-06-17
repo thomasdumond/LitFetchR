@@ -14,4 +14,5 @@
 - [`remove_scheduled_task()`](https://thomasdumond.github.io/LitFetchR/reference/remove_scheduled_task.md)
   : Removes a scheduled task.
 - [`save_api_keys()`](https://thomasdumond.github.io/LitFetchR/reference/save_api_keys.md)
-  : Saves Web of Science and/or Scopus API keys in .Renviron.
+  : Saves Web of Science, Scopus, and/or NCBI/PubMed API keys in
+  .Renviron.

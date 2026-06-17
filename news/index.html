@@ -41,28 +41,28 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.0" id="litfetchr-100">LitFetchR 1.0.0<a class="anchor" aria-label="anchor" href="#litfetchr-100"></a></h2>
 <p>Major reworking of the retrieval pipeline, consolidating a series of performance, reliability, and data-quality improvements. The exported function interface is unchanged apart from two new optional arguments to <code><a href="../reference/save_api_keys.html">save_api_keys()</a></code> (<code>scp_insttoken</code> and <code>ncbi_api_key</code>), but the returned data frame has changed (see “Output columns” below).</p>
-<div class="section level3">
-<h3 id="output-columns-1-0-0">Output columns<a class="anchor" aria-label="anchor" href="#output-columns-1-0-0"></a></h3>
+<div class="section level6">
+<h6 id="output-columns-1-0-0">Output columns<a class="anchor" aria-label="anchor" href="#output-columns-1-0-0"></a></h6>
 <ul><li>The <code>issue</code> column has been renamed to <code>number</code>. Code that referred to the output column by the name <code>issue</code> must be updated.</li>
 <li>Added <code>pages</code> and <code>isbn</code> columns to the output of all three extractors.</li>
 <li>The returned data frame is now a consistent 12 columns across Web of Science, Scopus, and PubMed: <code>author, year, title, journal, volume, number, abstract, doi, pages, isbn, source, platform_id</code>.</li>
 </ul></div>
-<div class="section level3">
-<h3 id="performance-1-0-0">Performance<a class="anchor" aria-label="anchor" href="#performance-1-0-0"></a></h3>
+<div class="section level6">
+<h6 id="performance-1-0-0">Performance<a class="anchor" aria-label="anchor" href="#performance-1-0-0"></a></h6>
 <ul><li>Web of Science and Scopus extractors no longer make individual per-record API calls. All metadata is now extracted directly from the batch search responses, greatly reducing the number of API requests and the time per run.</li>
 <li>PubMed record details are now fetched in batches of 200 PMIDs per call instead of one call per record.</li>
 <li>Replaced row-by-row <code>rbind</code> accumulation with list collection and a single combine in all three extractors.</li>
 <li>Removed a redundant save-and-reread of <code>history_id.xlsx</code> during extraction.</li>
 </ul></div>
-<div class="section level3">
-<h3 id="api-keys-and-authentication-1-0-0">API keys and authentication<a class="anchor" aria-label="anchor" href="#api-keys-and-authentication-1-0-0"></a></h3>
+<div class="section level6">
+<h6 id="api-keys-and-authentication-1-0-0">API keys and authentication<a class="anchor" aria-label="anchor" href="#api-keys-and-authentication-1-0-0"></a></h6>
 <ul><li>The Scopus API key is now sent as the <code>X-ELS-APIKey</code> request header instead of a URL query parameter, matching Elsevier’s current requirements.</li>
 <li>Added optional support for a Scopus institutional token. Set it with <code>save_api_keys(scp_insttoken = "...")</code>; when present it is sent as the <code>X-ELS-Insttoken</code> header on all Scopus requests. Some institutional subscriptions require it.</li>
 <li>
 <code><a href="../reference/save_api_keys.html">save_api_keys()</a></code> can now save an optional NCBI/PubMed API key with <code>save_api_keys(ncbi_api_key = "...")</code>, which enables a higher PubMed request rate. Previously this key had to be added to <code>.Renviron</code> by hand.</li>
 </ul></div>
-<div class="section level3">
-<h3 id="reliability-and-error-handling-1-0-0">Reliability and error handling<a class="anchor" aria-label="anchor" href="#reliability-and-error-handling-1-0-0"></a></h3>
+<div class="section level6">
+<h6 id="reliability-and-error-handling-1-0-0">Reliability and error handling<a class="anchor" aria-label="anchor" href="#reliability-and-error-handling-1-0-0"></a></h6>
 <ul><li>Rate-limit responses (HTTP 429) are now retried in a dedicated loop that respects the <code>Retry-After</code> header.</li>
 <li>Authentication failures (HTTP 401/403) now fail immediately with a clear diagnostic message instead of retrying.</li>
 <li>Every request now has a 60-second timeout.</li>
@@ -73,13 +73,13 @@
 <li>Search strings containing <code>=</code> are now parsed correctly from <code>search_list.txt</code>.</li>
 <li>Fixed handling of searches that return zero results in all three extractors.</li>
 </ul></div>
-<div class="section level3">
-<h3 id="data-quality-1-0-0">Data quality<a class="anchor" aria-label="anchor" href="#data-quality-1-0-0"></a></h3>
+<div class="section level6">
+<h6 id="data-quality-1-0-0">Data quality<a class="anchor" aria-label="anchor" href="#data-quality-1-0-0"></a></h6>
 <ul><li>Superscript/subscript markup (<code>&lt;sup&gt;</code>/<code>&lt;inf&gt;</code> tags) is now stripped from Scopus and Web of Science titles and abstracts while preserving their content (e.g. <code>10&lt;sup&gt;2&lt;/sup&gt;</code> becomes <code>102</code>), matching Scopus’ own export format. Bare <code>&lt;</code> and <code>&gt;</code> used as mathematical operators (e.g. <code>p &lt; 0.05</code>) are preserved.</li>
 <li>Web of Science extraction now handles more record types correctly: DIIDW patents (inventors, year, and Derwent abstract), multi-language abstracts from CSCD/KJD/SCIELO (preferring the English variant), and BCI/ZOOREC book-chapter journal titles. Italic terms in CABI titles and abstracts are reconstructed in place, and the article URL is used as a fallback when no DOI is available.</li>
 </ul></div>
-<div class="section level3">
-<h3 id="history-files-1-0-0">History files<a class="anchor" aria-label="anchor" href="#history-files-1-0-0"></a></h3>
+<div class="section level6">
+<h6 id="history-files-1-0-0">History files<a class="anchor" aria-label="anchor" href="#history-files-1-0-0"></a></h6>
 <ul><li>Per-run timestamped sheets in the history files have been replaced with append-only log sheets, keeping a single growing record instead of one sheet per run.</li>
 </ul></div>
 </div>

@@ -9,7 +9,7 @@ function interface is unchanged apart from two new optional arguments to
 (`scp_insttoken` and `ncbi_api_key`), but the returned data frame has
 changed (see “Output columns” below).
 
-### Output columns
+###### Output columns
 
 - The `issue` column has been renamed to `number`. Code that referred to
   the output column by the name `issue` must be updated.
@@ -19,7 +19,7 @@ changed (see “Output columns” below).
   Science, Scopus, and PubMed:
   `author, year, title, journal, volume, number, abstract, doi, pages, isbn, source, platform_id`.
 
-### Performance
+###### Performance
 
 - Web of Science and Scopus extractors no longer make individual
   per-record API calls. All metadata is now extracted directly from the
@@ -32,7 +32,7 @@ changed (see “Output columns” below).
 - Removed a redundant save-and-reread of `history_id.xlsx` during
   extraction.
 
-### API keys and authentication
+###### API keys and authentication
 
 - The Scopus API key is now sent as the `X-ELS-APIKey` request header
   instead of a URL query parameter, matching Elsevier’s current
@@ -47,7 +47,7 @@ changed (see “Output columns” below).
   request rate. Previously this key had to be added to `.Renviron` by
   hand.
 
-### Reliability and error handling
+###### Reliability and error handling
 
 - Rate-limit responses (HTTP 429) are now retried in a dedicated loop
   that respects the `Retry-After` header.
@@ -66,7 +66,7 @@ changed (see “Output columns” below).
 - Fixed handling of searches that return zero results in all three
   extractors.
 
-### Data quality
+###### Data quality
 
 - Superscript/subscript markup (`<sup>`/`<inf>` tags) is now stripped
   from Scopus and Web of Science titles and abstracts while preserving
@@ -80,7 +80,7 @@ changed (see “Output columns” below).
   and abstracts are reconstructed in place, and the article URL is used
   as a fallback when no DOI is available.
 
-### History files
+###### History files
 
 - Per-run timestamped sheets in the history files have been replaced
   with append-only log sheets, keeping a single growing record instead

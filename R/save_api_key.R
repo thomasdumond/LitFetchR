@@ -1,10 +1,12 @@
 #' Saves Web of Science and/or Scopus API keys in .Renviron.
 #'
-#' You can set wos_api_key, scp_api_key, or both at the same time.
+#' You can set wos_api_key, scp_api_key, scp_insttoken, or any combination.
 #' Remember to restart the R session after saving your API keys.
 #'
 #' @param wos_api_key The API key value for Web of Science (use quotation marks).
 #' @param scp_api_key The API key value for Scopus (use quotation marks).
+#' @param scp_insttoken The institutional token for Scopus (use quotation marks).
+#'   Required by some institutional Scopus subscriptions alongside the API key.
 #' @param dry_run Simulation run option.
 #'
 #' @return Logical. TRUE if at least one value was written, FALSE if left unchanged.
@@ -19,6 +21,7 @@
 
 save_api_keys <- function(wos_api_key = NULL,
                           scp_api_key = NULL,
+                          scp_insttoken = NULL,
                           dry_run = FALSE
                           ) {
 
@@ -33,6 +36,7 @@ save_api_keys <- function(wos_api_key = NULL,
   keys <- list()
   if (!missing(wos_api_key) && !is.null(wos_api_key)) keys$wos_api_key <- wos_api_key
   if (!missing(scp_api_key) && !is.null(scp_api_key)) keys$scp_api_key <- scp_api_key
+  if (!missing(scp_insttoken) && !is.null(scp_insttoken)) keys$scp_insttoken <- scp_insttoken
 
   # Informs the user if there is no API keys.
   if (!length(keys)) {

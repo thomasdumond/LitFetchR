@@ -36,6 +36,10 @@ extract_scp_list <- function(search_list_path, directory) {
            Set env var `scp_api_key` using the function `save_api_key`.",
            call. = FALSE)
     }
+    scp_insttoken <- Sys.getenv("scp_insttoken")
+    scp_headers <- c("X-ELS-APIKey" = scp_api_key,
+                     "Accept" = "application/json",
+                     if (nzchar(scp_insttoken)) c("X-ELS-Insttoken" = scp_insttoken))
     # Read the file "search_list.txt".
     lines <- readLines(search_list_path, warn = FALSE)
     lines <- lines[nzchar(trimws(lines))]
@@ -56,13 +60,11 @@ extract_scp_list <- function(search_list_path, directory) {
       # Creates the baseline API URL
       base_url_scp <- "https://api.elsevier.com/content/search/scopus?query="
       # Adds the search information.
-      search_url_scp <- paste0(base_url_scp,
-                               search_scp,
-                               "&apiKey=",
-                               scp_api_key)
+      search_url_scp <- paste0(base_url_scp, search_scp)
       # Extracts the content of the corresponding API call.
-      response_scp <- jsonlite::fromJSON(get_text_retry(search_url_scp),
-                                         flatten = TRUE)
+      response_scp <- jsonlite::fromJSON(
+        get_text_retry(search_url_scp, headers = scp_headers),
+        flatten = TRUE)
 
       # Check if the search gives results.
       if (is.null(response_scp$`search-results`$`opensearch:totalResults`)) {
@@ -95,11 +97,10 @@ extract_scp_list <- function(search_list_path, directory) {
         search_url_scp <- paste0(base_url_scp,
                                  search_scp,
                                  "&start=",
-                                 next_start_scp,
-                                 "&apiKey=",
-                                 scp_api_key)
-        response_scp <- jsonlite::fromJSON(get_text_retry(search_url_scp),
-                                           flatten = TRUE)
+                                 next_start_scp)
+        response_scp <- jsonlite::fromJSON(
+          get_text_retry(search_url_scp, headers = scp_headers),
+          flatten = TRUE)
         # Update the starting index for the next batch
         next_start_scp <- next_start_scp + 25
         # Check if ID list exists, and extracts the IDs.
@@ -177,7 +178,7 @@ extract_scp_list <- function(search_list_path, directory) {
         "https://api.elsevier.com/content/abstract/scopus_id/",
         x
         )
-      scp_article <- tryCatch(jsonlite::fromJSON(get_text_retry(url = search_url_scp, headers = c("X-ELS-APIKey" = scp_api_key, "Accept" = "application/json")), flatten = TRUE),
+      scp_article <- tryCatch(jsonlite::fromJSON(get_text_retry(url = search_url_scp, headers = scp_headers), flatten = TRUE),
                               error = function(e) {
                                 message("FAILED Scopus ID=", x, " : ", conditionMessage(e))
                                 data.frame(

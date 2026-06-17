@@ -416,7 +416,7 @@ extract_wos_list <- function(search_list_path, directory) {
           all_wos_records[[length(all_wos_records) + 1]] <- rec_data
         }
 
-        message("Finished batch number ", i)
+        message("Finished batch ", i, " of ", imax_wos)
       }
 
       # Combines all unique IDs into one data frame per search string.

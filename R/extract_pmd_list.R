@@ -38,7 +38,7 @@ extract_pmd_list <- function(search_list_path, directory) {
     search_list <- stats::setNames(sub("^[^=]+=", "", lines),
                                    sub("=.*", "", lines))
 
-    ncbi_api_key <- Sys.getenv("NCBI_API_KEY")
+    ncbi_api_key <- Sys.getenv("ncbi_api_key")
     ncbi_key_param <- if (nzchar(ncbi_api_key)) paste0("&api_key=", ncbi_api_key) else ""
     pmd_sleep <- if (nzchar(ncbi_api_key)) 0.1 else 0.34
 
@@ -111,7 +111,7 @@ extract_pmd_list <- function(search_list_path, directory) {
         next_start_pmd <- next_start_pmd + 200
 
         # Message to indicate the progress of unique ID batch extraction.
-        message("Finished batch ", i, " for ", search_query)
+        message("Finished batch ", i, " of ", imax_pmd)
 
       }
 
@@ -166,8 +166,10 @@ extract_pmd_list <- function(search_list_path, directory) {
     num_doi_pmd <- 0
     base_url_pmd <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
     batches_pmd <- split(pmd_new, ceiling(seq_along(pmd_new) / 200))
+    n_batches_pmd <- length(batches_pmd)
 
-    for (batch in batches_pmd) {
+    for (b in seq_along(batches_pmd)) {
+      batch <- batches_pmd[[b]]
 
       fetch_url <- paste0(base_url_pmd,
                           "efetch.fcgi?db=pubmed&id=",
@@ -279,9 +281,10 @@ extract_pmd_list <- function(search_list_path, directory) {
         )
 
         num_doi_pmd <- num_doi_pmd + 1
-        message(paste(pmd_doi, num_doi_pmd, "/", length(pmd_new)))
       }
 
+      message("Finished batch ", b, " of ", n_batches_pmd,
+              " (", num_doi_pmd, " / ", length(pmd_new), " records retrieved)")
       Sys.sleep(pmd_sleep)
     }
 

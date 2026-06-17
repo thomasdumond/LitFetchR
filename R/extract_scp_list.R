@@ -162,7 +162,7 @@ extract_scp_list <- function(search_list_path, directory) {
           )
         }
 
-        message("Finished batch number ", i)
+        message("Finished batch ", i, " of ", imax_scp)
       }
 
       # Combines all unique IDs into one data frame per search string.

@@ -1,12 +1,3 @@
-#' Internal HTTP GET helper with retries when
-#'  extracting data using WOS/SCP or PMD APIs
-#'
-#' @param url API call for the platform
-#' @param headers Named character vector of headers (optional).
-#' @return Character scalar. Response body (UTF-8).
-#' @keywords internal
-#' @noRd
-
 #' Strip inline sup/inf markup tags from extracted text.
 #'
 #' Scopus returns superscript/subscript as literal \code{<sup>}/\code{<inf>}
@@ -25,6 +16,14 @@ strip_markup <- function(x) {
   gsub("</?(sup|inf)>", "", x, ignore.case = TRUE)
 }
 
+#' Internal HTTP GET helper with retries when
+#'  extracting data using WOS/SCP or PMD APIs
+#'
+#' @param url API call for the platform
+#' @param headers Named character vector of headers (optional).
+#' @return Character scalar. Response body (UTF-8).
+#' @keywords internal
+#' @noRd
 get_text_retry <- function(url, headers = NULL) {
   hdrs <- if (is.null(headers)) httr::add_headers()
   else do.call(httr::add_headers, as.list(headers))

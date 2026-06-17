@@ -37,7 +37,7 @@ dedup_refs <- function(df1 = NULL,
   if (dry_run) {
     message("This is the message from the dry run showing what you should
     be seeing when the function will be used:
-    Warning: The following columns are missing: pages, number, record_id, isbn
+    Warning: The following columns are missing: record_id
     formatting data...
     identifying potential duplicates...
     identified duplicates!

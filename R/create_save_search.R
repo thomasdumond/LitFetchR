@@ -99,12 +99,18 @@ create_save_search <- function(wos = FALSE,
     }
   }
 
+  scp_headers <- NULL
   if (isTRUE(scp)) {
     scp_api_key <- Sys.getenv("scp_api_key")
     if (!nzchar(scp_api_key)) {
       stop("Scopus API key not found. Set env var `scp_api_key` using `save_api_key`.",
            call. = FALSE)
     }
+    # Auth via headers, matching extract_scp_list (X-ELS-APIKey, optional insttoken).
+    scp_insttoken <- Sys.getenv("scp_insttoken")
+    scp_headers <- c("X-ELS-APIKey" = scp_api_key,
+                     "Accept" = "application/json",
+                     if (nzchar(scp_insttoken)) c("X-ELS-Insttoken" = scp_insttoken))
   }
 
   #create lists to store data
@@ -241,14 +247,12 @@ create_save_search <- function(wos = FALSE,
                          search,
                          ignore.case = TRUE
                          )
-      #URL accessing scopus API
+      #URL accessing scopus API (auth via X-ELS-APIKey header, see scp_headers)
       search_url_scp <- paste0("https://api.elsevier.com/content/search/scopus?query=",
-                               utils::URLencode(paste0("TITLE-ABS-KEY(", search_scp, ")")),
-                               "&apiKey=",
-                               scp_api_key
+                               utils::URLencode(paste0("TITLE-ABS-KEY(", search_scp, ")"))
                                )
       #stores the metadata accessed
-      response_scp <- jsonlite::fromJSON(get_text_retry(search_url_scp))
+      response_scp <- jsonlite::fromJSON(get_text_retry(search_url_scp, headers = scp_headers))
       # Extract the total number of results
       max_result_scp <- as.numeric(response_scp$`search-results`$`opensearch:totalResults`)
       }

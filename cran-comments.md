@@ -1,19 +1,22 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
+0 errors | 0 warnings | up to 2 notes (environment-dependent)
 
 * checking package dependencies ... NOTE
-  Package suggested but not available for checking: 'cronR'
+  Suggests or Enhances not in mainstream repositories: ASySD
+  (On some platforms also reported as: 'ASySD', 'cronR' could not be checked.)
 
-  'cronR' is a suggested package used only for task scheduling on macOS/Linux.
-  It is not available on the check platform, and its use is guarded behind a
-  runtime availability check, so it is not required for the package to work.
+  'ASySD' is only available from GitHub (<https://github.com/camaradesuk/ASySD>).
+  It is used solely by the optional dedup_refs() function and its use is guarded
+  with requireNamespace(), so the package installs, loads, and passes its checks
+  without it. 'cronR' is a Suggested package used only for task scheduling on
+  macOS/Linux; it is likewise guarded behind a runtime availability check.
 
 * checking for future file timestamps ... NOTE
   unable to verify current time
 
   This note relates to the check environment's inability to reach the time
-  server and is not related to the package.
+  server and is not related to the package. (Not seen on win-builder.)
 
 ## Update
 

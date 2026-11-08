@@ -35,6 +35,13 @@ the number of results from 3 platforms:
 Web of Science, Scopus and PubMed. You can then save one
 or more search strings to retrieve the references later.
 }
+\details{
+Type \code{summary} to display the searches run so far and save one of them
+(the saved search strings are stored in "search_list.txt", which is
+required by the retrieval functions). Type \code{exit} to leave the tool. If
+searches were run but none was saved during the session, \code{exit} first
+offers to save one.
+}
 \examples{
 # This is a "dry run" example.
 # No search will be created and no database will be accessed.

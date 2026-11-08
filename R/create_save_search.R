@@ -6,6 +6,12 @@
 #' Web of Science, Scopus and PubMed. You can then save one
 #' or more search strings to retrieve the references later.
 #'
+#' Type `summary` to display the searches run so far and save one of them
+#' (the saved search strings are stored in "search_list.txt", which is
+#' required by the retrieval functions). Type `exit` to leave the tool. If
+#' searches were run but none was saved during the session, `exit` first
+#' offers to save one.
+#'
 #' @param wos Runs the search on Web of Science (TRUE or FALSE).
 #' @param scp Runs the search on Scopus (TRUE or FALSE).
 #' @param pmd Runs the search on PubMed (TRUE or FALSE).
@@ -63,14 +69,21 @@ create_save_search <- function(wos = FALSE,
   1                                     fish     1793296      718644      384742
   2                fish AND "vibrio harveyi"        2084        1080         727
   3 fish AND "vibrio harveyi" AND diagnostic         126          22         106
-  Select the index number for the search string to use in automated retrieval: 3
+  Do you want to save a search string for automated retrieval? (yes/no): yes
+  Select the index number of the search string to save: 3
 
   Selected search string: fish AND "vibrio harveyi" AND diagnostic
-  Do you want to save the search string for future use? (yes/no): yes
+
   Enter a name for the search identification: fish_vibrio
   Search string saved successfully.
   Enter your search string (or "summary" or "exit"): exit
-  Exiting search tool.'
+  Exiting search tool.
+
+  If you type "exit" before any search string was saved, the summary table
+  is displayed again and you are offered to save a search string:
+  Enter your search string (or "summary" or "exit"): exit
+  No search string has been saved yet. Retrieval with manual_fetch() requires a saved search.
+  Do you want to save a search string for automated retrieval? (yes/no):'
             )
     return(invisible(NULL))
   }
@@ -126,15 +139,54 @@ create_save_search <- function(wos = FALSE,
   history_search <- sh$history_search #new sheet R object created
   sheet_name <- sh$sheet_name #name of the new sheet R object
 
+  # Location of the saved search strings
+  search_file <- normalizePath(file.path(directory, "search_list.txt"),
+                               mustWork = FALSE)
+  # Stop early if an existing file is malformed, so that the user can fix it
+  # before running searches.
+  if (file.exists(search_file)) read_search_list(search_file, allow_empty = TRUE)
+
+  # TRUE once a search string was saved during this session
+  saved_any <- FALSE
+
+  # Table of the searches run so far and their number of results
+  make_search_table <- function() {
+    data.frame(Search_Term = unlist(search_history),
+               Results_WOS = unlist(results_wos),
+               Results_SCP = unlist(results_scp),
+               Results_PMD = unlist(results_pmd))
+  }
+
   repeat {
     # Ask the user for a search string
-    search <- readline(
-      prompt = "Enter your search string (or 'summary' or 'exit'): ")
+    search <- trimws(readline(
+      prompt = "Enter your search string (or 'summary' or 'exit'): "))
 
     # Exit condition (users can also press 'escape')
     if (tolower(search) == "exit") {
+      # Searches were run but none was saved: offer to save one, because
+      # "search_list.txt" is required by the retrieval functions.
+      if (!saved_any && length(search_history) > 0) {
+        message("\nNo search string has been saved yet. ",
+                "Retrieval with manual_fetch() requires a saved search.\n")
+        outcome <- offer_save_search(make_search_table(), search_history,
+                                     search_file, context = "exit")
+        if (outcome == "saved") saved_any <- TRUE
+        # Back to the search prompt so that the user can retry.
+        if (outcome == "invalid") next
+        if (outcome == "declined") {
+          message("No search string saved. Run create_save_search() again ",
+                  "to save one before retrieving references.\n")
+        }
+      }
       message("Exiting search tool.\n")
       break   # stops the repeat loop and ends the function
+    }
+
+    # Ignore empty input
+    if (!nzchar(search)) {
+      message("Empty search string ignored.\n")
+      next
     }
 
     # Summarise the search(es)
@@ -143,74 +195,12 @@ create_save_search <- function(wos = FALSE,
     # If the answer was 'summary' then it provides the summary
     #of the results of the search(es)
     if (tolower(search) == "summary") {
-      # Print search history and results as a table
-      search_table <- data.frame(Search_Term = unlist(search_history),
-                                 Results_WOS = unlist(results_wos),
-                                 Results_SCP = unlist(results_scp),
-                                 Results_PMD = unlist(results_pmd))
-      print(search_table)
-
-      # Ask whether the user wants to save a search string
-      save_search <- readline(
-        prompt = "Do you want to save a search string for automated retrieval? (yes/no): ")
-
-      if (tolower(save_search) == "yes") {
-        # Ask which search string to save
-        choice <- as.integer(
-          readline(
-            prompt = "Select the index number of the search string to save: "))
-
-        if (!is.na(choice) && choice > 0 && choice <= length(search_history)) {
-          search <- search_history[[choice]]
-          message("\nSelected search string: ", search, "\n")
-
-          # Select where to store saved search strings
-          search_file <- file.path(directory, "search_list.txt")
-          search_file <- normalizePath(search_file, mustWork = FALSE)
-
-          # Load existing searches if file exists
-          if (file.exists(search_file)) {
-            search_content <- readLines(search_file, warn = FALSE)
-          } else {
-            search_content <- character()
-          }
-
-          repeat {
-            # Ask a name for the saved search
-            save_name <- readline(prompt = "Enter a name for the search identification: ")
-            # Check if the name already exists in "search_list.txt"
-            existing_entry <- grep(paste0("^", save_name, "="), search_content, value = TRUE)
-
-            if (length(existing_entry) > 0) {
-              message("Variable name already exists:\n", existing_entry, "\n")
-              overwrite_choice <- readline(
-                prompt = "Enter a different name or type 'overwrite' to replace: ")
-
-              if (tolower(overwrite_choice) == "overwrite") {
-                search_content <- search_content[!grepl(paste0("^", save_name, "="),
-                                                        search_content)]
-                break
-              }
-            } else {
-              break
-            }
-          }
-
-          # Add the new search string to "search_list.txt" content
-          save_entry <- paste0(save_name, "=", search)
-          search_content <- c(search_content, save_entry)
-
-          # Save "search_list.txt" with the new content
-          writeLines(search_content, search_file)
-
-          message("Search string saved successfully.\n")
-
-        } else {
-          message("Invalid choice. Nothing saved.\n")
-        }
-
+      if (length(search_history) == 0) {
+        message("No search has been run yet.\n")
       } else {
-        message("Returning to search.\n")
+        outcome <- offer_save_search(make_search_table(), search_history,
+                                     search_file, context = "summary")
+        if (outcome == "saved") saved_any <- TRUE
       }
 
     } else {
@@ -298,4 +288,110 @@ create_save_search <- function(wos = FALSE,
     }
   }
   invisible(NULL)
+}
+
+
+# Internal helpers
+##################
+
+# Checks a name for a saved search. Returns NULL when the name is valid,
+# otherwise a message describing the problem.
+check_search_name <- function(name) {
+  if (!nzchar(name)) {
+    return("The name cannot be empty.")
+  }
+  if (grepl("=", name, fixed = TRUE)) {
+    return("The name cannot contain '=' (it separates the name from the search string).")
+  }
+  NULL
+}
+
+# Shows the summary table of the searches and offers to save one of them to
+# "search_list.txt". Used by both 'summary' and 'exit' in create_save_search().
+#
+# search_table   Data frame of the searches and their number of results.
+# search_history List of the search strings (same order as the table).
+# search_file    Path to "search_list.txt".
+# context        "summary" or "exit" (only changes the message when declined).
+#
+# Returns "saved", "declined" (the user answered no) or "invalid" (the index
+# was not valid, nothing was saved).
+offer_save_search <- function(search_table, search_history, search_file,
+                              context = c("summary", "exit")) {
+  context <- match.arg(context)
+
+  # Print search history and results as a table
+  print(search_table)
+
+  # Ask whether the user wants to save a search string
+  save_search <- trimws(readline(
+    prompt = "Do you want to save a search string for automated retrieval? (yes/no): "))
+
+  if (!tolower(save_search) %in% c("yes", "y")) {
+    if (context == "summary") message("Returning to search.\n")
+    return("declined")
+  }
+
+  # Ask which search string to save
+  choice <- suppressWarnings(as.integer(
+    readline(prompt = "Select the index number of the search string to save: ")))
+
+  if (is.na(choice) || choice < 1 || choice > length(search_history)) {
+    message("Invalid choice. Nothing saved.\n")
+    return("invalid")
+  }
+
+  search <- search_history[[choice]]
+  message("\nSelected search string: ", search, "\n")
+
+  # Load existing searches if the file exists. A malformed file stops here
+  # with an explanation instead of being silently rewritten.
+  if (file.exists(search_file)) {
+    read_search_list(search_file, allow_empty = TRUE)
+    search_content <- readLines(search_file, warn = FALSE)
+    search_content <- search_content[nzchar(trimws(search_content))]
+  } else {
+    search_content <- character()
+  }
+
+  ask_name <- function() {
+    trimws(readline(prompt = "Enter a name for the search identification: "))
+  }
+
+  save_name <- ask_name()
+  repeat {
+    problem <- check_search_name(save_name)
+    if (!is.null(problem)) {
+      message(problem, "\n")
+      save_name <- ask_name()
+      next
+    }
+
+    # Check if the name already exists in "search_list.txt"
+    # (fixed matching, so that the name is never read as a regular expression)
+    is_existing <- startsWith(search_content, paste0(save_name, "="))
+    if (!any(is_existing)) break
+
+    message("Variable name already exists:\n",
+            paste(search_content[is_existing], collapse = "\n"), "\n")
+    overwrite_choice <- trimws(readline(
+      prompt = "Enter a different name or type 'overwrite' to replace: "))
+
+    if (tolower(overwrite_choice) == "overwrite") {
+      search_content <- search_content[!is_existing]
+      break
+    }
+    # Anything else is taken as the different name and checked again.
+    save_name <- overwrite_choice
+  }
+
+  # Add the new search string to "search_list.txt" content
+  save_entry <- paste0(save_name, "=", search)
+  search_content <- c(search_content, save_entry)
+
+  # Save "search_list.txt" with the new content
+  writeLines(search_content, search_file)
+
+  message("Search string saved successfully.\n")
+  "saved"
 }

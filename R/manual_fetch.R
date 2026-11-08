@@ -15,7 +15,23 @@
 #' @param open_file Automatically opens the CSV file after reference retrieval.
 #' @param dry_run Simulation run option.
 #'
-#' @return \code{NULL} (invisibly). Called for its side effects: Create a CSV file with the references metadata, a history file of the references retrieved and a history file of the deduplication (if the option is selected).
+#' @details
+#' Every retrieval is recorded in the file `run_log.csv` of `directory`
+#' (one row per saved search and platform). It stores the exact query
+#' submitted to each platform, the date, the package and R versions, the
+#' number of results and new records, the status of the request and any
+#' error message. For PubMed, it also stores the query translation reported
+#' by PubMed. For Web of Science, it also stores the number of records
+#' retrieved from each source database.
+#'
+#' The history of the references already retrieved (`history_id.xlsx`) is
+#' only updated once the output file has been written. If a platform fails
+#' (for example an expired API key), the other platforms are still saved,
+#' a warning names the failed platform(s), and the failed platform is not
+#' added to the history, so its references are retrieved again by the next
+#' run. If all the selected platforms fail, an error is raised.
+#'
+#' @return \code{NULL} (invisibly). Called for its side effects: Create a CSV file with the references metadata, a history file of the references retrieved, a history file of the deduplication (if the option is selected) and a run log (`run_log.csv`).
 #'
 #' @examples
 #' # This is a "dry run" example.
@@ -99,40 +115,126 @@ manual_fetch <- function(wos = FALSE,
     stop("At least one database must be set to TRUE (wos, scp, pmd).")
   }
 
-  # Create NULL databases to allow `dedup_refs()`
-  # to work in case some platforms are not selected.
-  df1 <- df2 <- df3 <- NULL
+  # One identifier shared by all the rows of this run in "run_log.csv".
+  run_id <- make_run_id()
+  # Rows of the run log, written at the end of the run (or on any exit).
+  log_rows <- list()
+  flush_log <- function() {
+    if (length(log_rows) > 0) {
+      flush_run_log(directory, dplyr::bind_rows(log_rows))
+      log_rows <<- list()
+    }
+  }
+  on.exit(flush_log(), add = TRUE)
+
+  extractors <- list(wos = extract_wos_list,
+                     scp = extract_scp_list,
+                     pmd = extract_pmd_list)
+  platform_names <- c(wos = "Web of Science", scp = "Scopus", pmd = "PubMed")
 
   # Extract the metadata of the references retrieved
   # on the platforms selected by user.
-  if ("wos" %in% selected) {
-    df1 <- extract_wos_list(search_list_path, directory)
+  # A platform that fails does not stop the others. Nothing is added
+  # to the history at this stage: the pending updates are kept and
+  # written only once the output file exists.
+  dfs <- list()
+  pendings <- list()
+  failed <- character(0)
+  for (p in selected) {
+    res <- tryCatch(
+      extractors[[p]](search_list_path, directory,
+                      run_id = run_id, commit_history = FALSE),
+      error = function(e) e
+    )
+    if (inherits(res, "error")) {
+      failed[[p]] <- conditionMessage(res)
+      message("FAILED ", platform_names[[p]], ": ", conditionMessage(res))
+      if (inherits(res, "litfetchr_platform_error")) {
+        log_rows[[length(log_rows) + 1]] <- res$run_log
+      } else {
+        log_rows[[length(log_rows) + 1]] <- make_log_rows(
+          run_id = run_id, platform = p, search_name = "", search_string = "",
+          status = "error", message = conditionMessage(res))
+      }
+      next
+    }
+    if (is.null(res)) {
+      failed[[p]] <- "No search string saved."
+      next
+    }
+    pendings[p] <- list(attr(res, "pending_history"))
+    log_rows[[length(log_rows) + 1]] <- attr(res, "run_log")
+    attr(res, "pending_history") <- NULL
+    attr(res, "run_log") <- NULL
+    dfs[[p]] <- res
   }
-  if ("scp" %in% selected) {
-    df2 <- extract_scp_list(search_list_path, directory)
+
+  # Stops when no platform could be retrieved.
+  if (length(failed) == length(selected)) {
+    flush_log()
+    stop("All the selected platforms failed. Nothing was saved and the ",
+         "history was not updated.\n",
+         paste0("  ", platform_names[names(failed)], ": ", shorten(failed),
+                collapse = "\n"),
+         "\nSee ", file.path(directory, "run_log.csv"), " for details.",
+         call. = FALSE)
   }
-  if ("pmd" %in% selected) {
-    df3 <- extract_pmd_list(search_list_path, directory)
+
+  df1 <- dfs$wos
+  df2 <- dfs$scp
+  df3 <- dfs$pmd
+
+  # Writes the output: deduplicated references if the option was selected
+  # by user, else a CSV file with all the references.
+  # If this fails, the history is left untouched.
+  csv_path <- NULL
+  tryCatch({
+    if (isTRUE(dedup)) {
+      dedup_refs(df1, df2, df3, directory = directory, open_file = open_file)
+
+    } else {
+      date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
+      csv_name <- paste0("citationsCSV_", date_suffix, ".csv")
+      csv_path <- file.path(directory, csv_name)
+
+      dfs_out <- Filter(Negate(is.null), list(df1, df2, df3))
+      citations <- dplyr::bind_rows(dfs_out)
+
+      utils::write.csv(citations, file = csv_path, row.names = FALSE)
+    }
+  }, error = function(e) {
+    log_rows <<- amend_run_log(
+      log_rows, names(dfs),
+      paste0("The output file was not written (", conditionMessage(e), "). ",
+             "The history was not updated, so these records will be returned ",
+             "again on the next run."))
+    flush_log()
+    stop("The output file could not be written: ", conditionMessage(e),
+         "\nThe history was not updated, so the records will be retrieved ",
+         "again on the next run. See ", file.path(directory, "run_log.csv"),
+         call. = FALSE)
+  })
+
+  # The output exists: marks the retrieved references as seen.
+  commit_failed <- character(0)
+  for (p in names(pendings)) {
+    if (is.null(pendings[[p]])) next
+    tryCatch(
+      commit_id_history(directory, pendings[[p]]),
+      error = function(e) {
+        commit_failed[[p]] <<- conditionMessage(e)
+        log_rows <<- amend_run_log(
+          log_rows, p,
+          paste0("The output file was written but the history update failed (",
+                 conditionMessage(e), "). These records will be returned ",
+                 "again on the next run."))
+      }
+    )
   }
 
-  # Deduplicates the results if the option was selected by user.
-  if (isTRUE(dedup)) {
-    dedup_refs(df1, df2, df3, directory = directory, open_file = open_file)
-
-  # If not, the function returns the CSV file with all the references.
-  } else {
-    date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
-    csv_name <- paste0("citationsCSV_", date_suffix, ".csv")
-    csv_path <- file.path(directory, csv_name)
-
-    dfs <- Filter(Negate(is.null), list(df1, df2, df3))
-    citations <- dplyr::bind_rows(dfs)
-
-    utils::write.csv(citations, file = csv_path, row.names = FALSE)
-
-    # Opens the CSV file if the option was selected by user
-    if (isTRUE(open_file)) {
-
+  # Opens the CSV file if the option was selected by user
+  if (isTRUE(open_file) && !is.null(csv_path)) {
+    tryCatch({
       if (.Platform$OS.type == "windows") {
         # Windows: opens in default app (e.g. Excel, Calc)
         shell.exec(csv_path)
@@ -145,8 +247,62 @@ manual_fetch <- function(wos = FALSE,
         # Linux: opens in default app (e.g. Excel, Calc)
         system2("xdg-open", csv_path)
       }
-    }
+    }, error = function(e) {
+      warning("The CSV file could not be opened: ", conditionMessage(e),
+              call. = FALSE)
+    })
+  }
+
+  # Reports what did not go as expected.
+  partial <- unique(unlist(lapply(log_rows, function(r) {
+    r$platform[r$status == "partial"]
+  })))
+  flush_log()
+  message("Run log saved in ", file.path(directory, "run_log.csv"))
+  problems <- character(0)
+  if (length(failed) > 0) {
+    problems <- c(problems, paste0(
+      "FAILED, no references retrieved and history not updated (they will ",
+      "be fetched again on the next run): ",
+      paste0(platform_names[names(failed)], " (", shorten(failed), ")",
+             collapse = ", ")))
+  }
+  if (length(commit_failed) > 0) {
+    problems <- c(problems, paste0(
+      "History update FAILED for: ",
+      paste0(platform_names[names(commit_failed)], " (",
+             shorten(commit_failed), ")", collapse = ", "),
+      ". The references will be returned again on the next run."))
+  }
+  if (length(partial) > 0) {
+    problems <- c(problems, paste0(
+      "Incomplete retrieval for: ",
+      paste(platform_names[partial], collapse = ", ")))
+  }
+  if (length(problems) > 0) {
+    warning("LitFetchR retrieval finished with problems.\n",
+            paste0("  - ", problems, collapse = "\n"),
+            "\nThe other platforms were saved. See ",
+            file.path(directory, "run_log.csv"), " for details.",
+            call. = FALSE, immediate. = TRUE)
   }
 
   invisible(NULL)
+}
+
+# Shortens and cleans error messages for the console.
+shorten <- function(x, n = 200) {
+  x <- gsub("\\s+", " ", x)
+  ifelse(nchar(x) > n, paste0(substr(x, 1, n), "..."), x)
+}
+
+# Marks the successful rows of the given platforms as errors in the run log
+# rows (a list of data frames), when the output or the history failed.
+amend_run_log <- function(log_rows, platforms, text) {
+  lapply(log_rows, function(r) {
+    hit <- r$platform %in% platforms & r$status %in% c("success", "partial")
+    r$message[hit] <- trimws(paste(text, r$message[hit]))
+    r$status[hit] <- "error"
+    r
+  })
 }

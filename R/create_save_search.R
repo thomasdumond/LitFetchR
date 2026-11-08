@@ -232,7 +232,7 @@ create_save_search <- function(wos = FALSE,
       #URL accessing PubMed API
       search_url_pmd <- paste0(base_url_pmd,
                                "esearch.fcgi?db=pubmed&term=",
-                               utils::URLencode(search),
+                               utils::URLencode(build_platform_query(search, "pmd")),
                                "&retmax=200&retmode=json")
       response_pmd <- jsonlite::fromJSON(get_text_retry(search_url_pmd))
       # Extract the total number of results
@@ -240,16 +240,11 @@ create_save_search <- function(wos = FALSE,
       }
 
       # Call Scopus API
-      #scopus use "AND NOT", so transforms "NOT" to "AND NOT"
+      # Scopus uses "AND NOT", handled in build_platform_query()
       if (isTRUE(scp)) {
-      search_scp <- gsub("\\bNOT\\b",
-                         "AND NOT",
-                         search,
-                         ignore.case = TRUE
-                         )
       #URL accessing scopus API (auth via X-ELS-APIKey header, see scp_headers)
       search_url_scp <- paste0("https://api.elsevier.com/content/search/scopus?query=",
-                               utils::URLencode(paste0("TITLE-ABS-KEY(", search_scp, ")"))
+                               utils::URLencode(build_platform_query(search, "scp"))
                                )
       #stores the metadata accessed
       response_scp <- jsonlite::fromJSON(get_text_retry(search_url_scp, headers = scp_headers))
@@ -260,7 +255,7 @@ create_save_search <- function(wos = FALSE,
       # Call Web of Science Extended API
       if (isTRUE(wos)) {
       search_url_wos <- paste0("https://wos-api.clarivate.com/api/wos/?databaseId=WOK&usrQuery=",
-                               utils::URLencode(paste0("TS=(", search, ")"))
+                               utils::URLencode(build_platform_query(search, "wos"))
                                ) #URL accessing Web of Science API
       #stores the metadata accessed
       response_wos <- jsonlite::fromJSON(get_text_retry(search_url_wos,

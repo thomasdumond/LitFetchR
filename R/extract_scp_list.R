@@ -66,7 +66,7 @@ extract_scp_list <- function(search_list_path, directory) {
       dfs_scp <- list()
       # Defines at which reference to start the extraction of a batch.
       next_start_scp <- 0
-      search_scp <- utils::URLencode(paste0("TITLE-ABS-KEY(", query_scp, ")"))
+      search_scp <- utils::URLencode(build_platform_query(query_scp, "scp"))
 
       # Call Scopus API to get total results
       # Creates the baseline API URL

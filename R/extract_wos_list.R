@@ -51,7 +51,7 @@ extract_wos_list <- function(search_list_path, directory) {
       dfs_wos <- list()
       # Defines at which reference to start the extraction of a batch.
       next_start_wos <- 1
-      search_wos <- utils::URLencode(paste0("TS=(", query_wos, ")"))
+      search_wos <- utils::URLencode(build_platform_query(query_wos, "wos"))
 
       # Call WoS API to get total results
       base_url_wos <- "https://wos-api.clarivate.com/api/wos/?databaseId=WOK&usrQuery="

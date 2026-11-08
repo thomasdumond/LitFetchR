@@ -56,7 +56,7 @@ extract_pmd_list <- function(search_list_path, directory) {
       # Adds the search information.
       search_url_pmd <- paste0(base_url_pmd,
                                "esearch.fcgi?db=pubmed&term=",
-                               utils::URLencode(search_query),
+                               utils::URLencode(build_platform_query(search_query, "pmd")),
                                "&retmax=1&retmode=json",
                                ncbi_key_param)
       # Extracts the content of the corresponding API call.
@@ -89,7 +89,7 @@ extract_pmd_list <- function(search_list_path, directory) {
         batch_url_pmd <- paste0(
           base_url_pmd,
           "esearch.fcgi?db=pubmed&term=",
-          utils::URLencode(search_query),
+          utils::URLencode(build_platform_query(search_query, "pmd")),
           "&retstart=",
           next_start_pmd,
           "&retmax=200&retmode=json",

@@ -14,12 +14,15 @@ auto_LitFetchR_setup(
   directory,
   dedup = FALSE,
   open_file = FALSE,
-  dry_run = FALSE
+  dry_run = FALSE,
+  day = NULL
 )
 }
 \arguments{
 \item{task_id}{Name of the automated reference retrieval task
-(e.g. one keyword describing your review).}
+(e.g. one keyword describing your review). Spaces are replaced by "-".
+A task with the same name must not exist already: use
+\code{\link[=remove_scheduled_task]{remove_scheduled_task()}} first to replace it.}
 
 \item{when}{Frequency of the automated reference retrieval task
 (DAILY, WEEKLY or MONTHLY).}
@@ -42,11 +45,18 @@ will be saved.}
 \item{open_file}{Automatically opens the CSV file after reference retrieval.}
 
 \item{dry_run}{Simulation run option.}
+
+\item{day}{Day on which a WEEKLY or MONTHLY task runs. For WEEKLY, one of
+MON, TUE, WED, THU, FRI, SAT or SUN. For MONTHLY, a day of the month
+between 1 and 28. If \code{NULL} (default), the weekday (WEEKLY) or day of
+the month (MONTHLY) of today's date is used. Ignored for DAILY.}
 }
 \value{
 \code{NULL} (invisibly). Called for its side effects:
 writes an R script and schedules a task (Windows Task Scheduler or cron)
-to run the script automatically.
+to run the script automatically. The function stops with the scheduler's
+error message if the task cannot be created, and gives a warning if the
+new task cannot be confirmed.
 }
 \description{
 Creates a read-only Rscript and a task to run the code automatically
@@ -56,6 +66,18 @@ the saved search string(s) on up to three platforms
 \href{https://www.elsevier.com/en-au/products/scopus}{Scopus}
 and \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed}).
 }
+\details{
+The function reports "Task scheduled!" only after checking that the
+scheduler accepted the task and that the task exists. On Windows the
+registered task is read back from Task Scheduler and compared with the
+requested schedule. A short summary (recurrence, next run time and status)
+is then printed. If the scheduler returns an error, the function stops and
+shows the scheduler's own message. If the task cannot be confirmed, a
+warning is given instead of the success message. Check the summary: it is
+the only evidence that automatic retrieval will run.
+
+The scheduled task runs only while the computer is on and you are logged in.
+}
 \examples{
 # This is a "dry run" example.
 # No task will actually be scheduled,
@@ -63,6 +85,7 @@ and \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed}).
 auto_LitFetchR_setup(task_id = "fish_vibrio",
                        when = "WEEKLY",
                        time = "14:00",
+                       day = "MON",
                        wos = TRUE,
                        scp = TRUE,
                        pmd = TRUE,

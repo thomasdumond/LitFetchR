@@ -125,20 +125,26 @@ dedup_refs <- function(df1 = NULL,
           concatenated deduplicated references had been exported.\n")
 
   # Automatically opens the CSV if required by the user.
+  # A failure to open the file is only a warning, since the CSV is written.
   if (isTRUE(open_file)) {
 
-    if (.Platform$OS.type == "windows") {
-      # Windows: opens in default app (e.g. Excel, Calc)
-      shell.exec(csv_path)
+    tryCatch({
+      if (.Platform$OS.type == "windows") {
+        # Windows: opens in default app (e.g. Excel, Calc)
+        shell.exec(csv_path)
 
-    } else if (Sys.info()[["sysname"]] == "Darwin") {
-      # macOS: opens in default app (e.g. Excel, Calc)
-      system2("open", csv_path)
+      } else if (Sys.info()[["sysname"]] == "Darwin") {
+        # macOS: opens in default app (e.g. Excel, Calc)
+        system2("open", csv_path)
 
-    } else {
-      # Linux: opens in default app (e.g. Excel, Calc)
-      system2("xdg-open", csv_path)
-    }
+      } else {
+        # Linux: opens in default app (e.g. Excel, Calc)
+        system2("xdg-open", csv_path)
+      }
+    }, error = function(e) {
+      warning("The CSV file could not be opened: ", conditionMessage(e),
+              call. = FALSE)
+    })
   }
   invisible(NULL)
 }

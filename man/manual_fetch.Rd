@@ -31,7 +31,7 @@ manual_fetch(
 \item{dry_run}{Simulation run option.}
 }
 \value{
-\code{NULL} (invisibly). Called for its side effects: Create a CSV file with the references metadata, a history file of the references retrieved and a history file of the deduplication (if the option is selected).
+\code{NULL} (invisibly). Called for its side effects: Create a CSV file with the references metadata, a history file of the references retrieved, a history file of the deduplication (if the option is selected) and a run log (\code{run_log.csv}).
 }
 \description{
 Retrieves references corresponding to the saved search string(s)
@@ -39,6 +39,22 @@ on up to three platforms
 (e.g. \href{https://clarivate.com/academia-government/scientific-and-academic-research/research-discovery-and-referencing/web-of-science/}{Web of Science},
 \href{https://www.elsevier.com/en-au/products/scopus}{Scopus} and
 \href{https://pubmed.ncbi.nlm.nih.gov/}{PubMed}).
+}
+\details{
+Every retrieval is recorded in the file \code{run_log.csv} of \code{directory}
+(one row per saved search and platform). It stores the exact query
+submitted to each platform, the date, the package and R versions, the
+number of results and new records, the status of the request and any
+error message. For PubMed, it also stores the query translation reported
+by PubMed. For Web of Science, it also stores the number of records
+retrieved from each source database.
+
+The history of the references already retrieved (\code{history_id.xlsx}) is
+only updated once the output file has been written. If a platform fails
+(for example an expired API key), the other platforms are still saved,
+a warning names the failed platform(s), and the failed platform is not
+added to the history, so its references are retrieved again by the next
+run. If all the selected platforms fail, an error is raised.
 }
 \examples{
 # This is a "dry run" example.

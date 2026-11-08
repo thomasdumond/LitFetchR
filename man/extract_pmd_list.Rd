@@ -5,13 +5,28 @@
 \title{Extracts the metadata from the new references found on PubMed
 based on the search string(s) saved in "search_list.txt".}
 \usage{
-extract_pmd_list(search_list_path, directory)
+extract_pmd_list(
+  search_list_path,
+  directory,
+  run_id = NULL,
+  commit_history = TRUE
+)
 }
 \arguments{
 \item{search_list_path}{Path to "search_list.txt".}
 
 \item{directory}{Choose the directory in which
 the references identification history will be saved.}
+
+\item{run_id}{Identifier shared by all the rows of one retrieval in
+"run_log.csv" (created if \code{NULL}).}
+
+\item{commit_history}{If \code{TRUE} (default), the references
+identification history and the run log are written before returning.
+If \code{FALSE}, nothing is written: the pending history update and the
+run log rows are attached to the returned data frame (attributes
+\code{pending_history} and \code{run_log}) so that the caller can write
+them once the output file exists (used by \code{\link[=manual_fetch]{manual_fetch()}}).}
 }
 \value{
 A data.frame with one row per retrieved PubMed record and columns:
@@ -30,6 +45,8 @@ A data.frame with one row per retrieved PubMed record and columns:
 \item{platform_id}{Character. Publication unique identifier in data source.}
 }
 If \code{search_list_path} does not exist, returns \code{NULL}.
+If any search fails, an error of class \code{litfetchr_platform_error}
+is raised and nothing is added to the history.
 }
 \description{
 Extracts the metadata from the new references found on PubMed

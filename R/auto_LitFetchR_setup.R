@@ -171,7 +171,8 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
             names(selected),
             ifelse(selected, "TRUE", "FALSE")
             ), #Creates a vector with argument from `auto_LitFetchR_setup`
-    sprintf("directory = %s", shQuote(directory))
+    # Backslashes of Windows paths must be escaped to give valid R code.
+    sprintf("directory = %s", encodeString(directory, quote = "\""))
   )
   #Creates a string vector with the `manual_fetch`
   #function containing the same arguments as `auto_LitFetchR_setup`
@@ -182,6 +183,17 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
 
   # Create the R script
   writeLines(lines, script_path)
+
+  # The script must be valid R code, otherwise the scheduled task can never run.
+  script_check <- tryCatch({
+    parse(script_path)
+    TRUE
+  }, error = function(e) conditionMessage(e))
+  if (!isTRUE(script_check)) {
+    unlink(script_path)
+    stop("The generated script is not valid R code and no task was created: ",
+         script_check, call. = FALSE)
+  }
 
   # Make the new R script READ ONLY.
   if (is_windows()) {

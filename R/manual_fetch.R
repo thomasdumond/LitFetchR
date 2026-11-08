@@ -193,7 +193,16 @@ manual_fetch <- function(wos = FALSE,
   csv_path <- NULL
   tryCatch({
     if (isTRUE(dedup)) {
-      dedup_refs(df1, df2, df3, directory = directory, open_file = open_file)
+      n_rows <- sum(vapply(list(df1, df2, df3),
+                           function(d) if (is.null(d)) 0L else nrow(d),
+                           integer(1)))
+      if (n_rows == 0) {
+        # ASySD cannot deduplicate an empty set (typical of a scheduled run
+        # without any new record), so there is nothing to write.
+        message("No new records to deduplicate: no output file written.")
+      } else {
+        dedup_refs(df1, df2, df3, directory = directory, open_file = open_file)
+      }
 
     } else {
       date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")

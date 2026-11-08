@@ -311,13 +311,17 @@ cron_delete <- function(task_id) {
 }
 
 # Finds the crontab lines of a cronR job. cronR writes a comment line holding
-# the id, followed by the schedule line.
+# the id ("## id: <id>"), then other comment lines (tags, description) and
+# finally the schedule line. Only that comment line is matched, so the id is
+# not confused with a path or command of another job.
 cron_find <- function(task_id, lines = cron_lines()) {
   esc <- gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1", task_id)
-  pat <- paste0("(^|[^A-Za-z0-9_.-])", esc, "([^A-Za-z0-9_.-]|$)")
+  pat <- paste0("^\\s*#+\\s*id:\\s*", esc, "\\s*$")
   hit <- grep(pat, lines)
   if (!length(hit)) return(NULL)
   i <- hit[length(hit)]
-  sched <- if (i < length(lines)) lines[i + 1L] else NA_character_
+  later <- lines[seq_along(lines) > i]
+  later <- later[nzchar(trimws(later)) & !grepl("^\\s*#", later)]
+  sched <- if (length(later)) later[1L] else NA_character_
   list(id_line = lines[i], schedule_line = sched)
 }

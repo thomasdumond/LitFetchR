@@ -105,6 +105,9 @@ manual_fetch <- function(wos = FALSE,
     stop("No search string saved.
          Please save a search string using the function create_save_search().")
   }
+  # Checks the saved search strings before any platform is queried
+  # (stops with an informative message if the file is empty or malformed).
+  invisible(read_search_list(search_list_path))
 
   # Builds a list of databases selected by user.
   selected <- c(wos = wos, scp = scp, pmd = pmd)

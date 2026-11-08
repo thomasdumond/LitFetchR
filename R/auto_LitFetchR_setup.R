@@ -7,12 +7,29 @@
 #' [Scopus](https://www.elsevier.com/en-au/products/scopus)
 #' and [PubMed](https://pubmed.ncbi.nlm.nih.gov/)).
 #'
+#' The function reports "Task scheduled!" only after checking that the
+#' scheduler accepted the task and that the task exists. On Windows the
+#' registered task is read back from Task Scheduler and compared with the
+#' requested schedule. A short summary (recurrence, next run time and status)
+#' is then printed. If the scheduler returns an error, the function stops and
+#' shows the scheduler's own message. If the task cannot be confirmed, a
+#' warning is given instead of the success message. Check the summary: it is
+#' the only evidence that automatic retrieval will run.
+#'
+#' The scheduled task runs only while the computer is on and you are logged in.
+#'
 #' @param task_id Name of the automated reference retrieval task
-#'  (e.g. one keyword describing your review).
+#'  (e.g. one keyword describing your review). Spaces are replaced by "-".
+#'  A task with the same name must not exist already: use
+#'  [remove_scheduled_task()] first to replace it.
 #' @param when Frequency of the automated reference retrieval task
 #'  (DAILY, WEEKLY or MONTHLY).
 #' @param time Time of the automated reference retrieval task
 #'  (must be HH:MM 24-hour clock format).
+#' @param day Day on which a WEEKLY or MONTHLY task runs. For WEEKLY, one of
+#'  MON, TUE, WED, THU, FRI, SAT or SUN. For MONTHLY, a day of the month
+#'  between 1 and 28. If \code{NULL} (default), the weekday (WEEKLY) or day of
+#'  the month (MONTHLY) of today's date is used. Ignored for DAILY.
 #' @param wos Runs the search on Web of Science (TRUE or FALSE).
 #' @param scp Runs the search on Scopus (TRUE or FALSE).
 #' @param pmd Runs the search on PubMed (TRUE or FALSE).
@@ -25,7 +42,9 @@
 #'
 #' @return \code{NULL} (invisibly). Called for its side effects:
 #'  writes an R script and schedules a task (Windows Task Scheduler or cron)
-#'  to run the script automatically.
+#'  to run the script automatically. The function stops with the scheduler's
+#'  error message if the task cannot be created, and gives a warning if the
+#'  new task cannot be confirmed.
 #'
 #' @examples
 #' # This is a "dry run" example.
@@ -34,6 +53,7 @@
 #' auto_LitFetchR_setup(task_id = "fish_vibrio",
 #'                        when = "WEEKLY",
 #'                        time = "14:00",
+#'                        day = "MON",
 #'                        wos = TRUE,
 #'                        scp = TRUE,
 #'                        pmd = TRUE,
@@ -54,12 +74,20 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
                                  directory,
                                  dedup = FALSE,
                                  open_file = FALSE,
-                                 dry_run = FALSE
+                                 dry_run = FALSE,
+                                 day = NULL
                                  ) {
+  # Checks the schedule first, before anything is created
+  sched <- check_schedule_args(when, time, day)
+  when <- sched$when
+  time <- sched$time
+  day <- sched$day
+
   if (dry_run) {
     message('Dry run: no task scheduled,
             the message "Task scheduled!" will appear when the function will
             run successfully.')
+    message("The task would run ", describe_schedule(when, day, time), ".")
     return(invisible(NULL))
   }
 
@@ -71,6 +99,10 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
   }
   directory <- normalizePath(directory, mustWork = FALSE)
   if (!dir.exists(directory)) stop("Directory does not exist: ", directory)
+  task_id <- normalize_task_id(task_id)
+  if (sched$day_defaulted) {
+    message("`day` not supplied: using ", day, " (from today's date).")
+  }
 
     # Build the list of selected databases
   selected <- c(wos = wos,
@@ -84,9 +116,30 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
     stop("At least one database must be set to TRUE (wos, scp, pmd).")
   }
 
+  # Stops before anything is written if the task cannot be created.
+  # A task with the same name is never overwritten silently.
+  is_win <- is_windows()
+  if (is_win) {
+    if (win_task_query(task_id)$exists) {
+      stop("A scheduled task named '", task_id, "' already exists. ",
+           "Use remove_scheduled_task(\"", task_id, "\") first, ",
+           "or choose another `task_id`.")
+    }
+  } else {
+    if (!cron_available()) {
+      stop("The 'cronR' package is required for scheduling on this OS,
+           but is not installed.")
+    }
+    if (!is.null(cron_find(task_id))) {
+      stop("A cron job with the id '", task_id, "' already exists. ",
+           "Use remove_scheduled_task(\"", task_id, "\") first, ",
+           "or choose another `task_id`.")
+    }
+  }
+
   # Creates the path to the read-only R script containing the code
   # that will be run automatically. Different approach windows vs mac
-  if (.Platform$OS.type == "windows") {
+  if (is_windows()) {
     script_path <- file.path(directory, "auto_LitFetchR_code_READ_ONLY.R")
     #long paths can be problematic later when using `taskscheduler()`
   } else {
@@ -95,7 +148,7 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
   # If the task needs to be modified or add a new task, then the read-only
   # file must be readable again, deleted and recreated. Windows only.
   if (file.exists(script_path)) {
-    if (.Platform$OS.type == "windows") {
+    if (is_windows()) {
       system(paste("attrib -R", shQuote(script_path)))
     }
     unlink(script_path)
@@ -104,7 +157,7 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
   # Creates the Rscript from the path
   check <- file.create(script_path)
   if (!check) stop("Could not create script file: ", script_path)
-  script_path_scheduler <- if (.Platform$OS.type == "windows") {
+  script_path_scheduler <- if (is_windows()) {
     get_short_path(script_path)
   } else {
     script_path
@@ -131,7 +184,7 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
   writeLines(lines, script_path)
 
   # Make the new R script READ ONLY.
-  if (.Platform$OS.type == "windows") {
+  if (is_windows()) {
     system(paste("attrib +R", shQuote(script_path)))
   } else {
     system(paste("chmod 444", shQuote(script_path)))
@@ -141,30 +194,68 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
   #SCHEDULE TASK
   ##############
 
-  if (.Platform$OS.type == "windows") {
-    # Windows: use taskscheduleR
-    # create the scheduled task
-    taskscheduleR::taskscheduler_create(
-      taskname  = task_id,
-      rscript   = script_path_scheduler,
-      schedule  = when,
-      starttime = time
-    )
-  } else {
-    # macOS/Linux: use cronR if available
-    if (requireNamespace("cronR", quietly = TRUE)) {
-      cron_cmd <- cronR::cron_rscript(script_path)
-      cronR::cron_add(
-        command   = cron_cmd,
-        frequency = when,
-        at        = time,
-        id        = task_id
-      )
-    } else {
-      stop("The 'cronR' package is required for scheduling on this OS,
-           but is not installed.")
+  # Success is reported only after the scheduler's answer is checked and
+  # the task is read back.
+  if (is_win) {
+    # Windows: Task Scheduler through `schtasks`
+    created <- win_task_create(task_id, script_path_scheduler, when, time, day)
+    if (created$status != 0L) {
+      stop("Windows Task Scheduler could not create the task '", task_id,
+           "'. No task was scheduled.\n", format_sched_failure(created),
+           call. = FALSE)
     }
+
+    found <- win_task_query(task_id)
+    if (!found$exists) {
+      warning("Task Scheduler reported success but the task '", task_id,
+              "' could not be found afterwards. The task is NOT confirmed, ",
+              "so automatic retrieval may not run. Check Task Scheduler.",
+              call. = FALSE)
+      return(invisible(NULL))
+    }
+
+    info <- found$info
+    diffs <- compare_win_task(info, when, day, time)
+    next_run <- if (is.null(info$next_run) || is.na(info$next_run) ||
+                    !nzchar(info$next_run)) "not available" else info$next_run
+    summary_lines <- c(
+      sprintf("  Task name:  %s", task_id),
+      sprintf("  Recurrence: %s", describe_schedule(when, day, time)),
+      if (!is.null(info$start_date) && !is.na(info$start_date))
+        sprintf("  Start date: %s", info$start_date),
+      sprintf("  Next run:   %s", next_run),
+      sprintf("  Status:     %s", if (is.na(info$status)) "unknown" else info$status)
+    )
+    if (length(diffs) || next_run %in% c("not available", "N/A")) {
+      warning("The task '", task_id, "' exists but is NOT confirmed as ",
+              "requested: ",
+              paste(c(diffs, if (next_run %in% c("not available", "N/A"))
+                "there is no next run time"), collapse = ", "),
+              ". Check Task Scheduler.\n",
+              paste(summary_lines, collapse = "\n"), call. = FALSE)
+      return(invisible(NULL))
+    }
+    message("Task scheduled!\n", paste(summary_lines, collapse = "\n"))
+  } else {
+    # macOS/Linux: cronR (not tested on these systems)
+    err <- cron_create(task_id, script_path, when, time, day)
+    if (!is.null(err)) {
+      stop("cronR could not create the job '", task_id,
+           "'. No task was scheduled.\n", err, call. = FALSE)
+    }
+    entry <- cron_find(task_id)
+    if (is.null(entry)) {
+      warning("cronR reported success but the job '", task_id,
+              "' was not found in the crontab afterwards. The task is NOT ",
+              "confirmed, so automatic retrieval may not run. ",
+              "Check with cronR::cron_ls().", call. = FALSE)
+      return(invisible(NULL))
+    }
+    message("Task scheduled!\n",
+            sprintf("  Task name:  %s\n", task_id),
+            sprintf("  Recurrence: %s\n", describe_schedule(when, day, time)),
+            if (!is.na(entry$schedule_line))
+              sprintf("  Cron entry: %s", entry$schedule_line))
   }
-  message("Task scheduled!")
   invisible(NULL)
 }

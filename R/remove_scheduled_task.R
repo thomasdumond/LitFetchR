@@ -3,6 +3,12 @@
 #' Removes a scheduled task using the "task_id"
 #'  from Task Scheduler (Windows) or Cron (Mac/Linux).
 #'
+#' The function checks whether the task exists first, removes it, then checks
+#' that it is gone. It reports which of these happened. If the task does not
+#' exist, nothing is removed and a message says so. If the scheduler returns
+#' an error, or the task is still there afterwards, the function stops and
+#' shows the scheduler's own message.
+#'
 #' @param task_id Name/ID of the scheduled task (Windows Task Scheduler or Cron).
 #' @param dry_run Simulation run option.
 #'
@@ -23,50 +29,58 @@ remove_scheduled_task <- function(task_id,
 
   if (dry_run) {
     message('This is the message from the dry run showing what you should be seeing when the function will be used:
-            SUCCESS: The scheduled task "fish_vibrio" was successfully deleted.
-            Windows task "fish_vibrio" removed (or did not exist).')
+            Windows task "fish_vibrio" removed.
+            (or: Windows task "fish_vibrio" not found, nothing was removed.)')
     return(invisible(NULL))
   }
 
+  task_id <- normalize_task_id(task_id)
+
   # Identifies the OS of the computer before removing the task.
-  if (.Platform$OS.type == "windows") {
-    # Windows: uses taskscheduleR.
-    if (!requireNamespace("taskscheduleR", quietly = TRUE)) {
-      stop("Package 'taskscheduleR' is required on Windows.")
+  if (is_windows()) {
+    # Windows: uses schtasks. Each result is checked before reporting.
+    found <- win_task_query(task_id)
+    if (!found$exists) {
+      message("Windows task '", task_id,
+              "' not found, nothing was removed.\n",
+              "Task Scheduler said: ", paste(trimws(found$output), collapse = " "))
+      return(invisible(NULL))
     }
 
-    ok <- tryCatch(
-      {
-        taskscheduleR::taskscheduler_delete(task_id)
-        TRUE
-      },
-      error = function(e) FALSE
-    )
-
-    if (ok) {
-      message("Windows task '", task_id, "' removed (or did not exist).")
-    } else {
-      message("Could not remove Windows task '", task_id, "'.")
+    deleted <- win_task_delete(task_id)
+    if (deleted$status != 0L) {
+      stop("Windows Task Scheduler could not remove the task '", task_id,
+           "'. The task may still be scheduled.\n",
+           format_sched_failure(deleted), call. = FALSE)
     }
+    if (win_task_query(task_id)$exists) {
+      stop("Windows Task Scheduler reported success but the task '", task_id,
+           "' is still there. The task may still be scheduled.",
+           call. = FALSE)
+    }
+    message("Windows task '", task_id, "' removed.")
 
   } else {
-    # macOS / Linux: uses cronR.
-    if (!requireNamespace("cronR", quietly = TRUE)) {
+    # macOS / Linux: uses cronR (not tested on these systems).
+    if (!cron_available()) {
       stop("Package 'cronR' is required on this OS.")
     }
-    ok <- tryCatch(
-      {
-        cronR::cron_rm(task_id)
-        TRUE
-      },
-      error = function(e) FALSE
-    )
-    if (ok) {
-      message("Cron task '", task_id, "' removed (or did not exist).")
-    } else {
-      message("Could not remove Cron task '", task_id, "'.")
+    if (is.null(cron_find(task_id))) {
+      message("Cron task '", task_id, "' not found, nothing was removed.")
+      return(invisible(NULL))
     }
 
+    err <- cron_delete(task_id)
+    if (!is.null(err)) {
+      stop("cronR could not remove the job '", task_id,
+           "'. The task may still be scheduled.\n", err, call. = FALSE)
+    }
+    if (!is.null(cron_find(task_id))) {
+      stop("cronR reported success but the job '", task_id,
+           "' is still in the crontab. The task may still be scheduled.",
+           call. = FALSE)
+    }
+    message("Cron task '", task_id, "' removed.")
   }
 
   invisible(NULL)

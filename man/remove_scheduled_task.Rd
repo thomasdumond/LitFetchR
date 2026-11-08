@@ -18,6 +18,13 @@ remove_scheduled_task(task_id, dry_run = FALSE)
 Removes a scheduled task using the "task_id"
 from Task Scheduler (Windows) or Cron (Mac/Linux).
 }
+\details{
+The function checks whether the task exists first, removes it, then checks
+that it is gone. It reports which of these happened. If the task does not
+exist, nothing is removed and a message says so. If the scheduler returns
+an error, or the task is still there afterwards, the function stops and
+shows the scheduler's own message.
+}
 \examples{
 # This is a "dry run" example.
 # No task will actually be removed, it only shows how the function should react.

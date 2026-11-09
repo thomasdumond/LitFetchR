@@ -18,8 +18,11 @@ A single character string, not URL encoded.
 Takes the search string entered by the user and returns the exact query
 text sent to the API of the selected platform, before URL encoding.
 The field tag of the platform is added (PubMed: none, Scopus:
-\code{TITLE-ABS-KEY}, Web of Science: \code{TS}) and, for Scopus, the Boolean
-operator \code{NOT} is replaced by \verb{AND NOT} outside quoted phrases.
+\code{TITLE-ABS-KEY}, Web of Science: \code{TS}) and the exclusion operator is
+written the way each platform needs it, outside quoted phrases:
+\verb{AND NOT} for Scopus and \code{NOT} for PubMed and Web of Science (PubMed
+ignores the \code{NOT} of an \verb{AND NOT} and returns the records to be excluded,
+and Web of Science rejects it).
 This is the only place where the search string is modified, so that
 the counts shown by \code{\link[=create_save_search]{create_save_search()}} and the records retrieved by
 \code{\link[=manual_fetch]{manual_fetch()}} always use the same query.

@@ -218,40 +218,49 @@ create_save_search <- function(wos = FALSE,
 
       # Call PubMed API
       if (isTRUE(pmd)) {
-      base_url_pmd <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
-      #URL accessing PubMed API
-      search_url_pmd <- paste0(base_url_pmd,
-                               "esearch.fcgi?db=pubmed&term=",
-                               utils::URLencode(build_platform_query(search, "pmd")),
-                               "&retmax=200&retmode=json")
-      response_pmd <- jsonlite::fromJSON(get_text_retry(search_url_pmd))
-      # Extract the total number of results
-      max_result_pmd <- as.numeric(response_pmd$`esearchresult`$`count`)
+      query_pmd <- build_platform_query(search, "pmd")
+      max_result_pmd <- platform_count("PubMed", query_pmd, function() {
+        base_url_pmd <- "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+        #URL accessing PubMed API
+        search_url_pmd <- paste0(base_url_pmd,
+                                 "esearch.fcgi?db=pubmed&term=",
+                                 utils::URLencode(query_pmd),
+                                 "&retmax=200&retmode=json")
+        response_pmd <- jsonlite::fromJSON(get_text_retry(search_url_pmd))
+        # Extract the total number of results
+        as.numeric(response_pmd$`esearchresult`$`count`)
+      })
       }
 
       # Call Scopus API
       # Scopus uses "AND NOT", handled in build_platform_query()
       if (isTRUE(scp)) {
-      #URL accessing scopus API (auth via X-ELS-APIKey header, see scp_headers)
-      search_url_scp <- paste0("https://api.elsevier.com/content/search/scopus?query=",
-                               utils::URLencode(build_platform_query(search, "scp"))
-                               )
-      #stores the metadata accessed
-      response_scp <- jsonlite::fromJSON(get_text_retry(search_url_scp, headers = scp_headers))
-      # Extract the total number of results
-      max_result_scp <- as.numeric(response_scp$`search-results`$`opensearch:totalResults`)
+      query_scp <- build_platform_query(search, "scp")
+      max_result_scp <- platform_count("Scopus", query_scp, function() {
+        #URL accessing scopus API (auth via X-ELS-APIKey header, see scp_headers)
+        search_url_scp <- paste0("https://api.elsevier.com/content/search/scopus?query=",
+                                 utils::URLencode(query_scp)
+                                 )
+        #stores the metadata accessed
+        response_scp <- jsonlite::fromJSON(get_text_retry(search_url_scp, headers = scp_headers))
+        # Extract the total number of results
+        as.numeric(response_scp$`search-results`$`opensearch:totalResults`)
+      })
       }
 
       # Call Web of Science Extended API
       if (isTRUE(wos)) {
-      search_url_wos <- paste0("https://wos-api.clarivate.com/api/wos/?databaseId=WOK&usrQuery=",
-                               utils::URLencode(build_platform_query(search, "wos"))
-                               ) #URL accessing Web of Science API
-      #stores the metadata accessed
-      response_wos <- jsonlite::fromJSON(get_text_retry(search_url_wos,
-                                                        headers = c("X-ApiKey" = wos_api_key)))
-      # Extract the total number of results
-      max_result_wos <- as.numeric(response_wos$QueryResult$RecordsFound)
+      query_wos <- build_platform_query(search, "wos")
+      max_result_wos <- platform_count("Web of Science", query_wos, function() {
+        search_url_wos <- paste0("https://wos-api.clarivate.com/api/wos/?databaseId=WOK&usrQuery=",
+                                 utils::URLencode(query_wos)
+                                 ) #URL accessing Web of Science API
+        #stores the metadata accessed
+        response_wos <- jsonlite::fromJSON(get_text_retry(search_url_wos,
+                                                          headers = c("X-ApiKey" = wos_api_key)))
+        # Extract the total number of results
+        as.numeric(response_wos$QueryResult$RecordsFound)
+      })
       }
 
       # Stores the results for each database
@@ -281,9 +290,9 @@ create_save_search <- function(wos = FALSE,
       # Print the search string following the results from
       # each database.
       message(search)
-      if (isTRUE(wos)) message(paste0("Web of Science: ", max_result_wos, " results"))
-      if (isTRUE(scp)) message(paste0("Scopus: ", max_result_scp, " results"))
-      if (isTRUE(pmd)) message(paste0("PubMed: ", max_result_pmd, " results"))
+      if (isTRUE(wos)) message(count_label("Web of Science", max_result_wos))
+      if (isTRUE(scp)) message(count_label("Scopus", max_result_scp))
+      if (isTRUE(pmd)) message(count_label("PubMed", max_result_pmd))
 
     }
   }
@@ -292,6 +301,28 @@ create_save_search <- function(wos = FALSE,
 
 
 # Internal helpers
+
+# Runs the request of one platform and returns the number of results.
+# If the platform rejects the search (for example a syntax error), the problem
+# is reported with the query that was sent and NA is returned, so that the
+# other platforms and the session carry on.
+platform_count <- function(label, query, request) {
+  tryCatch(request(), error = function(e) {
+    message(label, " could not run this search: ", conditionMessage(e),
+            "\n  Query sent: ", query,
+            "\n  Check the syntax (AND, OR, NOT, parentheses, quoted phrases).")
+    NA_real_
+  })
+}
+
+# Text shown for the number of results of a platform.
+count_label <- function(label, n) {
+  if (is.na(n)) {
+    paste0(label, ": no result (the search failed)")
+  } else {
+    paste0(label, ": ", n, " results")
+  }
+}
 ##################
 
 # Checks a name for a saved search. Returns NULL when the name is valid,

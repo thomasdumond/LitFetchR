@@ -70,7 +70,7 @@ create_save_search <- function(wos = FALSE,
   2                fish AND "vibrio harveyi"        2084        1080         727
   3 fish AND "vibrio harveyi" AND diagnostic         126          22         106
   Do you want to save a search string for automated retrieval? (yes/no, Enter to cancel): yes
-  Select the index number of the search string to save (Enter to cancel): 3
+  Select the index number of the search string to save (1 to 3, Enter to cancel): 3
 
   Selected search string: fish AND "vibrio harveyi" AND diagnostic
 
@@ -374,8 +374,11 @@ offer_save_search <- function(search_table, search_history, search_file,
   # Ask which search string to save. An invalid answer asks the question
   # again, and an empty answer (Enter) cancels.
   repeat {
+    n_searches <- length(search_history)
     answer <- trimws(readline(
-      prompt = "Select the index number of the search string to save (Enter to cancel): "))
+      prompt = paste0("Select the index number of the search string to save (",
+                      if (n_searches == 1) "1" else paste0("1 to ", n_searches),
+                      ", Enter to cancel): ")))
     if (!nzchar(answer)) {
       message("Nothing saved.\n")
       return("cancelled")

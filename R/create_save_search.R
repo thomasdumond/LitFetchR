@@ -69,7 +69,7 @@ create_save_search <- function(wos = FALSE,
   1                                     fish     1793296      718644      384742
   2                fish AND "vibrio harveyi"        2084        1080         727
   3 fish AND "vibrio harveyi" AND diagnostic         126          22         106
-  Do you want to save a search string for automated retrieval? (yes/no): yes
+  Do you want to save a search string for automated retrieval? (yes/no, Enter to cancel): yes
   Select the index number of the search string to save (Enter to cancel): 3
 
   Selected search string: fish AND "vibrio harveyi" AND diagnostic
@@ -83,7 +83,7 @@ create_save_search <- function(wos = FALSE,
   is displayed again and you are offered to save a search string:
   Enter your search string (or "summary" or "exit"): exit
   No search string has been saved yet. Retrieval with manual_fetch() requires a saved search.
-  Do you want to save a search string for automated retrieval? (yes/no):'
+  Do you want to save a search string for automated retrieval? (yes/no, Enter to cancel):'
             )
     return(invisible(NULL))
   }
@@ -355,14 +355,18 @@ offer_save_search <- function(search_table, search_history, search_file,
   print(search_table)
 
   # Ask whether the user wants to save a search string. Any answer other than
-  # yes or no asks the question again, and an empty answer (Enter) means no.
+  # yes or no asks the question again, and an empty answer (Enter) cancels.
   repeat {
     save_search <- tolower(trimws(readline(
-      prompt = "Do you want to save a search string for automated retrieval? (yes/no): ")))
+      prompt = "Do you want to save a search string for automated retrieval? (yes/no, Enter to cancel): ")))
     if (save_search %in% c("yes", "y")) break
-    if (save_search %in% c("no", "n", "")) {
+    if (save_search %in% c("no", "n")) {
       if (context == "summary") message("Returning to search.\n")
       return("declined")
+    }
+    if (!nzchar(save_search)) {
+      message("Nothing saved.\n")
+      return("cancelled")
     }
     message("Please answer yes or no.\n")
   }

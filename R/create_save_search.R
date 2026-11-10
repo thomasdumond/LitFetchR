@@ -74,7 +74,7 @@ create_save_search <- function(wos = FALSE,
 
   Selected search string: fish AND "vibrio harveyi" AND diagnostic
 
-  Enter a name for the search identification: fish_vibrio
+  Enter a name for the search identification (Enter to cancel): fish_vibrio
   Search string saved successfully.
   Enter your search string (or "summary" or "exit"): exit
   Exiting search tool.
@@ -354,13 +354,17 @@ offer_save_search <- function(search_table, search_history, search_file,
   # Print search history and results as a table
   print(search_table)
 
-  # Ask whether the user wants to save a search string
-  save_search <- trimws(readline(
-    prompt = "Do you want to save a search string for automated retrieval? (yes/no): "))
-
-  if (!tolower(save_search) %in% c("yes", "y")) {
-    if (context == "summary") message("Returning to search.\n")
-    return("declined")
+  # Ask whether the user wants to save a search string. Any answer other than
+  # yes or no asks the question again, and an empty answer (Enter) means no.
+  repeat {
+    save_search <- tolower(trimws(readline(
+      prompt = "Do you want to save a search string for automated retrieval? (yes/no): ")))
+    if (save_search %in% c("yes", "y")) break
+    if (save_search %in% c("no", "n", "")) {
+      if (context == "summary") message("Returning to search.\n")
+      return("declined")
+    }
+    message("Please answer yes or no.\n")
   }
 
   # Ask which search string to save. An invalid answer asks the question
@@ -392,11 +396,17 @@ offer_save_search <- function(search_table, search_history, search_file,
   }
 
   ask_name <- function() {
-    trimws(readline(prompt = "Enter a name for the search identification: "))
+    trimws(readline(
+      prompt = "Enter a name for the search identification (Enter to cancel): "))
   }
 
+  # An invalid name asks the question again, and an empty answer cancels.
   save_name <- ask_name()
   repeat {
+    if (!nzchar(save_name)) {
+      message("Nothing saved.\n")
+      return("cancelled")
+    }
     problem <- check_search_name(save_name)
     if (!is.null(problem)) {
       message(problem, "\n")
@@ -412,8 +422,12 @@ offer_save_search <- function(search_table, search_history, search_file,
     message("Variable name already exists:\n",
             paste(search_content[is_existing], collapse = "\n"), "\n")
     overwrite_choice <- trimws(readline(
-      prompt = "Enter a different name or type 'overwrite' to replace: "))
+      prompt = "Enter a different name or type 'overwrite' to replace (Enter to cancel): "))
 
+    if (!nzchar(overwrite_choice)) {
+      message("Nothing saved.\n")
+      return("cancelled")
+    }
     if (tolower(overwrite_choice) == "overwrite") {
       search_content <- search_content[!is_existing]
       break

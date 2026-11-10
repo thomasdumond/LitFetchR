@@ -67,15 +67,15 @@ manual_fetch <- function(wos = FALSE,
               154 total results found on Web of Science for: fish AND "vibrio harveyi" AND diagnostic
               Finished batch 1 of 2
               Finished batch 2 of 2
-              File already exists
+              Updating existing history_id.xlsx.
               149 new records found among 154 total results.
               24 total results found on Scopus for: fish AND "vibrio harveyi" AND diagnostic
               Finished batch 1 of 1
-              File already exists
+              Updating existing history_id.xlsx.
               22 new records found among 24 total results.
               110 total results found on PubMed for: fish AND "vibrio harveyi" AND diagnostic
               Finished batch 1 of 1
-              File already exists
+              Updating existing history_id.xlsx.
               104 new records found among 110 total results.
               Finished batch 1 of 1 (104 / 104 records retrieved)
               Warning: The following columns are missing: record_id

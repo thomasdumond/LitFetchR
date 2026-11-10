@@ -32,8 +32,9 @@ create_search_history <- function(directory) {
     openxlsx::saveWorkbook(history_search,
                            file = history_search_path,
                            overwrite = TRUE)
+    message("History had been created.")
   } else {
-    message("File already exists")
+    message("Updating existing history_search.xlsx.")
     history_search <- openxlsx::loadWorkbook(history_search_path)
     # Add search_history sheet if opening a file created before this version.
     if (!"search_history" %in% names(history_search)) {
@@ -44,7 +45,6 @@ create_search_history <- function(directory) {
                                      timestamp = character(), stringsAsFactors = FALSE))
     }
   }
-  message("History had been created.")
 
   list(
     history_search = history_search,

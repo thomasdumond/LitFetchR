@@ -30,6 +30,7 @@
 #' a warning names the failed platform(s), and the failed platform is not
 #' added to the history, so its references are retrieved again by the next
 #' run. If all the selected platforms fail, an error is raised.
+#' When there is no new record, no output file is written.
 #'
 #' @return \code{NULL} (invisibly). Called for its side effects: Create a CSV file with the references metadata, a history file of the references retrieved, a history file of the deduplication (if the option is selected) and a run log (`run_log.csv`).
 #'
@@ -191,18 +192,17 @@ manual_fetch <- function(wos = FALSE,
   # by user, else a CSV file with all the references.
   # If this fails, the history is left untouched.
   csv_path <- NULL
+  n_rows <- sum(vapply(list(df1, df2, df3),
+                       function(d) if (is.null(d)) 0L else nrow(d),
+                       integer(1)))
   tryCatch({
-    if (isTRUE(dedup)) {
-      n_rows <- sum(vapply(list(df1, df2, df3),
-                           function(d) if (is.null(d)) 0L else nrow(d),
-                           integer(1)))
-      if (n_rows == 0) {
-        # ASySD cannot deduplicate an empty set (typical of a scheduled run
-        # without any new record), so there is nothing to write.
-        message("No new records to deduplicate: no output file written.")
-      } else {
-        dedup_refs(df1, df2, df3, directory = directory, open_file = open_file)
-      }
+    if (n_rows == 0) {
+      # Typical of a scheduled run without any new record. Nothing is written
+      # (an empty file is of no use, and ASySD cannot deduplicate an empty set).
+      message("No new records: no output file written.")
+
+    } else if (isTRUE(dedup)) {
+      dedup_refs(df1, df2, df3, directory = directory, open_file = open_file)
 
     } else {
       date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
@@ -294,7 +294,7 @@ manual_fetch <- function(wos = FALSE,
   if (length(problems) > 0) {
     warning("LitFetchR retrieval finished with problems.\n",
             paste0("  - ", problems, collapse = "\n"),
-            "\nThe other platforms were saved. See ",
+            "\nThe other platforms were processed. See ",
             file.path(directory, "run_log.csv"), " for details.",
             call. = FALSE, immediate. = TRUE)
   }

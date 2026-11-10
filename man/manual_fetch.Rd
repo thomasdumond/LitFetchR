@@ -55,6 +55,7 @@ only updated once the output file has been written. If a platform fails
 a warning names the failed platform(s), and the failed platform is not
 added to the history, so its references are retrieved again by the next
 run. If all the selected platforms fail, an error is raised.
+When there is no new record, no output file is written.
 }
 \examples{
 # This is a "dry run" example.

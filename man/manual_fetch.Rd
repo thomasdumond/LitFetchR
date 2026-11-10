@@ -42,7 +42,10 @@ on up to three platforms
 }
 \details{
 Every retrieval is recorded in the file \code{run_log.csv} of \code{directory}
-(one row per saved search and platform). It stores the exact query
+(one row per saved search and platform, or one row with platform "all" if
+the run could not start, for example because \code{search_list.txt} is invalid).
+It records whether the run was started by hand or by a scheduled task
+(\code{run_mode}). It stores the exact query
 submitted to each platform, the date, the package and R versions, the
 number of results and new records, the status of the request and any
 error message. For PubMed, it also stores the query translation reported

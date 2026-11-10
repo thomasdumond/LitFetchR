@@ -17,7 +17,10 @@
 #'
 #' @details
 #' Every retrieval is recorded in the file `run_log.csv` of `directory`
-#' (one row per saved search and platform). It stores the exact query
+#' (one row per saved search and platform, or one row with platform "all" if
+#' the run could not start, for example because `search_list.txt` is invalid).
+#' It records whether the run was started by hand or by a scheduled task
+#' (`run_mode`). It stores the exact query
 #' submitted to each platform, the date, the package and R versions, the
 #' number of results and new records, the status of the request and any
 #' error message. For PubMed, it also stores the query translation reported
@@ -98,27 +101,6 @@ manual_fetch <- function(wos = FALSE,
   directory <- normalizePath(directory, mustWork = FALSE)
   if (!dir.exists(directory)) stop("Directory does not exist: ", directory)
 
-  search_list_path <- file.path(directory, "search_list.txt")
-  search_list_path <- normalizePath(search_list_path, mustWork = FALSE)
-
-  # Only runs if search string(s) are saved, else asks the user to do so.
-  if (!file.exists(search_list_path)) {
-    stop("No search string saved.
-         Please save a search string using the function create_save_search().")
-  }
-  # Checks the saved search strings before any platform is queried
-  # (stops with an informative message if the file is empty or malformed).
-  invisible(read_search_list(search_list_path))
-
-  # Builds a list of databases selected by user.
-  selected <- c(wos = wos, scp = scp, pmd = pmd)
-  selected <- names(selected)[selected]  # keep only TRUE ones
-
-  # Informs the user if no databases were selected.
-  if (length(selected) == 0) {
-    stop("At least one database must be set to TRUE (wos, scp, pmd).")
-  }
-
   # One identifier shared by all the rows of this run in "run_log.csv".
   run_id <- make_run_id()
   # Rows of the run log, written at the end of the run (or on any exit).
@@ -130,6 +112,38 @@ manual_fetch <- function(wos = FALSE,
     }
   }
   on.exit(flush_log(), add = TRUE)
+  # A problem found before any platform is queried is recorded in the run log
+  # too (platform "all"), then the run stops.
+  stop_early <- function(text) {
+    log_rows[[length(log_rows) + 1]] <<- make_log_rows(
+      run_id = run_id, platform = "all", search_name = "", search_string = "",
+      status = "error", message = text)
+    flush_log()
+    stop(text, call. = FALSE)
+  }
+
+  search_list_path <- file.path(directory, "search_list.txt")
+  search_list_path <- normalizePath(search_list_path, mustWork = FALSE)
+
+  # Only runs if search string(s) are saved, else asks the user to do so.
+  if (!file.exists(search_list_path)) {
+    stop_early(paste("No search string saved.",
+                     "Please save a search string using the function",
+                     "create_save_search()."))
+  }
+  # Checks the saved search strings before any platform is queried
+  # (stops with an informative message if the file is empty or malformed).
+  tryCatch(read_search_list(search_list_path),
+           error = function(e) stop_early(conditionMessage(e)))
+
+  # Builds a list of databases selected by user.
+  selected <- c(wos = wos, scp = scp, pmd = pmd)
+  selected <- names(selected)[selected]  # keep only TRUE ones
+
+  # Informs the user if no databases were selected.
+  if (length(selected) == 0) {
+    stop_early("At least one database must be set to TRUE (wos, scp, pmd).")
+  }
 
   extractors <- list(wos = extract_wos_list,
                      scp = extract_scp_list,
@@ -292,11 +306,16 @@ manual_fetch <- function(wos = FALSE,
       paste(platform_names[partial], collapse = ", ")))
   }
   if (length(problems) > 0) {
-    warning("LitFetchR retrieval finished with problems.\n",
-            paste0("  - ", problems, collapse = "\n"),
-            "\nThe other platforms were processed. See ",
-            file.path(directory, "run_log.csv"), " for details.",
-            call. = FALSE, immediate. = TRUE)
+    # A warning of its own class, so that the script of a scheduled task can
+    # recognise it and report a failed run to the scheduler.
+    warning(structure(
+      class = c("litfetchr_run_problem", "warning", "condition"),
+      list(message = paste0(
+        "LitFetchR retrieval finished with problems.\n",
+        paste0("  - ", problems, collapse = "\n"),
+        "\nThe other platforms were processed. See ",
+        file.path(directory, "run_log.csv"), " for details."),
+        call = NULL)))
   }
 
   invisible(NULL)

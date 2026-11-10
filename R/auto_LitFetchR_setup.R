@@ -17,6 +17,10 @@
 #' the only evidence that automatic retrieval will run.
 #'
 #' The scheduled task runs only while the computer is on and you are logged in.
+#' Each run is recorded in `run_log.csv` (see [manual_fetch()]) with the name
+#' of the task in the column `run_mode`. When a run fails, or finishes with
+#' problems on one platform, it ends with a non-zero exit status, which the
+#' Windows Task Scheduler shows as the Last Run Result of the task.
 #'
 #' @param task_id Name of the automated reference retrieval task
 #'  (e.g. one keyword describing your review). Spaces are replaced by "-".
@@ -176,10 +180,30 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
   )
   #Creates a string vector with the `manual_fetch`
   #function containing the same arguments as `auto_LitFetchR_setup`
-  lines <- c(lines, sprintf("LitFetchR::manual_fetch(%s)",
-                            paste(arg_strings, collapse = ", ")
-                            )
-             )
+  fetch_call <- sprintf("LitFetchR::manual_fetch(%s)",
+                        paste(arg_strings, collapse = ", "))
+
+  # The script gives the name of the task to the run log, and ends with a
+  # non-zero exit status when the run failed or finished with problems, so
+  # that the Task Scheduler shows it (Last Run Result).
+  lines <- c(
+    lines,
+    "# Script written by LitFetchR::auto_LitFetchR_setup(), do not edit.",
+    sprintf("Sys.setenv(LITFETCHR_TASK_ID = %s)",
+            encodeString(task_id, quote = "\"")),
+    "run_ok <- TRUE",
+    "withCallingHandlers(",
+    "  tryCatch(",
+    paste0("    ", fetch_call, ","),
+    "    error = function(e) {",
+    "      message(\"LitFetchR run failed: \", conditionMessage(e))",
+    "      run_ok <<- FALSE",
+    "    }",
+    "  ),",
+    "  litfetchr_run_problem = function(w) run_ok <<- FALSE",
+    ")",
+    "if (!run_ok) quit(save = \"no\", status = 1)"
+  )
 
   # Create the R script
   writeLines(lines, script_path)

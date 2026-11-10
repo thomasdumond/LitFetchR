@@ -4,8 +4,8 @@
 #' @keywords internal
 #' @noRd
 run_log_columns <- function() {
-  c("run_id", "timestamp", "litfetchr_version", "r_version", "platform",
-    "search_name", "search_string", "submitted_query",
+  c("run_id", "timestamp", "run_mode", "litfetchr_version", "r_version",
+    "platform", "search_name", "search_string", "submitted_query",
     "pubmed_query_translation", "total_results", "new_records",
     "status", "message", "wos_database_counts")
 }
@@ -19,13 +19,27 @@ make_run_id <- function() {
   format(Sys.time(), "%Y-%m-%d-%H%M%S")
 }
 
+#' Tells whether the run was started by hand or by a scheduled task.
+#'
+#' The script written by `auto_LitFetchR_setup()` sets the environment
+#' variable `LITFETCHR_TASK_ID` to the name of the task.
+#'
+#' @return "manual" or "scheduled:<task name>".
+#' @keywords internal
+#' @noRd
+current_run_mode <- function() {
+  task <- Sys.getenv("LITFETCHR_TASK_ID", unset = "")
+  if (nzchar(task)) paste0("scheduled:", task) else "manual"
+}
+
 #' Builds rows for the run log.
 #'
 #' All vector arguments are recycled to a common length. Empty or missing
 #' text values are stored as empty strings so that the CSV stays simple.
 #'
 #' @param run_id Run identifier.
-#' @param platform One of "wos", "scp" or "pmd".
+#' @param platform One of "wos", "scp" or "pmd", or "all" for a problem found
+#'   before any platform was queried.
 #' @param search_name Name of the saved search.
 #' @param search_string Search string as read from "search_list.txt".
 #' @param submitted_query Exact query submitted to the platform.
@@ -53,6 +67,7 @@ make_log_rows <- function(run_id, platform, search_name, search_string,
   data.frame(
     run_id = run_id,
     timestamp = format(Sys.time(), "%Y-%m-%d %H:%M:%S %Z"),
+    run_mode = current_run_mode(),
     litfetchr_version = pkg_version,
     r_version = as.character(getRversion()),
     platform = platform,

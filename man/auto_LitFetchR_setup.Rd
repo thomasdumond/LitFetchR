@@ -77,6 +77,10 @@ warning is given instead of the success message. Check the summary: it is
 the only evidence that automatic retrieval will run.
 
 The scheduled task runs only while the computer is on and you are logged in.
+Each run is recorded in \code{run_log.csv} (see \code{\link[=manual_fetch]{manual_fetch()}}) with the name
+of the task in the column \code{run_mode}. When a run fails, or finishes with
+problems on one platform, it ends with a non-zero exit status, which the
+Windows Task Scheduler shows as the Last Run Result of the task.
 }
 \examples{
 # This is a "dry run" example.

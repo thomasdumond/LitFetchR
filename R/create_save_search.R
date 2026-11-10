@@ -70,7 +70,7 @@ create_save_search <- function(wos = FALSE,
   2                fish AND "vibrio harveyi"        2084        1080         727
   3 fish AND "vibrio harveyi" AND diagnostic         126          22         106
   Do you want to save a search string for automated retrieval? (yes/no): yes
-  Select the index number of the search string to save: 3
+  Select the index number of the search string to save (Enter to cancel): 3
 
   Selected search string: fish AND "vibrio harveyi" AND diagnostic
 
@@ -173,7 +173,7 @@ create_save_search <- function(wos = FALSE,
                                      search_file, context = "exit")
         if (outcome == "saved") saved_any <- TRUE
         # Back to the search prompt so that the user can retry.
-        if (outcome == "invalid") next
+        if (outcome == "cancelled") next
         if (outcome == "declined") {
           message("No search string saved. Run create_save_search() again ",
                   "to save one before retrieving references.\n")
@@ -345,8 +345,8 @@ check_search_name <- function(name) {
 # search_file    Path to "search_list.txt".
 # context        "summary" or "exit" (only changes the message when declined).
 #
-# Returns "saved", "declined" (the user answered no) or "invalid" (the index
-# was not valid, nothing was saved).
+# Returns "saved", "declined" (the user answered no) or "cancelled" (the user
+# left the index question empty, nothing was saved).
 offer_save_search <- function(search_table, search_history, search_file,
                               context = c("summary", "exit")) {
   context <- match.arg(context)
@@ -363,13 +363,19 @@ offer_save_search <- function(search_table, search_history, search_file,
     return("declined")
   }
 
-  # Ask which search string to save
-  choice <- suppressWarnings(as.integer(
-    readline(prompt = "Select the index number of the search string to save: ")))
-
-  if (is.na(choice) || choice < 1 || choice > length(search_history)) {
-    message("Invalid choice. Nothing saved.\n")
-    return("invalid")
+  # Ask which search string to save. An invalid answer asks the question
+  # again, and an empty answer (Enter) cancels.
+  repeat {
+    answer <- trimws(readline(
+      prompt = "Select the index number of the search string to save (Enter to cancel): "))
+    if (!nzchar(answer)) {
+      message("Nothing saved.\n")
+      return("cancelled")
+    }
+    choice <- suppressWarnings(as.integer(answer))
+    if (!is.na(choice) && choice >= 1 && choice <= length(search_history)) break
+    message("Invalid choice. Enter a number from 1 to ", length(search_history),
+            ".\n")
   }
 
   search <- search_history[[choice]]

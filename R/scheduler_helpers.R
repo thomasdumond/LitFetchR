@@ -302,7 +302,10 @@ cron_create <- function(task_id, script, when, time, day = NULL) {
                         days_of_week = match(day, sched_weekdays) - 1L,
                         id = task_id, ask = FALSE)
       } else {
-        cronR::cron_add(command = cmd, frequency = "monthly", at = time,
+        # The "monthly" template of cronR also sets the day of the week to
+        # Monday, and cron then runs the job on the day of the month OR on
+        # Mondays. The plain "daily" template leaves both fields free.
+        cronR::cron_add(command = cmd, frequency = "daily", at = time,
                         days_of_month = day, id = task_id, ask = FALSE)
       }
     })

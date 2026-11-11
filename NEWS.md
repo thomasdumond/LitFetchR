@@ -1,3 +1,43 @@
+# LitFetchR 1.1.0
+
+Reliability and transparency release. Each retrieval is now recorded in a run log, scheduling is verified instead of assumed, and a failure on one platform no longer affects the others or the history of seen records. The exported function interface is unchanged apart from one new optional argument, `day`, in `auto_LitFetchR_setup()`.
+
+##### Run log
+
+* New file `run_log.csv` in the project directory. Every run, manual or scheduled, adds one row per saved search and platform with the date and time, the versions of LitFetchR and R, the run mode (`manual` or `scheduled:<task name>`), the search string as read from `search_list.txt`, the exact query submitted to the platform, the number of results and of new records, the status (`success`, `no_results`, `partial` or `error`) and any error message.
+* For PubMed the query translation returned by the platform is stored. For Web of Science the number of retrieved records per source database is stored, derived from the prefix of the record identifiers.
+* A problem found before any platform is queried (missing or invalid `search_list.txt`, no platform selected) is logged as a row with the platform `all` and the status `error`.
+* The `id_log` sheet of `history_id.xlsx` has a new `search_name` column. Existing files are upgraded in place. A `run_log.csv` made by an earlier development version is upgraded in place as well.
+
+##### Search strings
+
+* One internal helper now builds the exact query sent to each platform, so that the counts shown by `create_save_search()` and the records retrieved by `manual_fetch()` always use the same query.
+* The exclusion operator is written the way each platform needs it, outside quoted phrases: `AND NOT` for Scopus and `NOT` for PubMed and Web of Science. A typed `AND NOT` is no longer duplicated for Scopus. Previously retrieval sent the raw string to Scopus, and PubMed ignored the `NOT` of an `AND NOT` and returned the records to be excluded. Searches containing exclusions can therefore return different, correct, results than in 1.0.0.
+* `create_save_search()` no longer ends the session when a platform rejects a search. The count for that platform is shown as unavailable, together with the platform's message and the query sent.
+
+##### create_save_search() and search_list.txt
+
+* Selecting `exit` or `summary` offers to save a search of the session when none has been saved.
+* All questions of the saving flow behave the same way: an invalid answer is asked again, an empty answer cancels and returns to the search prompt, and the valid range is shown for the index question. Names are checked before saving (empty names, `=` and regular expression characters).
+* `search_list.txt` is validated before any platform is queried: a missing or empty file, a line without `=`, an empty name or query and duplicate names stop the run with a clear message. Files with duplicate names were accepted by 1.0.0 and now stop the run.
+
+##### Scheduling
+
+* `auto_LitFetchR_setup()` reports "Task scheduled!" only after the scheduler accepted the task and the task was read back. A short summary (recurrence, next run time, status) is printed. If the scheduler returns an error, the function stops and shows the scheduler's message. If the task cannot be confirmed, a warning is given.
+* New argument `day`: the weekday of a weekly task (MON to SUN) or the day of the month of a monthly task (1 to 28). The default is the weekday or day of the month of today. Weekly tasks previously ran every day, and no start date is passed any more, so regional date settings no longer matter.
+* A task with the same name is never overwritten. Use `remove_scheduled_task()` first.
+* The generated script wrote Windows paths unescaped and could not be parsed. This is fixed, and the script is checked before the task is created.
+* The generated script records the name of the task in the run log and ends with a non-zero exit status when the run failed or finished with a problem.
+* `remove_scheduled_task()` reports what actually happened.
+* The package now calls the Windows `schtasks` command directly and no longer uses taskscheduleR, which is removed from the suggested packages. The cron branch (`cronR`, macOS and Linux) has not been tested on those systems.
+
+##### Failure handling
+
+* Each platform is queried independently. A failure on one platform is logged and warned about, and the other platforms continue. The run stops only when all selected platforms fail.
+* The output file is written first and `history_id.xlsx` is updated afterwards, only with the identifiers of records actually retrieved. A failed platform or a failed output therefore never marks records as seen, and the records are retrieved at the next run.
+* When no record is new, no CSV or deduplication file is written. With `dedup = TRUE` and no new record the deduplication step is skipped instead of failing.
+* Messages about existing history files were reworded ("Updating existing history_id.xlsx.").
+
 # LitFetchR 1.0.0
 
 Major reworking of the retrieval pipeline, consolidating a series of performance, reliability, and data-quality improvements. The exported function interface is unchanged apart from two new optional arguments to `save_api_keys()` (`scp_insttoken` and `ncbi_api_key`), but the returned data frame has changed (see "Output columns" below).

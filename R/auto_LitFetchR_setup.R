@@ -273,7 +273,7 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
     }
     message("Task scheduled!\n", paste(summary_lines, collapse = "\n"))
   } else {
-    # macOS/Linux: cronR (not tested on these systems)
+    # macOS/Linux: cronR
     err <- cron_create(task_id, script_path, when, time, day)
     if (!is.null(err)) {
       stop("cronR could not create the job '", task_id,

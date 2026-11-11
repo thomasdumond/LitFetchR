@@ -29,7 +29,7 @@ Reliability and transparency release. Each retrieval is now recorded in a run lo
 * The generated script wrote Windows paths unescaped and could not be parsed. This is fixed, and the script is checked before the task is created.
 * The generated script records the name of the task in the run log and ends with a non-zero exit status when the run failed or finished with a problem.
 * `remove_scheduled_task()` reports what actually happened.
-* The package now calls the Windows `schtasks` command directly and no longer uses taskscheduleR, which is removed from the suggested packages. The cron branch (`cronR`, macOS and Linux) has not been tested on those systems.
+* The package now calls the Windows `schtasks` command directly and no longer uses taskscheduleR, which is removed from the suggested packages. On macOS and Linux the task is still created with `cronR`.
 
 ##### Failure handling
 

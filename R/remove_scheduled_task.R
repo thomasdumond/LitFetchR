@@ -61,7 +61,7 @@ remove_scheduled_task <- function(task_id,
     message("Windows task '", task_id, "' removed.")
 
   } else {
-    # macOS / Linux: uses cronR (not tested on these systems).
+    # macOS / Linux: uses cronR.
     if (!cron_available()) {
       stop("Package 'cronR' is required on this OS.")
     }

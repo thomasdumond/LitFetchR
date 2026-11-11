@@ -26,6 +26,8 @@ library(LitFetchR)
 ## Manual reference retrieval
 Make sure to have saved your search string using `create_save_search()` as the following function needs to access the file *search_list.txt*, see [LitFetchR (Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html).
 
+The optional deduplication (`dedup = TRUE`) needs the package `ASySD`, which is not on CRAN. Install it with `remotes::install_github("camaradesuk/ASySD")`, or use `dedup = FALSE`.
+
 ```{r, eval=FALSE}
 # Load LitFetchR
 library(LitFetchR)

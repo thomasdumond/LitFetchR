@@ -27,10 +27,14 @@ We strongly recommend creating a new R directory for each individual review proj
 
 * Click `Create Project`
 
-From your new directory, install `LitFetchR` from GitHub: 
+From your new directory, install `LitFetchR` from CRAN:
 ```{r, eval = FALSE}
 #This step can be skipped if `LitFetchR` is already installed
+install.packages("LitFetchR")
+```
 
+Alternatively, install the development version from GitHub:
+```{r, eval = FALSE}
 #Install using devtools package
 install.packages("devtools")
 devtools::install_github("thomasdumond/LitFetchR")
@@ -41,6 +45,18 @@ devtools::install_github("thomasdumond/LitFetchR")
 install.packages("remotes")
 remotes::install_github("thomasdumond/LitFetchR")
 ```
+
+Two optional packages are only needed for some functions:
+
+* **Deduplication** (`dedup = TRUE`) uses `ASySD`, which is not on CRAN. Without it, the retrieval works with `dedup = FALSE`:
+
+```{r, eval = FALSE}
+install.packages("remotes")
+remotes::install_github("camaradesuk/ASySD")
+```
+
+* **Scheduling on macOS and Linux** uses `cronR`: `install.packages("cronR")`. On Windows, the Windows Task Scheduler is used and nothing more is needed.
+
 Then load the package:
 ```{r, eval = FALSE}
 #Load `LitFetchR`

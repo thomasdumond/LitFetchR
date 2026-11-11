@@ -90,7 +90,9 @@ manual_fetch <- function(wos = FALSE,
 
               Warning message:
               In add_missing_cols(raw_citations) :
-                Search contains missing values for the record_id column. A record_id will be created using row numbers'
+                Search contains missing values for the record_id column. A record_id will be created using row numbers
+
+              Run log saved in <directory>/run_log.csv'
             )
     return(invisible(NULL))
   }

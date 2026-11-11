@@ -30,7 +30,7 @@ read_search_list <- function(path, allow_empty = FALSE) {
 
   lines <- readLines(path, warn = FALSE)
   # A byte order mark written by some editors (e.g. Notepad) is removed.
-  if (length(lines)) lines[1] <- sub("^(﻿|ï»¿)", "", lines[1])
+  if (length(lines)) lines[1] <- sub("^(\ufeff|\u00ef\u00bb\u00bf)", "", lines[1])
   # Keep the original line numbers for the error messages.
   line_no <- seq_along(lines)
   keep <- nzchar(trimws(lines))

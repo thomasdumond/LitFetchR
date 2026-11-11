@@ -277,27 +277,35 @@ compare_win_task <- function(info, when, day, time) {
 
 # Lines of the user's crontab (empty when there is none)
 cron_lines <- function() {
-  x <- tryCatch(suppressWarnings(cronR::cron_ls()), error = function(e) NULL)
+  # cron_ls() prints the crontab with message() and returns it invisibly as
+  # one text block with embedded line breaks, so it is split into lines.
+  x <- tryCatch(suppressMessages(suppressWarnings(cronR::cron_ls())),
+                error = function(e) NULL)
   if (is.null(x)) return(character())
-  as.character(x)
+  unlist(strsplit(as.character(x), "\r?\n"))
 }
 
 # Adds the entry. Returns NULL on success or the error message.
 cron_create <- function(task_id, script, when, time, day = NULL) {
   tryCatch({
     cmd <- cronR::cron_rscript(script)
-    if (when == "DAILY") {
-      cronR::cron_add(command = cmd, frequency = "daily", at = time,
-                      id = task_id)
-    } else if (when == "WEEKLY") {
-      # cron counts days of the week from 0 (Sunday)
-      cronR::cron_add(command = cmd, frequency = "daily", at = time,
-                      days_of_week = match(day, sched_weekdays) - 1L,
-                      id = task_id)
-    } else {
-      cronR::cron_add(command = cmd, frequency = "monthly", at = time,
-                      days_of_month = day, id = task_id)
-    }
+    # `ask = FALSE`: cronR otherwise waits for the user to type "y", which
+    # never works in scripts and breaks pasted code. The summary shown by
+    # auto_LitFetchR_setup() replaces cronR's own messages.
+    suppressMessages({
+      if (when == "DAILY") {
+        cronR::cron_add(command = cmd, frequency = "daily", at = time,
+                        id = task_id, ask = FALSE)
+      } else if (when == "WEEKLY") {
+        # cron counts days of the week from 0 (Sunday)
+        cronR::cron_add(command = cmd, frequency = "daily", at = time,
+                        days_of_week = match(day, sched_weekdays) - 1L,
+                        id = task_id, ask = FALSE)
+      } else {
+        cronR::cron_add(command = cmd, frequency = "monthly", at = time,
+                        days_of_month = day, id = task_id, ask = FALSE)
+      }
+    })
     NULL
   }, error = function(e) conditionMessage(e))
 }
@@ -305,7 +313,7 @@ cron_create <- function(task_id, script, when, time, day = NULL) {
 # Removes the entry. Returns NULL on success or the error message.
 cron_delete <- function(task_id) {
   tryCatch({
-    cronR::cron_rm(task_id)
+    suppressMessages(cronR::cron_rm(task_id, ask = FALSE))
     NULL
   }, error = function(e) conditionMessage(e))
 }

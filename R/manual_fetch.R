@@ -97,11 +97,11 @@ manual_fetch <- function(wos = FALSE,
     return(invisible(NULL))
   }
 
-  if (missing(directory) || is.null(directory) || !nzchar(directory)) {
-    stop("`directory` must be provided (path to your project folder).")
+  if (missing(directory)) {
+    stop("`directory` must be provided (path to your project folder).",
+         call. = FALSE)
   }
-  directory <- normalizePath(directory, mustWork = FALSE)
-  if (!dir.exists(directory)) stop("Directory does not exist: ", directory)
+  directory <- check_directory(directory)
 
   # One identifier shared by all the rows of this run in "run_log.csv".
   run_id <- make_run_id()

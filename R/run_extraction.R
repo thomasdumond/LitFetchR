@@ -158,6 +158,12 @@ run_extraction <- function(platform, search_list, directory, run_id,
               " total results.")
 
       records <- fetch_fn(new_ids, state)
+      # The same record found by two searches is kept once (rows without an
+      # identifier, such as placeholders for failed requests, are kept).
+      if ("platform_id" %in% names(records)) {
+        dup_id <- !is.na(records$platform_id) & duplicated(records$platform_id)
+        records <- records[!dup_id, , drop = FALSE]
+      }
       rownames(records) <- NULL
 
       pending <- list(

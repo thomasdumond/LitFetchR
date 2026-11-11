@@ -108,7 +108,7 @@ search_scp <- function(search_list, state) {
     ids_q <- character(0)
     # Defines at which reference to start the extraction of a batch.
     next_start_scp <- 0
-    term_scp <- utils::URLencode(build_platform_query(query_scp, "scp"))
+    term_scp <- encode_query(build_platform_query(query_scp, "scp"))
 
     # Call Scopus API to get total results
     # Creates the baseline API URL

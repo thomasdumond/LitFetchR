@@ -93,7 +93,7 @@ search_pmd <- function(search_list, state, ncbi_key_param) {
     ids_q <- character(0)
     # Defines at which reference to start the extraction of a batch.
     next_start_pmd <- 0
-    term_pmd <- utils::URLencode(build_platform_query(search_query, "pmd"))
+    term_pmd <- encode_query(build_platform_query(search_query, "pmd"))
 
     # Call PubMed API to get total results
     # Adds the search information.

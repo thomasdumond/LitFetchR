@@ -98,11 +98,11 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
   # CREATE AUTOMATION CODE
   ########################
 
-  if (missing(directory) || is.null(directory) || !nzchar(directory)) {
-    stop("`directory` must be provided (path to your project folder).")
+  if (missing(directory)) {
+    stop("`directory` must be provided (path to your project folder).",
+         call. = FALSE)
   }
-  directory <- normalizePath(directory, mustWork = FALSE)
-  if (!dir.exists(directory)) stop("Directory does not exist: ", directory)
+  directory <- check_directory(directory)
   task_id <- normalize_task_id(task_id)
   if (sched$day_defaulted) {
     message("`day` not supplied: using ", day, " (from today's date).")

@@ -22,7 +22,7 @@
 commit_id_history <- function(directory, pending) {
   history_id_path <- file.path(directory, "history_id.xlsx")
   if (!file.exists(history_id_path)) create_id_history(directory)
-  history_id <- openxlsx::loadWorkbook(history_id_path)
+  history_id <- load_history_workbook(history_id_path)
   if (!"id_log" %in% names(history_id)) {
     openxlsx::addWorksheet(history_id, "id_log")
   }
@@ -48,6 +48,6 @@ commit_id_history <- function(directory, pending) {
   updated_list <- rbind(last_list, data.frame(id = new_ids))
   openxlsx::writeData(history_id, sheet = "updated_id_list", x = updated_list)
 
-  openxlsx::saveWorkbook(history_id, file = history_id_path, overwrite = TRUE)
+  save_history_workbook(history_id, history_id_path)
   invisible(NULL)
 }

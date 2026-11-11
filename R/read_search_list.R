@@ -29,6 +29,8 @@ read_search_list <- function(path, allow_empty = FALSE) {
   }
 
   lines <- readLines(path, warn = FALSE)
+  # A byte order mark written by some editors (e.g. Notepad) is removed.
+  if (length(lines)) lines[1] <- sub("^(﻿|ï»¿)", "", lines[1])
   # Keep the original line numbers for the error messages.
   line_no <- seq_along(lines)
   keep <- nzchar(trimws(lines))
@@ -56,6 +58,9 @@ read_search_list <- function(path, allow_empty = FALSE) {
   pos <- regexpr("=", lines, fixed = TRUE)
   nm <- ifelse(has_equal, substr(lines, 1, pos - 1), lines)
   query <- ifelse(has_equal, substr(lines, pos + 1, nchar(lines)), "")
+  # Spaces around the name and the query ("name = query") are not part of them.
+  nm <- trimws(nm)
+  query <- trimws(query)
 
   empty_name <- has_equal & !nzchar(trimws(nm))
   if (any(empty_name)) {

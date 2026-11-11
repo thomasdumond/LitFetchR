@@ -93,7 +93,7 @@ search_wos <- function(search_list, state) {
     ids_q <- character(0)
     # Defines at which reference to start the extraction of a batch.
     next_start_wos <- 1
-    term_wos <- utils::URLencode(build_platform_query(query_wos, "wos"))
+    term_wos <- encode_query(build_platform_query(query_wos, "wos"))
 
     # Call WoS API to get total results
     base_url_wos <- "https://wos-api.clarivate.com/api/wos/?databaseId=WOK&usrQuery="

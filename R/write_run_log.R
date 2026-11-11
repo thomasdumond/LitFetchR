@@ -201,6 +201,8 @@ flush_run_log <- function(directory, rows) {
     write_run_log(directory, rows),
     error = function(e) {
       warning("Could not write run_log.csv: ", conditionMessage(e),
+              ". If the file is open in another program (for example Excel), ",
+              "close it. This run is not recorded in the log.",
               call. = FALSE)
     }
   )

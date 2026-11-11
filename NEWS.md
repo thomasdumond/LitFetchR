@@ -14,12 +14,14 @@ Reliability and transparency release. Each retrieval is now recorded in a run lo
 * One internal helper now builds the exact query sent to each platform, so that the counts shown by `create_save_search()` and the records retrieved by `manual_fetch()` always use the same query.
 * The exclusion operator is written the way each platform needs it, outside quoted phrases: `AND NOT` for Scopus and `NOT` for PubMed and Web of Science. A typed `AND NOT` is no longer duplicated for Scopus. Previously retrieval sent the raw string to Scopus, and PubMed ignored the `NOT` of an `AND NOT` and returned the records to be excluded. Searches containing exclusions can therefore return different, correct, results than in 1.0.0.
 * `create_save_search()` no longer ends the session when a platform rejects a search. The count for that platform is shown as unavailable, together with the platform's message and the query sent.
+* Search strings containing `&`, `#` or `+` are now sent correctly to all three platforms. They were not protected in the request, so PubMed silently searched only the part before the `&` (returning unrelated results) and Web of Science and Scopus rejected the request.
 
 ##### create_save_search() and search_list.txt
 
 * Selecting `exit` or `summary` offers to save a search of the session when none has been saved.
 * All questions of the saving flow behave the same way: an invalid answer is asked again, an empty answer cancels and returns to the search prompt, and the valid range is shown for the index question. Names are checked before saving (empty names, `=` and regular expression characters).
 * `search_list.txt` is validated before any platform is queried: a missing or empty file, a line without `=`, an empty name or query and duplicate names stop the run with a clear message. Files with duplicate names were accepted by 1.0.0 and now stop the run.
+* Spaces around the name and the query (`name = query`) and a byte order mark written by some editors are ignored. A `directory` that is not a single text string now gives a readable message.
 
 ##### Scheduling
 
@@ -37,6 +39,9 @@ Reliability and transparency release. Each retrieval is now recorded in a run lo
 * The output file is written first and `history_id.xlsx` is updated afterwards, only with the identifiers of records actually retrieved. A failed platform or a failed output therefore never marks records as seen, and the records are retrieved at the next run.
 * When no record is new, no CSV or deduplication file is written. With `dedup = TRUE` and no new record the deduplication step is skipped instead of failing.
 * Messages about existing history files were reworded ("Updating existing history_id.xlsx.").
+* A history file that is open in another program (for example Excel) or damaged now gives a readable message. If the history cannot be updated after the output file was written, the run is reported as a problem (a scheduled run ends with a non-zero exit status) and the references are returned again at the next run. Before, only a technical warning appeared and the run counted as successful.
+* The same record found by two searches on Web of Science or Scopus is kept once in the CSV (PubMed already did so).
+* The warning shown when `run_log.csv` cannot be written now says why and what to do.
 
 # LitFetchR 1.0.0
 

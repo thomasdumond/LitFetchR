@@ -88,11 +88,11 @@ create_save_search <- function(wos = FALSE,
     return(invisible(NULL))
   }
 
-  if (missing(directory) || is.null(directory) || !nzchar(directory)) {
-    stop("`directory` must be provided (path to your project folder).")
+  if (missing(directory)) {
+    stop("`directory` must be provided (path to your project folder).",
+         call. = FALSE)
   }
-  directory <- normalizePath(directory, mustWork = FALSE)
-  if (!dir.exists(directory)) stop("Directory does not exist: ", directory)
+  directory <- check_directory(directory)
 
   # Require at least one platform
   if (!isTRUE(wos) && !isTRUE(scp) && !isTRUE(pmd)) {
@@ -224,7 +224,7 @@ create_save_search <- function(wos = FALSE,
         #URL accessing PubMed API
         search_url_pmd <- paste0(base_url_pmd,
                                  "esearch.fcgi?db=pubmed&term=",
-                                 utils::URLencode(query_pmd),
+                                 encode_query(query_pmd),
                                  "&retmax=200&retmode=json")
         response_pmd <- jsonlite::fromJSON(get_text_retry(search_url_pmd))
         # Extract the total number of results
@@ -239,7 +239,7 @@ create_save_search <- function(wos = FALSE,
       max_result_scp <- platform_count("Scopus", query_scp, function() {
         #URL accessing scopus API (auth via X-ELS-APIKey header, see scp_headers)
         search_url_scp <- paste0("https://api.elsevier.com/content/search/scopus?query=",
-                                 utils::URLencode(query_scp)
+                                 encode_query(query_scp)
                                  )
         #stores the metadata accessed
         response_scp <- jsonlite::fromJSON(get_text_retry(search_url_scp, headers = scp_headers))
@@ -253,7 +253,7 @@ create_save_search <- function(wos = FALSE,
       query_wos <- build_platform_query(search, "wos")
       max_result_wos <- platform_count("Web of Science", query_wos, function() {
         search_url_wos <- paste0("https://wos-api.clarivate.com/api/wos/?databaseId=WOK&usrQuery=",
-                                 utils::URLencode(query_wos)
+                                 encode_query(query_wos)
                                  ) #URL accessing Web of Science API
         #stores the metadata accessed
         response_wos <- jsonlite::fromJSON(get_text_retry(search_url_wos,

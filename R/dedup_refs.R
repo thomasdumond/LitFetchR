@@ -66,11 +66,11 @@ dedup_refs <- function(df1 = NULL,
     )
   }
 
-  if (missing(directory) || is.null(directory) || !nzchar(directory)) {
-    stop("`directory` must be provided (path to your project folder).")
+  if (missing(directory)) {
+    stop("`directory` must be provided (path to your project folder).",
+         call. = FALSE)
   }
-  directory <- normalizePath(directory, mustWork = FALSE)
-  if (!dir.exists(directory)) stop("Directory does not exist: ", directory)
+  directory <- check_directory(directory)
 
   # Filters the NULL dataframes.
   dfs <- Filter(function(x) !is.null(x), list(df1, df2, df3))

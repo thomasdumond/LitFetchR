@@ -14,11 +14,11 @@
 
 create_search_history <- function(directory) {
 
-  if (missing(directory) || is.null(directory) || !nzchar(directory)) {
-    stop("`directory` must be provided (path to your project folder).")
+  if (missing(directory)) {
+    stop("`directory` must be provided (path to your project folder).",
+         call. = FALSE)
   }
-  directory <- normalizePath(directory, mustWork = FALSE)
-  if (!dir.exists(directory)) stop("Directory does not exist: ", directory)
+  directory <- check_directory(directory)
 
   history_search_path <- file.path(directory, "history_search.xlsx")
 
@@ -35,7 +35,7 @@ create_search_history <- function(directory) {
     message("History had been created.")
   } else {
     message("Updating existing history_search.xlsx.")
-    history_search <- openxlsx::loadWorkbook(history_search_path)
+    history_search <- load_history_workbook(history_search_path)
     # Add search_history sheet if opening a file created before this version.
     if (!"search_history" %in% names(history_search)) {
       openxlsx::addWorksheet(history_search, "search_history")

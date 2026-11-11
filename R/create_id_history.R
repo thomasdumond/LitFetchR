@@ -14,11 +14,11 @@
 # create history if does not exist
 create_id_history <- function(directory) {
 
-  if (missing(directory) || is.null(directory) || !nzchar(directory)) {
-    stop("`directory` must be provided (path to your project folder).")
+  if (missing(directory)) {
+    stop("`directory` must be provided (path to your project folder).",
+         call. = FALSE)
   }
-  directory <- normalizePath(directory, mustWork = FALSE)
-  if (!dir.exists(directory)) stop("Directory does not exist: ", directory)
+  directory <- check_directory(directory)
 
   history_id_path <- file.path(directory, "history_id.xlsx")
 
@@ -35,10 +35,10 @@ create_id_history <- function(directory) {
                         data.frame(id = character(), platform = character(),
                                    timestamp = character(),
                                    stringsAsFactors = FALSE))
-    openxlsx::saveWorkbook(history_id, history_id_path, overwrite = TRUE)
+    save_history_workbook(history_id, history_id_path)
   } else {
     message("Updating existing history_id.xlsx.")
-    history_id <- openxlsx::loadWorkbook(history_id_path)
+    history_id <- load_history_workbook(history_id_path)
     # Add id_log sheet if opening a file created before this version.
     if (!"id_log" %in% names(history_id)) {
       openxlsx::addWorksheet(history_id, "id_log")

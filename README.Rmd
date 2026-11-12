@@ -27,6 +27,8 @@ The purpose of `LitFetchR` is to automatically retrieve and deduplicate referenc
 2. **Fetch:** `manual_fetch()` retrieves the references on demand, and `auto_LitFetchR_setup()` schedules the same retrieval at a daily, weekly or monthly frequency. Only references that were not retrieved in a previous run are returned.
 3. **Deduplicate:** the references of the different platforms can be merged and deduplicated (optional, see below).
 
+The references are written as a CSV file (default) or a RIS file (`output_format = "ris"`), for example for Covidence, which does not accept CSV.
+
 Every run, manual or scheduled, is recorded in a run log (`run_log.csv`) with the search string, the exact query sent to each platform, the number of results, the status of each platform and any error.
 
 ## Installation

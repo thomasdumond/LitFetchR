@@ -11,7 +11,8 @@ manual_fetch(
   directory,
   dedup = FALSE,
   open_file = FALSE,
-  dry_run = FALSE
+  dry_run = FALSE,
+  output_format = c("csv", "ris")
 )
 }
 \arguments{
@@ -26,12 +27,18 @@ manual_fetch(
 
 \item{dedup}{Deduplicates the retrieved references (TRUE or FALSE).}
 
-\item{open_file}{Automatically opens the CSV file after reference retrieval.}
+\item{open_file}{Automatically opens the output file after reference retrieval.}
 
 \item{dry_run}{Simulation run option.}
+
+\item{output_format}{Format of the file of references: \code{"csv"} (default) or
+\code{"ris"}. RIS is read by most reference managers and screening tools,
+for example Covidence, which does not accept CSV files. A RIS file has
+one \code{AU} line per author and always describes journal articles. With
+\code{dedup = TRUE} the deduplicated references are written in the chosen format.}
 }
 \value{
-\code{NULL} (invisibly). Called for its side effects: Create a CSV file with the references metadata, a history file of the references retrieved, a history file of the deduplication (if the option is selected) and a run log (\code{run_log.csv}).
+\code{NULL} (invisibly). Called for its side effects: Create a CSV or RIS file with the references metadata, a history file of the references retrieved, a history file of the deduplication (if the option is selected) and a run log (\code{run_log.csv}).
 }
 \description{
 Retrieves references corresponding to the saved search string(s)

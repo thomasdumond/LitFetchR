@@ -5,11 +5,13 @@
 #' @param df3 Dataframe 3 (can be NULL)
 #' @param directory Choose the directory in which
 #'  the references deduplication history will be saved.
-#' @param open_file Automatically opens the CSV file after reference retrieval.
+#' @param open_file Automatically opens the output file after reference retrieval.
 #' @param dry_run Simulation run option.
+#' @param output_format Format of the file of deduplicated references: `"csv"`
+#'  (default) or `"ris"` (see [manual_fetch()]).
 #'
 #' @return \code{NULL} (invisibly). Called for its side effects:
-#'  writes a CSV of deduplicated citations and
+#'  writes a CSV or RIS file of deduplicated citations and
 #'  an Excel workbook recording the deduplication history.
 #'
 #' @examples
@@ -31,8 +33,11 @@ dedup_refs <- function(df1 = NULL,
                        df3 = NULL,
                        directory,
                        open_file = FALSE,
-                       dry_run = FALSE
+                       dry_run = FALSE,
+                       output_format = c("csv", "ris")
                        ) {
+
+  output_format <- check_output_format(output_format)
 
   if (dry_run) {
     message("This is the message from the dry run showing what you should
@@ -81,7 +86,11 @@ dedup_refs <- function(df1 = NULL,
   # System date time.
   date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
   # Creates a unique name for the CSV file.
-  csv_name <- paste0("citationsCSV_", date_suffix, ".csv")
+  csv_name <- if (output_format == "ris") {
+    paste0("citationsRIS_", date_suffix, ".ris")
+  } else {
+    paste0("citationsCSV_", date_suffix, ".csv")
+  }
   csv_path <- file.path(directory, csv_name)
 
   # Creates a new history for the deduplication.
@@ -115,7 +124,11 @@ dedup_refs <- function(df1 = NULL,
   # Saves the sheet.
   openxlsx::saveWorkbook(history_dedup, hist_dedup_path, overwrite = TRUE)
   # Creates the CSV file only containing the unique citations.
-  ASySD::write_citations(unique_citations, type = "csv", filename = csv_path)
+  if (output_format == "ris") {
+    write_ris(unique_citations, csv_path)
+  } else {
+    ASySD::write_citations(unique_citations, type = "csv", filename = csv_path)
+  }
 
   # Remove 'issue' column if present
   if ("issue" %in% names(unique_citations)) unique_citations$issue <- NULL

@@ -221,9 +221,9 @@ Each time the task runs, the following files are created or updated:
 
     *This file records every run, manual or scheduled, with one row per saved search and platform: the date and time, the versions of LitFetchR and R, the run mode (`manual` or `scheduled:<task name>`), the search string as read from "search_list.txt", the exact query sent to the platform, the number of results and of new references, the status (`success`, `no_results`, `partial` or `error`) and the error message if any. For PubMed it also stores the query translation returned by the platform and for Web of Science the number of references per source database. Open it to check that your scheduled task is running and that no platform failed.*
 
-* citationsCSV_YYYY_MM_HHMMSS.CSV
+* citationsCSV_YYYY_MM_HHMMSS.CSV (or citationsRIS_YYYY_MM_HHMMSS.ris)
 
-    *This file contains the list of references retrieved from the search conducted at the date referenced in the name of the file. It is a CSV file, ready to be imported into the screening tool of your choice or in your reference manager. If the deduplication option was selected (dedup = TRUE), this file contains the unique dedupicated references. This file automatically opens after the reference retrieval ends if the corresponding option is selected (open_file = TRUE). When no reference is new, no file is written.*
+    *This file contains the list of references retrieved from the search conducted at the date referenced in the name of the file. It is a CSV file, ready to be imported into the screening tool of your choice or in your reference manager. If the deduplication option was selected (dedup = TRUE), this file contains the unique dedupicated references. This file automatically opens after the reference retrieval ends if the corresponding option is selected (open_file = TRUE). When no reference is new, no file is written. The default format is CSV. Use `output_format = "ris"` in `manual_fetch()` or `auto_LitFetchR_setup()` for a RIS file, which tools such as Covidence require (the format of a task is fixed when it is created: remove the task and create it again to change it).*
 
 * history_dedup_YYYY_MM_HHMMSS.xlsx (if dedup = TRUE)
 

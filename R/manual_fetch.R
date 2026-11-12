@@ -12,8 +12,13 @@
 #' @param directory Choose the directory in which the search string is saved
 #'  (Project's directory). That is also where the references metadata will be saved.
 #' @param dedup Deduplicates the retrieved references (TRUE or FALSE).
-#' @param open_file Automatically opens the CSV file after reference retrieval.
+#' @param open_file Automatically opens the output file after reference retrieval.
 #' @param dry_run Simulation run option.
+#' @param output_format Format of the file of references: `"csv"` (default) or
+#'  `"ris"`. RIS is read by most reference managers and screening tools,
+#'  for example Covidence, which does not accept CSV files. A RIS file has
+#'  one `AU` line per author and always describes journal articles. With
+#'  `dedup = TRUE` the deduplicated references are written in the chosen format.
 #'
 #' @details
 #' Every retrieval is recorded in the file `run_log.csv` of `directory`
@@ -35,7 +40,7 @@
 #' run. If all the selected platforms fail, an error is raised.
 #' When there is no new record, no output file is written.
 #'
-#' @return \code{NULL} (invisibly). Called for its side effects: Create a CSV file with the references metadata, a history file of the references retrieved, a history file of the deduplication (if the option is selected) and a run log (`run_log.csv`).
+#' @return \code{NULL} (invisibly). Called for its side effects: Create a CSV or RIS file with the references metadata, a history file of the references retrieved, a history file of the deduplication (if the option is selected) and a run log (`run_log.csv`).
 #'
 #' @examples
 #' # This is a "dry run" example.
@@ -58,8 +63,11 @@ manual_fetch <- function(wos = FALSE,
                          directory,
                          dedup = FALSE,
                          open_file = FALSE,
-                         dry_run = FALSE
+                         dry_run = FALSE,
+                         output_format = c("csv", "ris")
                          ) {
+
+  output_format <- check_output_format(output_format)
 
   if (dry_run) {
     message('This is the message from the dry run showing what you should be
@@ -218,17 +226,26 @@ manual_fetch <- function(wos = FALSE,
       message("No new records: no output file written.")
 
     } else if (isTRUE(dedup)) {
-      dedup_refs(df1, df2, df3, directory = directory, open_file = open_file)
+      dedup_refs(df1, df2, df3, directory = directory, open_file = open_file,
+                 output_format = output_format)
 
     } else {
       date_suffix <- format(Sys.time(), "%Y-%m-%d-%H%M%S")
-      csv_name <- paste0("citationsCSV_", date_suffix, ".csv")
+      csv_name <- if (output_format == "ris") {
+        paste0("citationsRIS_", date_suffix, ".ris")
+      } else {
+        paste0("citationsCSV_", date_suffix, ".csv")
+      }
       csv_path <- file.path(directory, csv_name)
 
       dfs_out <- Filter(Negate(is.null), list(df1, df2, df3))
       citations <- dplyr::bind_rows(dfs_out)
 
-      utils::write.csv(citations, file = csv_path, row.names = FALSE)
+      if (output_format == "ris") {
+        write_ris(citations, csv_path)
+      } else {
+        utils::write.csv(citations, file = csv_path, row.names = FALSE)
+      }
     }
   }, error = function(e) {
     log_rows <<- amend_run_log(

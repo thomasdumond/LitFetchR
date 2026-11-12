@@ -10,7 +10,8 @@ dedup_refs(
   df3 = NULL,
   directory,
   open_file = FALSE,
-  dry_run = FALSE
+  dry_run = FALSE,
+  output_format = c("csv", "ris")
 )
 }
 \arguments{
@@ -23,13 +24,16 @@ dedup_refs(
 \item{directory}{Choose the directory in which
 the references deduplication history will be saved.}
 
-\item{open_file}{Automatically opens the CSV file after reference retrieval.}
+\item{open_file}{Automatically opens the output file after reference retrieval.}
 
 \item{dry_run}{Simulation run option.}
+
+\item{output_format}{Format of the file of deduplicated references: \code{"csv"}
+(default) or \code{"ris"} (see \code{\link[=manual_fetch]{manual_fetch()}}).}
 }
 \value{
 \code{NULL} (invisibly). Called for its side effects:
-writes a CSV of deduplicated citations and
+writes a CSV or RIS file of deduplicated citations and
 an Excel workbook recording the deduplication history.
 }
 \description{

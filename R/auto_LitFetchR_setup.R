@@ -41,8 +41,12 @@
 #'  (Project's directory). That is also where the references metadata
 #'  will be saved.
 #' @param dedup Deduplicates the retrieved references (TRUE or FALSE).
-#' @param open_file Automatically opens the CSV file after reference retrieval.
+#' @param open_file Automatically opens the output file after reference retrieval.
 #' @param dry_run Simulation run option.
+#' @param output_format Format of the file of references written at each run:
+#'  `"csv"` (default) or `"ris"` (see [manual_fetch()]). The choice is fixed in
+#'  the script of the task. To change it, remove the task with
+#'  [remove_scheduled_task()] and create it again.
 #'
 #' @return \code{NULL} (invisibly). Called for its side effects:
 #'  writes an R script and schedules a task (Windows Task Scheduler or cron)
@@ -79,8 +83,10 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
                                  dedup = FALSE,
                                  open_file = FALSE,
                                  dry_run = FALSE,
-                                 day = NULL
+                                 day = NULL,
+                                 output_format = c("csv", "ris")
                                  ) {
+  output_format <- check_output_format(output_format)
   # Checks the schedule first, before anything is created
   sched <- check_schedule_args(when, time, day)
   when <- sched$when
@@ -189,6 +195,7 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
             ifelse(selected, "TRUE", "FALSE")
             ), #Creates a vector with argument from `auto_LitFetchR_setup`
     # Backslashes of Windows paths must be escaped to give valid R code.
+    sprintf("output_format = %s", encodeString(output_format, quote = "\"")),
     sprintf("directory = %s", encodeString(directory, quote = "\""))
   )
   #Creates a string vector with the `manual_fetch`

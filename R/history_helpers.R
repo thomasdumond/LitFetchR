@@ -80,3 +80,19 @@ check_directory <- function(directory) {
 encode_query <- function(x) {
   utils::URLencode(x, reserved = TRUE)
 }
+
+#' Checks the `output_format` argument of the exported functions.
+#'
+#' @param output_format Value given by the user (the default is the vector of
+#'  the two choices, which means "csv").
+#' @return "csv" or "ris".
+#' @keywords internal
+#' @noRd
+check_output_format <- function(output_format) {
+  if (identical(output_format, c("csv", "ris"))) return("csv")
+  if (!is.character(output_format) || length(output_format) != 1 ||
+      is.na(output_format) || !output_format %in% c("csv", "ris")) {
+    stop("`output_format` must be \"csv\" or \"ris\".", call. = FALSE)
+  }
+  output_format
+}

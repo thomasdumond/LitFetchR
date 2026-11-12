@@ -25,6 +25,8 @@ maintenance of a living review:
 3.  **Deduplicate:** the references of the different platforms can be
     merged and deduplicated (optional, see below).
 
+The references are written as a CSV file (default) or a RIS file (`output_format = "ris"`), for example for Covidence, which does not accept CSV.
+
 Every run, manual or scheduled, is recorded in a run log (`run_log.csv`)
 with the search string, the exact query sent to each platform, the
 number of results, the status of each platform and any error.

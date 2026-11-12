@@ -15,7 +15,8 @@ auto_LitFetchR_setup(
   dedup = FALSE,
   open_file = FALSE,
   dry_run = FALSE,
-  day = NULL
+  day = NULL,
+  output_format = c("csv", "ris")
 )
 }
 \arguments{
@@ -42,7 +43,7 @@ will be saved.}
 
 \item{dedup}{Deduplicates the retrieved references (TRUE or FALSE).}
 
-\item{open_file}{Automatically opens the CSV file after reference retrieval.}
+\item{open_file}{Automatically opens the output file after reference retrieval.}
 
 \item{dry_run}{Simulation run option.}
 
@@ -50,6 +51,11 @@ will be saved.}
 MON, TUE, WED, THU, FRI, SAT or SUN. For MONTHLY, a day of the month
 between 1 and 28. If \code{NULL} (default), the weekday (WEEKLY) or day of
 the month (MONTHLY) of today's date is used. Ignored for DAILY.}
+
+\item{output_format}{Format of the file of references written at each run:
+\code{"csv"} (default) or \code{"ris"} (see \code{\link[=manual_fetch]{manual_fetch()}}). The choice is fixed in
+the script of the task. To change it, remove the task with
+\code{\link[=remove_scheduled_task]{remove_scheduled_task()}} and create it again.}
 }
 \value{
 \code{NULL} (invisibly). Called for its side effects:

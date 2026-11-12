@@ -1,6 +1,10 @@
 # LitFetchR 1.1.0
 
-Reliability and transparency release. Each retrieval is now recorded in a run log, scheduling is verified instead of assumed, and a failure on one platform no longer affects the others or the history of seen records. The exported function interface is unchanged apart from one new optional argument, `day`, in `auto_LitFetchR_setup()`.
+Reliability and transparency release. Each retrieval is now recorded in a run log, scheduling is verified instead of assumed, and a failure on one platform no longer affects the others or the history of seen records. The exported function interface is unchanged apart from two new optional arguments: `day` in `auto_LitFetchR_setup()`, and `output_format` in `manual_fetch()`, `auto_LitFetchR_setup()` and `dedup_refs()`.
+
+##### Output format
+
+* New argument `output_format` in `manual_fetch()`, `auto_LitFetchR_setup()` and `dedup_refs()`: `"csv"` (the default, unchanged) or `"ris"`. RIS files (`citationsRIS_<date and time>.ris`) are read by most reference managers and screening tools, for example Covidence, which does not accept CSV. Each record is a journal article with one `AU` line per author (the platforms give surnames separated by commas), and the title, journal, year, volume, issue, pages, abstract, DOI, ISBN, platform identifier and platform name. Tasks and scripts created by earlier versions keep writing CSV files.
 
 ##### Run log
 

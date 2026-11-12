@@ -45,6 +45,14 @@ create_save_search(
 `NULL` (invisibly). Called for its side effects: interactive querying
 and writing search history files.
 
+## Details
+
+Type `summary` to display the searches run so far and save one of them
+(the saved search strings are stored in "search_list.txt", which is
+required by the retrieval functions). Type `exit` to leave the tool. If
+searches were run but none was saved during the session, `exit` first
+offers to save one.
+
 ## Examples
 
 ``` r
@@ -81,12 +89,19 @@ create_save_search(wos = TRUE,
 #>   1                                     fish     1793296      718644      384742
 #>   2                fish AND "vibrio harveyi"        2084        1080         727
 #>   3 fish AND "vibrio harveyi" AND diagnostic         126          22         106
-#>   Select the index number for the search string to use in automated retrieval: 3
+#>   Do you want to save a search string for automated retrieval? (yes/no, Enter to cancel): yes
+#>   Select the index number of the search string to save (1 to 3, Enter to cancel): 3
 #> 
 #>   Selected search string: fish AND "vibrio harveyi" AND diagnostic
-#>   Do you want to save the search string for future use? (yes/no): yes
-#>   Enter a name for the search identification: fish_vibrio
+#> 
+#>   Enter a name for the search identification (Enter to cancel): fish_vibrio
 #>   Search string saved successfully.
 #>   Enter your search string (or "summary" or "exit"): exit
 #>   Exiting search tool.
+#> 
+#>   If you type "exit" before any search string was saved, the summary table
+#>   is displayed again and you are offered to save a search string:
+#>   Enter your search string (or "summary" or "exit"): exit
+#>   No search string has been saved yet. Retrieval with manual_fetch() requires a saved search.
+#>   Do you want to save a search string for automated retrieval? (yes/no, Enter to cancel):
 ```

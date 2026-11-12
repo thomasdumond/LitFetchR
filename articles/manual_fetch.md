@@ -23,6 +23,10 @@ as the following function needs to access the file *search_list.txt*,
 see [LitFetchR
 (Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html).
 
+The optional deduplication (`dedup = TRUE`) needs the package `ASySD`,
+which is not on CRAN. Install it with
+`remotes::install_github("camaradesuk/ASySD")`, or use `dedup = FALSE`.
+
 ``` r
 
 # Load LitFetchR
@@ -31,57 +35,84 @@ library(LitFetchR)
 # Retrieve the list of references corresponding to your saved search string(s)
 #We recommend choosing the R project directory as the directory in the function. It has to be the directory where "search_list.txt" and "history_search.xlsx" have been saved.
 
-# Example of what you should see: 
+# Example of what you should see (a later run, the history files already exist):
 # > manual_fetch(wos = TRUE,
 #                scp = TRUE,
 #                pmd = TRUE,
 #                directory = "C:/path-to-project-directory",
 #                dedup = TRUE,
 #                open_file = FALSE)
-# [1] 126
-# Finished batch number 1
-# Finished batch number 2
-# [1] "10.1016/j.aaf.2023.11.002 1 / 126"
-# [1] "10.3390/fishes10090439 2 / 126"
-# [FOR THE PURPOSE OF THIS EXAMPLE WE ARE NOT SHOWING EACH LINE OF THE COMMAND]
-# [THE REMOVED LINES CORRESPOND TO MOST OF THE REFERENCE RETRIEVAL COUNTING]
-# [1] "NA 125 / 126"
-# [1] "NA 126 / 126"
-# [1] 22
-# Finished batch number 1
-# File already exists
-# [1] "10.1007/s12602-023-10207-x 1 / 22"
-# [1] "10.1016/j.fsi.2025.110189 2 / 22"
-# [FOR THE PURPOSE OF THIS EXAMPLE WE ARE NOT SHOWING EACH LINE OF THE COMMAND]
-# [THE REMOVED LINES CORRESPOND TO MOST OF THE REFERENCE RETRIEVAL COUNTING]
-# [1] "10.1111/j.1472-765X.2010.02894.x 21 / 22"
-# [1] "NA 22 / 22"
-# [1] 106
-# Finished batch 1 for fish AND "vibrio harveyi" AND diagnostic
-# File already exists
-# [1] "10.1016/j.fsi.2025.110503 1 / 106"
-# [1] "10.1016/j.fsi.2025.110501 2 / 106"
-# [FOR THE PURPOSE OF THIS EXAMPLE WE ARE NOT SHOWING EACH LINE OF THE COMMAND][1] "NA 105 / 106"
-# [THE REMOVED LINES CORRESPOND TO MOST OF THE REFERENCE RETRIEVAL COUNTING]
-# [1] "NA 106 / 106"
-# Warning: The following columns are missing: pages, number, record_id, isbn
+# 154 total results found on Web of Science for: fish AND "vibrio harveyi" AND diagnostic
+# Finished batch 1 of 2
+# Finished batch 2 of 2
+# Updating existing history_id.xlsx.
+# 149 new records found among 154 total results.
+# 24 total results found on Scopus for: fish AND "vibrio harveyi" AND diagnostic
+# Finished batch 1 of 1
+# Updating existing history_id.xlsx.
+# 22 new records found among 24 total results.
+# 110 total results found on PubMed for: fish AND "vibrio harveyi" AND diagnostic
+# Finished batch 1 of 1
+# Updating existing history_id.xlsx.
+# 104 new records found among 110 total results.
+# Finished batch 1 of 1 (104 / 104 records retrieved)
+# Warning: The following columns are missing: record_id
 # formatting data...
 # identifying potential duplicates...
 # identified duplicates!
-# flagging potential pairs for manual dedup...
-# Joining with `by = join_by(duplicate_id.x, duplicate_id.y)`
-# 254 citations loaded...
-# 14 duplicate citations removed...
-# 240 unique citations remaining!
+# 275 citations loaded...
+# 27 duplicate citations removed...
+# 248 unique citations remaining!
 # Deduplication script has been executed, concatenated deduplicated references had been exported.
 # Warning message:
 # In add_missing_cols(raw_citations) :
 #   Search contains missing values for the record_id column. A record_id will be created using row numbers
+#
+# Run log saved in C:/path-to-project-directory/run_log.csv
 ```
 
 After running
 [`manual_fetch()`](https://thomasdumond.github.io/LitFetchR/reference/manual_fetch.md),
-new unique *history_dedup\_* and *citationCSV\_* files are created and
-*history_id* is updated. See bottom of the page [LitFetchR
+new unique *history_dedup\_* and *citationsCSV\_* files are created,
+*history_id* is updated and one row per saved search and platform is
+added to *run_log.csv*. When no reference is new, the function reports
+it (`No new records: no output file written.`) and no output file is
+written. See bottom of the page [LitFetchR
 (Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html)
 for more information about those files.
+
+## Output format
+
+By default the references are written to a CSV file
+(*citationsCSV_YYYY_MM_HHMMSS.csv*). Some tools do not accept CSV, for
+example Covidence, which imports RIS files. Use `output_format = "ris"`
+to get a RIS file (*citationsRIS_YYYY_MM_HHMMSS.ris*) instead:
+
+``` r
+
+manual_fetch(wos = TRUE,
+             scp = TRUE,
+             pmd = TRUE,
+             directory = "C:/path-to-project-directory",
+             dedup = TRUE,
+             output_format = "ris")
+```
+
+The RIS file has one record per reference, with one author line per
+author. The platforms give the authors as surnames, so initials are not
+included. The same argument exists in
+[`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md).
+A scheduled task keeps the format it was created with: to change it,
+remove the task and create it again.
+
+## If something goes wrong
+
+- *search_list.txt* is checked before any platform is queried. A
+  missing, empty or malformed file (for example a line without “=” or a
+  name used twice) stops the run with a message.
+- Each platform is queried independently. If one fails (for example an
+  expired API key), you get a warning, the other platforms continue, and
+  the failed platform is marked `error` in *run_log.csv*. Its references
+  are not marked as seen, so they are retrieved at the next run. The run
+  stops only when every selected platform fails.
+- The output file is written before *history_id.xlsx* is updated.

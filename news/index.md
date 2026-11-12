@@ -1,6 +1,171 @@
 # Changelog
 
+## LitFetchR 1.1.0
+
+CRAN release: 2026-11-12
+
+Reliability and transparency release. Each retrieval is now recorded in
+a run log, scheduling is verified instead of assumed, and a failure on
+one platform no longer affects the others or the history of seen
+records. The exported function interface is unchanged apart from two new
+optional arguments: `day` in
+[`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md),
+and `output_format` in
+[`manual_fetch()`](https://thomasdumond.github.io/LitFetchR/reference/manual_fetch.md),
+[`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md)
+and
+[`dedup_refs()`](https://thomasdumond.github.io/LitFetchR/reference/dedup_refs.md).
+
+###### Output format
+
+- New argument `output_format` in
+  [`manual_fetch()`](https://thomasdumond.github.io/LitFetchR/reference/manual_fetch.md),
+  [`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md)
+  and
+  [`dedup_refs()`](https://thomasdumond.github.io/LitFetchR/reference/dedup_refs.md):
+  `"csv"` (the default, unchanged) or `"ris"`. RIS files
+  (`citationsRIS_<date and time>.ris`) are read by most reference
+  managers and screening tools, for example Covidence, which does not
+  accept CSV. Each record is a journal article with one `AU` line per
+  author (the platforms give surnames separated by commas), and the
+  title, journal, year, volume, issue, pages, abstract, DOI, ISBN,
+  platform identifier and platform name. Tasks and scripts created by
+  earlier versions keep writing CSV files.
+
+###### Run log
+
+- New file `run_log.csv` in the project directory. Every run, manual or
+  scheduled, adds one row per saved search and platform with the date
+  and time, the versions of LitFetchR and R, the run mode (`manual` or
+  `scheduled:<task name>`), the search string as read from
+  `search_list.txt`, the exact query submitted to the platform, the
+  number of results and of new records, the status (`success`,
+  `no_results`, `partial` or `error`) and any error message.
+- For PubMed the query translation returned by the platform is stored.
+  For Web of Science the number of retrieved records per source database
+  is stored, derived from the prefix of the record identifiers.
+- A problem found before any platform is queried (missing or invalid
+  `search_list.txt`, no platform selected) is logged as a row with the
+  platform `all` and the status `error`.
+- The `id_log` sheet of `history_id.xlsx` has a new `search_name`
+  column. Existing files are upgraded in place. A `run_log.csv` made by
+  an earlier development version is upgraded in place as well.
+
+###### Search strings
+
+- One internal helper now builds the exact query sent to each platform,
+  so that the counts shown by
+  [`create_save_search()`](https://thomasdumond.github.io/LitFetchR/reference/create_save_search.md)
+  and the records retrieved by
+  [`manual_fetch()`](https://thomasdumond.github.io/LitFetchR/reference/manual_fetch.md)
+  always use the same query.
+- The exclusion operator is written the way each platform needs it,
+  outside quoted phrases: `AND NOT` for Scopus and `NOT` for PubMed and
+  Web of Science. A typed `AND NOT` is no longer duplicated for Scopus.
+  Previously retrieval sent the raw string to Scopus, and PubMed ignored
+  the `NOT` of an `AND NOT` and returned the records to be excluded.
+  Searches containing exclusions can therefore return different,
+  correct, results than in 1.0.0.
+- [`create_save_search()`](https://thomasdumond.github.io/LitFetchR/reference/create_save_search.md)
+  no longer ends the session when a platform rejects a search. The count
+  for that platform is shown as unavailable, together with the
+  platform’s message and the query sent.
+- Search strings containing `&`, `#` or `+` are now sent correctly to
+  all three platforms. They were not protected in the request, so PubMed
+  silently searched only the part before the `&` (returning unrelated
+  results) and Web of Science and Scopus rejected the request.
+
+###### create_save_search() and search_list.txt
+
+- Selecting `exit` or `summary` offers to save a search of the session
+  when none has been saved.
+- All questions of the saving flow behave the same way: an invalid
+  answer is asked again, an empty answer cancels and returns to the
+  search prompt, and the valid range is shown for the index question.
+  Names are checked before saving (empty names, `=` and regular
+  expression characters).
+- `search_list.txt` is validated before any platform is queried: a
+  missing or empty file, a line without `=`, an empty name or query and
+  duplicate names stop the run with a clear message. Files with
+  duplicate names were accepted by 1.0.0 and now stop the run.
+- Spaces around the name and the query (`name = query`) and a byte order
+  mark written by some editors are ignored. A `directory` that is not a
+  single text string now gives a readable message.
+
+###### Scheduling
+
+- [`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md)
+  reports “Task scheduled!” only after the scheduler accepted the task
+  and the task was read back. A short summary (recurrence, next run
+  time, status) is printed. If the scheduler returns an error, the
+  function stops and shows the scheduler’s message. If the task cannot
+  be confirmed, a warning is given.
+- New argument `day`: the weekday of a weekly task (MON to SUN) or the
+  day of the month of a monthly task (1 to 28). The default is the
+  weekday or day of the month of today. Weekly tasks previously ran
+  every day, and no start date is passed any more, so regional date
+  settings no longer matter.
+- A task with the same name is never overwritten. Use
+  [`remove_scheduled_task()`](https://thomasdumond.github.io/LitFetchR/reference/remove_scheduled_task.md)
+  first.
+- A project folder whose path is too long for the Windows Task Scheduler
+  (its command is limited to 261 characters and contains the script path
+  twice) is refused before anything is created, with a message that says
+  so and suggests a shorter path.
+- The generated script wrote Windows paths unescaped and could not be
+  parsed. This is fixed, and the script is checked before the task is
+  created.
+- The generated script records the name of the task in the run log and
+  ends with a non-zero exit status when the run failed or finished with
+  a problem.
+- [`remove_scheduled_task()`](https://thomasdumond.github.io/LitFetchR/reference/remove_scheduled_task.md)
+  reports what actually happened.
+- The package now calls the Windows `schtasks` command directly and no
+  longer uses taskscheduleR, which is removed from the suggested
+  packages. On macOS and Linux the task is still created with `cronR`,
+  without its interactive confirmation question, and the new job is now
+  found in the crontab afterwards (the crontab is read line by line). A
+  monthly cron task now runs only on the chosen day of the month (the
+  template of `cronR` also added every Monday).
+
+###### Failure handling
+
+- Each platform is queried independently. A failure on one platform is
+  logged and warned about, and the other platforms continue. The run
+  stops only when all selected platforms fail.
+- The output file is written first and `history_id.xlsx` is updated
+  afterwards, only with the identifiers of records actually retrieved. A
+  failed platform or a failed output therefore never marks records as
+  seen, and the records are retrieved at the next run.
+- When no record is new, no CSV or deduplication file is written. With
+  `dedup = TRUE` and no new record the deduplication step is skipped
+  instead of failing.
+- Messages about existing history files were reworded (“Updating
+  existing history_id.xlsx.”).
+- A history file that is open in another program (for example Excel) or
+  damaged now gives a readable message. If the history cannot be updated
+  after the output file was written, the run is reported as a problem (a
+  scheduled run ends with a non-zero exit status) and the references are
+  returned again at the next run. Before, only a technical warning
+  appeared and the run counted as successful.
+- The same record found by two searches on Web of Science or Scopus is
+  kept once in the CSV (PubMed already did so).
+- The warning shown when `run_log.csv` cannot be written now says why
+  and what to do.
+
+###### Data quality
+
+- Italic, bold, subscript and similar inline tags (`<i>`, `<b>`,
+  `<sub>`, `<bold>`, `<italic>` and others) are now removed from titles
+  and abstracts of Web of Science and Scopus records, keeping the text
+  (for example `<i>Vibrio harveyi</i>` becomes `Vibrio harveyi`). About
+  3% of the titles from Web of Science carried them, and the same title
+  could then differ between platforms. Only the literal tags are
+  removed, so `p < 0.05` is unchanged.
+
 ## LitFetchR 1.0.0
+
+CRAN release: 2026-06-18
 
 Major reworking of the retrieval pipeline, consolidating a series of
 performance, reliability, and data-quality improvements. The exported

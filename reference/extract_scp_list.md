@@ -6,7 +6,12 @@ the search string(s) saved in "search_list.txt".
 ## Usage
 
 ``` r
-extract_scp_list(search_list_path, directory)
+extract_scp_list(
+  search_list_path,
+  directory,
+  run_id = NULL,
+  commit_history = TRUE
+)
 ```
 
 ## Arguments
@@ -19,6 +24,20 @@ extract_scp_list(search_list_path, directory)
 
   Choose the directory in which the references identification history
   will be saved.
+
+- run_id:
+
+  Identifier shared by all the rows of one retrieval in "run_log.csv"
+  (created if `NULL`).
+
+- commit_history:
+
+  If `TRUE` (default), the references identification history and the run
+  log are written before returning. If `FALSE`, nothing is written: the
+  pending history update and the run log rows are attached to the
+  returned data frame (attributes `pending_history` and `run_log`) so
+  that the caller can write them once the output file exists (used by
+  [`manual_fetch()`](https://thomasdumond.github.io/LitFetchR/reference/manual_fetch.md)).
 
 ## Value
 
@@ -72,4 +91,7 @@ A data.frame with one row per retrieved Scopus record and columns:
 
   Character. Publication unique identifier in data source.
 
-If `search_list_path` does not exist, returns `NULL`.
+If `search_list_path` does not exist, returns `NULL`. If any search
+fails (or the API key is missing), an error of class
+`litfetchr_platform_error` is raised and nothing is added to the
+history.

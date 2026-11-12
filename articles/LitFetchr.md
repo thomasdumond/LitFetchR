@@ -22,11 +22,17 @@ review project. To do so in RStudio:
 
 - Click `Create Project`
 
-From your new directory, install `LitFetchR` from GitHub:
+From your new directory, install `LitFetchR` from CRAN:
 
 ``` r
 
 #This step can be skipped if `LitFetchR` is already installed
+install.packages("LitFetchR")
+```
+
+Alternatively, install the development version from GitHub:
+
+``` r
 
 #Install using devtools package
 install.packages("devtools")
@@ -38,6 +44,21 @@ devtools::install_github("thomasdumond/LitFetchR")
 install.packages("remotes")
 remotes::install_github("thomasdumond/LitFetchR")
 ```
+
+Two optional packages are only needed for some functions:
+
+- **Deduplication** (`dedup = TRUE`) uses `ASySD`, which is not on CRAN.
+  Without it, the retrieval works with `dedup = FALSE`:
+
+``` r
+
+install.packages("remotes")
+remotes::install_github("camaradesuk/ASySD")
+```
+
+- **Scheduling on macOS and Linux** uses `cronR`:
+  `install.packages("cronR")`. On Windows, the Windows Task Scheduler is
+  used and nothing more is needed.
 
 Then load the package:
 
@@ -126,35 +147,45 @@ library(LitFetchR)
 #                      directory = "C:/path-to-project-directory")
 #
 # History had been created.
-# Enter your search string (or 'summary' or 'exit'): fish
+# Enter your search string (or "summary" or "exit"): fish
 # [1] "fish"
 # [1] "Web of Science: 1793296 results"
 # [1] "Scopus: 718644 results"
 # [1] "PubMed: 384742 results"
-# Enter your search string (or 'summary' or 'exit'): fish AND "vibrio harveyi"
+# Enter your search string (or "summary" or "exit"): fish AND "vibrio harveyi"
 # [1] "fish AND \"vibrio harveyi\""
 # [1] "Web of Science: 2084 results"
 # [1] "Scopus: 1080 results"
 # [1] "PubMed: 727 results"
-# Enter your search string (or 'summary' or 'exit'): fish AND "vibrio harveyi" AND diagnostic
+# Enter your search string (or "summary" or "exit"): fish AND "vibrio harveyi" AND diagnostic
 # [1] "fish AND \"vibrio harveyi\" AND diagnostic"
 # [1] "Web of Science: 126 results"
 # [1] "Scopus: 22 results"
 # [1] "PubMed: 106 results"
-# Enter your search string (or 'summary' or 'exit'): summary
+# Enter your search string (or "summary" or "exit"): summary
 #                                Search_Term Results_WOS Results_SCP Results_PMD
 # 1                                     fish     1793296      718644      384742
 # 2                fish AND "vibrio harveyi"        2084        1080         727
 # 3 fish AND "vibrio harveyi" AND diagnostic         126          22         106
-# Select the index number for the search string to use in automated retrieval: 3
-# 
-# Selected search string: fish AND "vibrio harveyi" AND diagnostic 
-# Do you want to save the search string for future use? (yes/no): yes
-# Enter a name for the search identification: fish_vibrio
+# Do you want to save a search string for automated retrieval? (yes/no, Enter to cancel): yes
+# Select the index number of the search string to save (1 to 3, Enter to cancel): 3
+#
+# Selected search string: fish AND "vibrio harveyi" AND diagnostic
+#
+# Enter a name for the search identification (Enter to cancel): fish_vibrio
 # Search string saved successfully.
-# Enter your search string (or 'summary' or 'exit'): exit
+# Enter your search string (or "summary" or "exit"): exit
 # Exiting search tool.
 ```
+
+Typing `exit` before any search string was saved offers to save one, so
+a search is not lost by mistake. Every question can be cancelled by
+pressing Enter, and an invalid answer is asked again.
+
+*Exclusions: type `NOT` or `AND NOT`, `LitFetchR` writes the exclusion
+the way each platform requires (`AND NOT` for Scopus and `NOT` for
+PubMed and Web of Science). Phrases between double quotes are never
+changed.*
 
 After using
 [`create_save_search()`](https://thomasdumond.github.io/LitFetchR/reference/create_save_search.md),
@@ -163,19 +194,23 @@ two new files will appear in your directory:
 - search_list.txt
 
   *This file contains the name and search string that you saved using
-  [`create_save_search()`](https://thomasdumond.github.io/LitFetchR/reference/create_save_search.md).
-  It is an essential file to retrieve the reference later. If you modify
-  the search string in this file, the modified search string will be
-  used for future reference retrieval.*
+  [`create_save_search()`](https://thomasdumond.github.io/LitFetchR/reference/create_save_search.md),
+  one `name=search string` per line. It is an essential file to retrieve
+  the reference later. If you modify the search string in this file, the
+  modified search string will be used for future reference retrieval.
+  The file is checked before each retrieval and the run stops with a
+  clear message if it is missing, empty or malformed (for example a line
+  without “=” or a name used twice). The search string actually used is
+  written to “run_log.csv” at each run.*
 
 - history_search.xlsx
 
-  *This file contains all the search that you run when using the
+  *This file contains all the searches that you ran when using the
   function
-  [`create_save_search()`](https://thomasdumond.github.io/LitFetchR/reference/create_save_search.md).
-  Each time you run the function, it creates a new sheet named with the
-  current date and saves both the search string sent to the literature
-  platforms, and the number of results that they returned.*
+  [`create_save_search()`](https://thomasdumond.github.io/LitFetchR/reference/create_save_search.md),
+  with the search string sent to the literature platforms, the number of
+  results that they returned and the time of the search. Each run of the
+  function adds rows to the same sheet.*
 
 If you already validated your review search string, use
 [`create_save_search()`](https://thomasdumond.github.io/LitFetchR/reference/create_save_search.md)
@@ -186,7 +221,8 @@ the automation of reference retrieval.
 
 The automated reference retrieval uses either Windows Task Scheduler or
 Cron (Mac/Linux). You do not have to specify it, `LitFetchR` will detect
-the system and setup the task for you using the following:
+the system and setup the task for you using the following. On macOS and
+Linux the package `cronR` must be installed.
 
 ``` r
 
@@ -196,6 +232,9 @@ library(LitFetchR)
 #We recommend using a single word for the *task_id* or to use underscores "_" to separate words.
 #The retrieval frequency is currently available "DAILY", "WEEKLY" or "MONTHLY".
 #You need to use a 24H format for the time of reference retrieval.
+#For "WEEKLY", `day` is the weekday (MON, TUE, WED, THU, FRI, SAT or SUN).
+#For "MONTHLY", `day` is the day of the month (1 to 28).
+#If you do not give `day`, the weekday (or day of the month) of today is used.
 #If you do not have an API key for WOS and/or SCP or want to exclude any database,
 #change "TRUE" to "FALSE" in front of the corresponding database (e.g.`wos = FALSE`).
 
@@ -203,39 +242,32 @@ library(LitFetchR)
 #> auto_LitFetchR_setup(task_id = "fish_vibrio",
                      # when = "WEEKLY",
                      # time = "14:00",
+                     # day = "MON",
                      # wos = TRUE,
                      # scp = TRUE,
                      # pmd = TRUE,
                      # directory = "C:/path-to-project-directory",
                      # dedup = FALSE,
                      # open_file = TRUE)
+#To get a RIS file instead of a CSV file (for example for Covidence), add `output_format = "ris"`.
 #Task scheduled!
+#  Task name:  fish_vibrio
+#  Recurrence: weekly on Monday at 14:00
+#  Next run:   (date and time of the next run)
+#  Status:     Ready
 ```
 
+`Task scheduled!` is only shown after the scheduler accepted the task
+and the task was read back from it. **Check the summary that follows**:
+it is your proof that the retrieval will run. If the scheduler refuses
+the task, the function stops and shows the message of the scheduler. If
+the task cannot be confirmed, a warning is shown instead. A task with
+the same name is never overwritten, remove it first with
+[`remove_scheduled_task()`](https://thomasdumond.github.io/LitFetchR/reference/remove_scheduled_task.md).
+
 After running
-[`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md)
-for the first time, four new files will be created:
-
-- history_id.xlsx
-
-  *This file contains all the databases unique identifiers (e.g. PMID or
-  SCOPUS_ID). These are saved and used at each reference retrieval to
-  only extract the references that were not retrieved before.*
-
-- history_dedup_YYYY_MM_HHMMSS.xlsx (if dedup = TRUE)
-
-  *This file contains the history of each step of the deduplication,
-  using the package ASySD.*
-
-- citationsCSV_YYYY_MM_HHMMSS.CSV
-
-  *This file contains the list of references retrieved from the search
-  conducted at the date referenced in the name of the file. It is a CSV
-  file, ready to be imported into the screening tool of your choice or
-  in your reference manager. If the deduplication option was selected
-  (dedup = TRUE), this file contains the unique dedupicated references.
-  This file automatically opens after the reference retrieval ends if
-  the corresponding option is selected (open_file = TRUE).*
+[`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md),
+one new file is created in your directory:
 
 - auto_LitFetchR_code_READ_ONLY.R
 
@@ -246,14 +278,80 @@ for the first time, four new files will be created:
   impair the scheduled task action. If you deleted this file by
   accident, use the
   [`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md)
-  to create a new task and a new code file.*
+  to create a new task and a new code file. The script gives the name of
+  the task to the run log and ends with a non-zero exit status if the
+  run failed or finished with a problem.*
 
-Each time *auto_LitFetchR_code(READ_ONLY).R* runs, new unique
-*history_dedup\_* and *citationCSV\_* files are created and *history_id*
-is updated.
+Each time the task runs, the following files are created or updated:
+
+- history_id.xlsx
+
+  *This file contains all the databases unique identifiers (e.g. PMID or
+  SCOPUS_ID). These are saved and used at each reference retrieval to
+  only extract the references that were not retrieved before.
+  Identifiers are added only after the output file was written, and only
+  for the references actually retrieved. A platform that failed, or a
+  run that could not write its output, therefore never marks references
+  as seen: they are retrieved at the next run.*
+
+- run_log.csv
+
+  *This file records every run, manual or scheduled, with one row per
+  saved search and platform: the date and time, the versions of
+  LitFetchR and R, the run mode (`manual` or `scheduled:<task name>`),
+  the search string as read from “search_list.txt”, the exact query sent
+  to the platform, the number of results and of new references, the
+  status (`success`, `no_results`, `partial` or `error`) and the error
+  message if any. For PubMed it also stores the query translation
+  returned by the platform and for Web of Science the number of
+  references per source database. Open it to check that your scheduled
+  task is running and that no platform failed.*
+
+- citationsCSV_YYYY_MM_HHMMSS.CSV (or citationsRIS_YYYY_MM_HHMMSS.ris)
+
+  *This file contains the list of references retrieved from the search
+  conducted at the date referenced in the name of the file. It is a CSV
+  file, ready to be imported into the screening tool of your choice or
+  in your reference manager. If the deduplication option was selected
+  (dedup = TRUE), this file contains the unique dedupicated references.
+  This file automatically opens after the reference retrieval ends if
+  the corresponding option is selected (open_file = TRUE). When no
+  reference is new, no file is written. The default format is CSV. Use
+  `output_format = "ris"` in
+  [`manual_fetch()`](https://thomasdumond.github.io/LitFetchR/reference/manual_fetch.md)
+  or
+  [`auto_LitFetchR_setup()`](https://thomasdumond.github.io/LitFetchR/reference/auto_LitFetchR_setup.md)
+  for a RIS file, which tools such as Covidence require (the format of a
+  task is fixed when it is created: remove the task and create it again
+  to change it).*
+
+- history_dedup_YYYY_MM_HHMMSS.xlsx (if dedup = TRUE)
+
+  *This file contains the history of each step of the deduplication,
+  using the package ASySD.*
 
 **Congratulations! Your automated reference retrieval is ready to
 work!**
+
+## Good to know about scheduled retrieval
+
+- The task only runs while the computer is on and you are logged in. A
+  run missed for this reason loses nothing: new references are found by
+  their identifier and not by date, so the next run retrieves them.
+- If one platform fails (for example an expired API key), the other
+  platforms continue. The failed platform is marked `error` in
+  “run_log.csv” and its references are retrieved at the next run.
+- If you stop receiving files, open “run_log.csv” first. Rows with
+  `error` or `partial` give the reason. A task that was disabled later
+  is not detected by `LitFetchR`, check it in your task scheduler.
+- Avoid running
+  [`manual_fetch()`](https://thomasdumond.github.io/LitFetchR/reference/manual_fetch.md)
+  in the same directory at the time a scheduled run is due.
+- On Windows, the Task Scheduler limits the length of the command it
+  stores. A project folder with a very long path (for example deep
+  inside a synchronised cloud folder) is refused with a message saying
+  so. Use a folder with a shorter path, for example
+  `C:/reviews/my_review`.
 
 ## See also
 

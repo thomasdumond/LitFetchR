@@ -17,13 +17,13 @@ Source:
 [`DESCRIPTION`](https://github.com/thomasdumond/LitFetchR/blob/master/DESCRIPTION)
 
 Dumond T (2026). *LitFetchR: Automatically Fetching References Metadata
-from Literature Databases*. R package version 1.0.0,
+from Literature Databases*. R package version 1.1.0,
 <https://github.com/thomasdumond/LitFetchR>.
 
     @Manual{,
       title = {LitFetchR: Automatically Fetching References Metadata from Literature Databases},
       author = {Thomas Dumond},
       year = {2026},
-      note = {R package version 1.0.0},
+      note = {R package version 1.1.0},
       url = {https://github.com/thomasdumond/LitFetchR},
     }

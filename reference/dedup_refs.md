@@ -11,7 +11,8 @@ dedup_refs(
   df3 = NULL,
   directory,
   open_file = FALSE,
-  dry_run = FALSE
+  dry_run = FALSE,
+  output_format = c("csv", "ris")
 )
 ```
 
@@ -36,17 +37,23 @@ dedup_refs(
 
 - open_file:
 
-  Automatically opens the CSV file after reference retrieval.
+  Automatically opens the output file after reference retrieval.
 
 - dry_run:
 
   Simulation run option.
 
+- output_format:
+
+  Format of the file of deduplicated references: `"csv"` (default) or
+  `"ris"` (see
+  [`manual_fetch()`](https://thomasdumond.github.io/LitFetchR/reference/manual_fetch.md)).
+
 ## Value
 
-`NULL` (invisibly). Called for its side effects: writes a CSV of
-deduplicated citations and an Excel workbook recording the deduplication
-history.
+`NULL` (invisibly). Called for its side effects: writes a CSV or RIS
+file of deduplicated citations and an Excel workbook recording the
+deduplication history.
 
 ## Examples
 

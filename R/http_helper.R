@@ -1,19 +1,23 @@
-#' Strip inline sup/inf markup tags from extracted text.
+#' Strip inline formatting tags from extracted text.
 #'
-#' Scopus returns superscript/subscript as literal \code{<sup>}/\code{<inf>}
-#' HTML tags embedded in title and abstract strings (e.g. \code{10<sup>2</sup>}).
-#' This removes the tags while keeping their content (\code{10<sup>2</sup>} ->
-#' \code{102}), matching Scopus' own CSV export. The regex targets only the
-#' literal tag forms so bare \code{<}/\code{>} used as math operators
+#' Scopus and Web of Science return superscripts, subscripts, italics and
+#' bold as literal HTML-like tags embedded in title and abstract strings
+#' (e.g. \code{10<sup>2</sup>}, \code{<i>Vibrio harveyi</i>}). This removes
+#' the tags while keeping their content (\code{10<sup>2</sup>} ->
+#' \code{102}), matching Scopus' own CSV export. Italic tags left in titles
+#' also made the same title differ between platforms. The regex targets only
+#' the literal tag forms (sup, sub, inf, i, b, u, em, strong, bold, italic,
+#' underline, sc, tt) so bare \code{<}/\code{>} used as math operators
 #' (e.g. \code{p < 0.05}) are preserved.
 #'
 #' @param x Character scalar (or NA).
-#' @return \code{x} with sup/inf tags removed.
+#' @return \code{x} with the inline formatting tags removed.
 #' @keywords internal
 #' @noRd
 strip_markup <- function(x) {
   if (is.null(x) || length(x) == 0 || is.na(x)) return(x)
-  gsub("</?(sup|inf)>", "", x, ignore.case = TRUE)
+  gsub("</?(sup|sub|inf|i|b|u|em|strong|bold|italic|underline|sc|tt)\\s*/?>",
+       "", x, ignore.case = TRUE)
 }
 
 #' Internal HTTP GET helper with retries when

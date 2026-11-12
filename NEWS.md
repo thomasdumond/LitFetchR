@@ -44,6 +44,10 @@ Reliability and transparency release. Each retrieval is now recorded in a run lo
 * The same record found by two searches on Web of Science or Scopus is kept once in the CSV (PubMed already did so).
 * The warning shown when `run_log.csv` cannot be written now says why and what to do.
 
+##### Data quality
+
+* Italic, bold, subscript and similar inline tags (`<i>`, `<b>`, `<sub>`, `<bold>`, `<italic>` and others) are now removed from titles and abstracts of Web of Science and Scopus records, keeping the text (for example `<i>Vibrio harveyi</i>` becomes `Vibrio harveyi`). About 3% of the titles from Web of Science carried them, and the same title could then differ between platforms. Only the literal tags are removed, so `p < 0.05` is unchanged.
+
 # LitFetchR 1.0.0
 
 Major reworking of the retrieval pipeline, consolidating a series of performance, reliability, and data-quality improvements. The exported function interface is unchanged apart from two new optional arguments to `save_api_keys()` (`scp_insttoken` and `ncbi_api_key`), but the returned data frame has changed (see "Output columns" below).

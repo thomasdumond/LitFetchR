@@ -237,6 +237,7 @@ Each time the task runs, the following files are created or updated:
 * If one platform fails (for example an expired API key), the other platforms continue. The failed platform is marked `error` in "run_log.csv" and its references are retrieved at the next run.
 * If you stop receiving files, open "run_log.csv" first. Rows with `error` or `partial` give the reason. A task that was disabled later is not detected by `LitFetchR`, check it in your task scheduler.
 * Avoid running `manual_fetch()` in the same directory at the time a scheduled run is due.
+* On Windows, the Task Scheduler limits the length of the command it stores. A project folder with a very long path (for example deep inside a synchronised cloud folder) is refused with a message saying so. Use a folder with a shorter path, for example `C:/reviews/my_review`.
 
 ## See also
 

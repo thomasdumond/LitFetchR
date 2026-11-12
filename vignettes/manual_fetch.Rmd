@@ -73,6 +73,21 @@ library(LitFetchR)
 
 After running `manual_fetch()`, new unique *history_dedup_* and *citationsCSV_* files are created, *history_id* is updated and one row per saved search and platform is added to *run_log.csv*. When no reference is new, the function reports it (`No new records: no output file written.`) and no output file is written. See bottom of the page [LitFetchR (Tutorial)](https://thomasdumond.github.io/LitFetchR/articles/LitFetchr.html) for more information about those files.
 
+## Output format
+
+By default the references are written to a CSV file (*citationsCSV_YYYY_MM_HHMMSS.csv*). Some tools do not accept CSV, for example Covidence, which imports RIS files. Use `output_format = "ris"` to get a RIS file (*citationsRIS_YYYY_MM_HHMMSS.ris*) instead:
+
+```{r, eval=FALSE}
+manual_fetch(wos = TRUE,
+             scp = TRUE,
+             pmd = TRUE,
+             directory = "C:/path-to-project-directory",
+             dedup = TRUE,
+             output_format = "ris")
+```
+
+The RIS file has one record per reference, with one author line per author. The platforms give the authors as surnames, so initials are not included. The same argument exists in `auto_LitFetchR_setup()`. A scheduled task keeps the format it was created with: to change it, remove the task and create it again.
+
 ## If something goes wrong
 
 * *search_list.txt* is checked before any platform is queried. A missing, empty or malformed file (for example a line without "=" or a name used twice) stops the run with a message.

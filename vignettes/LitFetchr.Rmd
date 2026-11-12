@@ -196,6 +196,7 @@ library(LitFetchR)
                      # directory = "C:/path-to-project-directory",
                      # dedup = FALSE,
                      # open_file = TRUE)
+#To get a RIS file instead of a CSV file (for example for Covidence), add `output_format = "ris"`.
 #Task scheduled!
 #  Task name:  fish_vibrio
 #  Recurrence: weekly on Monday at 14:00

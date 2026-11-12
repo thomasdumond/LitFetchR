@@ -166,6 +166,19 @@ auto_LitFetchR_setup <- function(task_id = "task_id",
   } else {
     script_path
   }
+  # The Windows Task Scheduler stores at most 261 characters for the command,
+  # which contains the path of the script twice (script and log).
+  if (is_win) {
+    cmd_length <- nchar(win_task_command(script_path_scheduler))
+    if (cmd_length > 261) {
+      unlink(script_path)
+      stop("The path of the project folder is too long for the Windows Task ",
+           "Scheduler (its command is ", cmd_length, " characters long, the ",
+           "limit is 261). Use a project folder with a shorter path, for ",
+           "example C:/reviews/my_review. No task was scheduled.",
+           call. = FALSE)
+    }
+  }
 
   # Vector of code lines to be added in the Rscript
   lines <- character() #create the character vector

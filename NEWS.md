@@ -28,6 +28,7 @@ Reliability and transparency release. Each retrieval is now recorded in a run lo
 * `auto_LitFetchR_setup()` reports "Task scheduled!" only after the scheduler accepted the task and the task was read back. A short summary (recurrence, next run time, status) is printed. If the scheduler returns an error, the function stops and shows the scheduler's message. If the task cannot be confirmed, a warning is given.
 * New argument `day`: the weekday of a weekly task (MON to SUN) or the day of the month of a monthly task (1 to 28). The default is the weekday or day of the month of today. Weekly tasks previously ran every day, and no start date is passed any more, so regional date settings no longer matter.
 * A task with the same name is never overwritten. Use `remove_scheduled_task()` first.
+* A project folder whose path is too long for the Windows Task Scheduler (its command is limited to 261 characters and contains the script path twice) is refused before anything is created, with a message that says so and suggests a shorter path.
 * The generated script wrote Windows paths unescaped and could not be parsed. This is fixed, and the script is checked before the task is created.
 * The generated script records the name of the task in the run log and ends with a non-zero exit status when the run failed or finished with a problem.
 * `remove_scheduled_task()` reports what actually happened.

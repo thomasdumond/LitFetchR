@@ -130,8 +130,9 @@ format_sched_failure <- function(res) {
 # Arguments of `schtasks /Create`. No start date (/SD) is passed, so Windows
 # uses today's date. The start date format depends on the regional settings
 # and is a known source of failures. No days argument is passed for DAILY.
-win_task_args <- function(task_id, script, when, time, day = NULL,
-                          rexe = NULL) {
+# The command stored in the task: Rscript runs the script and the output is
+# appended to a log. Task Scheduler accepts at most 261 characters for it.
+win_task_command <- function(script, rexe = NULL) {
   if (is.null(rexe)) {
     rexe <- file.path(R.home("bin"), "Rscript.exe")
     rexe <- tryCatch(get_short_path(rexe), error = function(e) rexe)
@@ -141,10 +142,15 @@ win_task_args <- function(task_id, script, when, time, day = NULL,
   }
   log_file <- paste0(tools::file_path_sans_ext(script), ".log")
   # Same command line as taskscheduleR uses (output is appended to a log)
-  task <- sprintf("cmd /c %s %s >> %s 2>&1",
-                  rexe,
-                  shQuote(script, type = "cmd"),
-                  shQuote(log_file, type = "cmd"))
+  sprintf("cmd /c %s %s >> %s 2>&1",
+          rexe,
+          shQuote(script, type = "cmd"),
+          shQuote(log_file, type = "cmd"))
+}
+
+win_task_args <- function(task_id, script, when, time, day = NULL,
+                          rexe = NULL) {
+  task <- win_task_command(script, rexe)
   args <- c("/Create",
             "/TN", shQuote(task_id, type = "cmd"),
             "/TR", shQuote(task, type = "cmd"),
